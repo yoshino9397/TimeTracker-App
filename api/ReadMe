@@ -1,0 +1,2 @@
+#### Command to create JWT token
+## openssl rand -base64 32
