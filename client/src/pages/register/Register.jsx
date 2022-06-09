@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import axios from 'axios';
-import zxcvbn from 'zxcvbn';
 import { useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -7,7 +7,9 @@ import './register.scss';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
-import { useState } from 'react';
+
+import zxcvbn from 'zxcvbn';
+import * as yup from 'yup';
 
 const passMessage = [
   'Weak',
@@ -23,19 +25,31 @@ const Register = () => {
   const [emailLabelCss, setEmailLabelCss] = useState('');
   const [passLabelCss, setPassLabelCss] = useState('');
   const [passStrengthColor, setPassStrengthColor] = useState(0);
+  const [emailErr, setEmailErr] = useState('');
+  const [passErr, setPassErr] = useState('');
+  const emailSchema = yup.object({
+    email: yup
+      .string()
+      .email('Must be a valid email')
+      .max(255)
+      .required('Email is required'),
+  });
+  const passSchema = yup.object({
+    password: yup.string().max(255).required('Password is required'),
+  });
 
   const email = useRef();
-  const password = useRef();
-  const passwordAgain = useRef();
   const navigate = useNavigate();
 
   const handleBlur = (e) => {
-    if (e.target.value) {
-      if (e.target.type === 'email') setEmailLabelCss('rInputLabelActive');
-      else setPassLabelCss('rInputLabelActive');
+    if (e.target.type === 'email') {
+      if (e.target.value) setEmailLabelCss('rInputLabelActive');
+      else setEmailLabelCss('');
+      validateCheck(e.target.value, null);
     } else {
-      if (e.target.type === 'email') setEmailLabelCss('');
+      if (e.target.value) setPassLabelCss('rInputLabelActive');
       else setPassLabelCss('');
+      validateCheck(null, e.target.value);
     }
   };
 
@@ -44,30 +58,67 @@ const Register = () => {
     setPasswordVisible((prev) => !prev);
   };
 
-  const handleChange = (event) => {
-    if (event?.target.value) {
-      const result = zxcvbn(event?.target.value, [email.current.value]);
+  const handleChange = (e) => {
+    if (e?.target.value) {
+      const result = zxcvbn(e?.target.value, [email.current.value]);
       setPassStrengthColor(result.score);
     }
   };
 
-  const handleClick = async (e) => {
+  const validateCheck = async (email, password) => {
+    const resultArr = [];
+    if (email !== null) {
+      const emailResult = await emailSchema
+        .validate({
+          email,
+        })
+        .then(function (value) {
+          setEmailErr('');
+          return true;
+        })
+        .catch(function (err) {
+          setEmailErr(err.errors);
+          return false;
+        });
+      resultArr.push(emailResult);
+    }
+
+    if (password !== null) {
+      const passResult = await passSchema
+        .validate({
+          password,
+        })
+        .then(function (value) {
+          setPassErr('');
+          return true;
+        })
+        .catch(function (err) {
+          setPassErr(err.errors);
+          return false;
+        });
+      resultArr.push(passResult);
+    }
+
+    return resultArr;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (passwordAgain.current.value !== password.current.value) {
-    //   passwordAgain.current.setCustomValidity("Passwords don't match!");
-    // } else {
-    //   const user = {
-    //     username: username.current.value,
-    //     email: email.current.value,
-    //     password: password.current.value,
-    //   };
-    //   try {
-    //     await axios.post('/auth/register', user);
-    //     navigate('/login');
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+    const result = await validateCheck(email, password);
+    if (!result.some((el) => el === false)) {
+      const user = {
+        email,
+        password,
+      };
+      try {
+        await axios.post('/auth/register', user);
+        navigate('/login');
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -96,37 +147,38 @@ const Register = () => {
             <h6 className='rOtionEmailMessage'>Sign up with Email address</h6>
           </div>
         </div>
-        <form noValidate>
+
+        <form noValidate onSubmit={handleSubmit}>
           <div className={`rInputSetContainer`}>
             <div className={`rInputLabelContainer`}>
-              <label htmlFor='email' className={`rInputLabel ${emailLabelCss}`}>
+              <label
+                htmlFor='email'
+                className={`rInputLabel ${emailLabelCss} ${
+                  emailErr ? 'labelErr' : ''
+                }`}
+              >
                 Email Address
               </label>
-              <div className='rInputContainer'>
+              <div className={`rInputContainer`}>
                 <input
                   type='email'
                   id='email'
-                  required
                   ref={email}
-                  className={`rInput`}
+                  className={`rInput ${emailErr ? 'inputErr' : ''}`}
                   onBlur={handleBlur}
+                  autocomplete='off'
                 />
               </div>
             </div>
+            {emailErr && <div className='rInputErr'>{emailErr}</div>}
           </div>
-          {/* {touched.password && errors.password && (
-            <FormHelperText
-              error
-              id='standard-weight-helper-text-password-register'
-            >
-              {errors.password}
-            </FormHelperText>
-          )} */}
           <div className={`rInputSetContainer`}>
             <div className={`rInputLabelContainer`}>
               <label
                 htmlFor='password'
-                className={`rInputLabel ${passLabelCss}`}
+                className={`rInputLabel ${passLabelCss} ${
+                  passErr ? 'labelErr' : ''
+                }`}
               >
                 Password
               </label>
@@ -134,14 +186,14 @@ const Register = () => {
                 <input
                   type={passwordVisible ? 'text' : 'password'}
                   id='password'
-                  ref={password}
-                  className='rInput'
-                  required
+                  className={`rInput ${passErr ? 'inputErr' : ''}`}
                   onBlur={handleBlur}
                   onChange={handleChange}
+                  autocomplete='off'
                 />
               </div>
             </div>
+            {passErr && <div className='rInputErr'>{passErr}</div>}
             <button className='rInputBtn' onClick={handleVisible}>
               {passwordVisible ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
@@ -179,7 +231,7 @@ const Register = () => {
               )}
             </button>
           </div> */}
-          <button onClick={handleClick} className='rButton'>
+          <button className='rButton' type='submit'>
             Register
           </button>
           {error && <span>{error.message}</span>}

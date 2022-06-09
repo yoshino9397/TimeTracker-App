@@ -21,6 +21,7 @@
     "recharts": "^2.1.9",
     "sass": "^1.49.9",
     "web-vitals": "^2.1.4",
+    "yup": "^0.32.11",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
