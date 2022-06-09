@@ -3,8 +3,6 @@ import { useContext, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.scss";
-import { Link } from "react-router-dom";
-import * as yup from "yup";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 
@@ -14,21 +12,10 @@ const Login = () => {
   const [passLabelCss, setPassLabelCss] = useState("");
   const [emailErr, setEmailErr] = useState("");
   const [passErr, setPassErr] = useState("");
-  const emailSchema = yup.object({
-    email: yup
-      .string()
-      .email("Must be a valid email")
-      .max(255)
-      .required("Email is required"),
-  });
-  const passSchema = yup.object({
-    password: yup.string().max(255).required("Password is required"),
-  });
 
   const email = useRef();
-
   const [credentials, setCredentials] = useState({
-    username: undefined,
+    email: undefined,
     password: undefined,
   });
 
@@ -59,52 +46,13 @@ const Login = () => {
     }
   };
 
-  const validateCheck = async (email, password) => {
-    const resultArr = [];
-    if (email !== null) {
-      const emailResult = await emailSchema
-        .validate({
-          email,
-        })
-        .then(function (value) {
-          setEmailErr("");
-          return true;
-        })
-        .catch(function (err) {
-          setEmailErr(err.errors);
-          return false;
-        });
-      resultArr.push(emailResult);
-    }
-
-    if (password !== null) {
-      const passResult = await passSchema
-        .validate({
-          password,
-        })
-        .then(function (value) {
-          setPassErr("");
-          return true;
-        })
-        .catch(function (err) {
-          setPassErr(err.errors);
-          return false;
-        });
-      resultArr.push(passResult);
-    }
-
-    return resultArr;
-  };
-
   const handleBlur = (e) => {
     if (e.target.type === "email") {
       if (e.target.value) setEmailLabelCss("rInputLabelActive");
       else setEmailLabelCss("");
-      validateCheck(e.target.value, null);
     } else {
       if (e.target.value) setPassLabelCss("rInputLabelActive");
       else setPassLabelCss("");
-      validateCheck(null, e.target.value);
     }
   };
 
@@ -122,7 +70,7 @@ const Login = () => {
         <div className="lTitleContainer">
           <h3 className="lTitle">Hi, Welcome Back</h3>
           <span className="lTitleMessage">
-          Enter your credentials to continue
+            Enter your credentials to continue
           </span>
         </div>
         <div className="lOption">
@@ -156,6 +104,7 @@ const Login = () => {
                 ref={email}
                 className={`lInput ${emailErr ? "inputErr" : ""}`}
                 onBlur={handleBlur}
+                onChange={handleChange}
                 autoComplete="off"
               />
             </div>
@@ -179,7 +128,7 @@ const Login = () => {
                 className={`lInput ${passErr ? "inputErr" : ""}`}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                autocomplete="off"
+                autoComplete="off"
               />
             </div>
           </div>
@@ -188,7 +137,7 @@ const Login = () => {
             {passwordVisible ? <AiFillEye /> : <AiFillEyeInvisible />}
           </button>
         </div>
-        <button className="rButton" disabled={loading} onClick={handleClick}>
+        <button className="lButton" disabled={loading} onClick={handleClick}>
           Login
         </button>
         {error && <span>{error.message}</span>}
