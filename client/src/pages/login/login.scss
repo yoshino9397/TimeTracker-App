@@ -1,52 +1,302 @@
-.login {
+.Login {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color:rgba(168, 200, 210, 0.677);
+  background-color: rgba(168, 200, 210, 0.677);
+  min-height: 100vh;
 }
 
 .lContainer {
-  padding:100px;
+  margin: 2rem;
+  width: 22rem;
+  background-color: rgb(255, 255, 255);
+  color: #3f597c;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background-color:white;
+  align-items: center;
+  padding: 2rem;
+}
+
+.lLogo {
+  margin-bottom: 2rem;
+}
+
+.lLogo a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.lTitleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lTitle {
+  margin-bottom: 0.35em;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.167;
+}
+
+.lTitleMessage {
+  margin-top: 8px;
+  color: rgb(158, 158, 158);
+  font-weight: 400;
+  line-height: 1.66;
+  font-size: 16px;
   text-align: center;
 }
 
-.lTitle{
-color: #3f597c;
+.lOption {
+  margin-top: 16px;
+  width: 100%;
 }
 
-.lInput{
-  height: 30px;
-  padding: 10px 70px;
-  margin-top: 10px;
+.lOptionGoogle {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 21px;
+  border: 1px solid rgb(245, 245, 245);
+  font-weight: 500;
+  border-radius: 4px;
+  color: rgb(97, 97, 97);
+  background-color: rgb(250, 250, 250);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  -webkit-tap-highlight-color: transparent;
+  outline: 0px;
+  cursor: pointer;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.lOptionGoogle:hover {
+  background-color: rgb(248, 252, 255);
+  border-color: rgb(33, 150, 243);
+}
+
+.lOptionGoogle svg {
+  margin-right: 16px;
+  width: 20px;
+}
+
+.lOptionOr {
+  align-items: center;
+  display: flex;
+  padding-top: 16px;
+}
+
+.lOptionOrHr {
+  margin: 0px;
+  flex-shrink: 0;
+  border-width: 0px 0px thin;
+  border-style: solid;
+  border-color: rgb(238, 238, 238);
+  opacity: 1;
+  flex-grow: 1;
+}
+
+.lOptionOrBtn {
+  pointer-events: none;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  border: 1px solid rgb(245, 245, 245);
+  margin: 16px;
+  padding: 4px 56px;
+  font-weight: 500;
+  border-radius: 8px;
+  color: rgb(33, 33, 33);
+  cursor: unset;
+}
+
+.lOptionEmail {
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lOtionEmailMessage {
+  margin: 0px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(33, 33, 33);
+  line-height: 1.75;
+}
+
+.lInputSetContainer {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  margin: 8px 0px;
+  vertical-align: top;
+  width: 100%;
+}
+
+.lInputBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  // position: relative;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0px;
+  border: 0px;
+  text-align: center;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.lInputBtn:hover {
+  background-color: rgba(0, 0, 0, 0.062);
+}
+
+.lInputSetContainer svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: rgb(125, 125, 125);
+}
+
+.lInputLabel {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.4rem;
+  transform-origin: left top;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 24px);
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  transform: translate(14px, 22px) scale(1);
+  transition: color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms,
+    transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.lInputLabelContainer:focus-within .lInputLabel {
+  transform: translate(14px, 7px) scale(0.75);
+  color: rgb(33, 150, 243);
+}
+
+.lInputLabelActive {
+  transform: translate(14px, 7px) scale(0.75);
+}
+
+.lInputContainer {
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.4375em;
+  color: rgb(97, 97, 97);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  background: rgb(250, 250, 250);
+  border-radius: 8px;
+  border: 1px solid rgb(189, 189, 189);
+  cursor: text;
+}
+
+.lInput {
+  outline: none;
+  border: 0px;
+  padding: 30.5px 14px 11.5px;
+  height: 1.4375em;
+  margin: 0px;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  min-width: 0px;
+  width: 100%;
+  font-weight: 500;
+  background-color: rgb(250, 250, 250);
+  border-radius: 8px;
+}
+
+.lInput:focus {
+  outline: solid 2px rgb(33, 150, 243);
+}
+
+
+.lPasswordStrengthContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.lPasswordStrength {
+  width: 85px;
+  height: 8px;
+  border-radius: 7px;
+}
+
+.lPasswordStrengthColor0,
+.lPasswordStrengthColor1 {
+  background-color: rgb(255, 94, 0);
+}
+
+.lPasswordStrengthColor2,
+.lPasswordStrengthColor3 {
+  background-color: rgb(255, 193, 7);
+}
+
+.lPasswordStrengthColor4 {
+  background-color: rgb(15, 214, 38);
+}
+
+.lPasswordStrengthMessage {
+  padding-left: 16px;
+}
+
+.inputErr {
+  border-color: rgb(244, 67, 54) !important;
+  outline: solid 2px rgb(244, 67, 54) !important;
+}
+
+.labelErr {
+  color: rgb(244, 67, 54) !important;
+}
+
+.lInputErr {
+  color: rgb(244, 67, 54);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.66;
+  text-align: left;
+  margin: 4px 12px 0px;
 }
 
 .lButton {
   border: none;
-  padding: 15px 20px;
-  background-color: #2D4059;
+  padding: 12px 20px;
+  background-color: #46648a;
   color: white;
   font-weight: bold;
   cursor: pointer;
   border-radius: 5px;
-  margin: 10px 0 30px;
+  margin-top: 2rem;
+  width: 100%;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
 }
 
-.lButton:disabled{
-  background-color: #44597488;
-  cursor: not-allowed;
-}
-
-.register{
-  border: none;
-  background-color: #EA5455;
-  padding: 15px 110px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
+.lButton:hover {
+  background-color: #2d4059;
 }
