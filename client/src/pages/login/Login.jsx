@@ -41,6 +41,8 @@ const Login = () => {
   return (
     <div className="login">
       <div className="lContainer">
+        <h2>Hi, Welcome Back</h2>
+        <p>Sign in with Email address</p>
         <input
           type="text"
           placeholder="yoshino"
@@ -58,6 +60,7 @@ const Login = () => {
         <button disabled={loading} onClick={handleClick} className="lButton">
           Login
         </button>
+        <p>Don't have an account?</p>
         <Link to="/register" style={{ textDecoration: "none" }}>
           <button className="register">Register</button>
         </Link>
