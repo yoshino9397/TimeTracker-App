@@ -41,7 +41,7 @@ const Login = () => {
   return (
     <div className="login">
       <div className="lContainer">
-        <h2>Hi, Welcome Back</h2>
+        <h2 className="lTitle">Hi, Welcome Back</h2>
         <p>Sign in with Email address</p>
         <input
           type="text"
