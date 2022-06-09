@@ -48,18 +48,6 @@ const Sidebar = () => {
               <span>Dashboard</span>
             </li>
           </Link>
-          <Link to="/users" style={{ textDecoration: "none" }}>
-            <li>
-              <PersonOutlineIcon className="icon" />
-              <span>Users</span>
-            </li>
-          </Link>
-          <Link to="/hotels" style={{ textDecoration: "none" }}>
-            <li>
-              <AssignmentIcon className="icon" />
-              <span>Tasks</span>
-            </li>
-          </Link>
           <p className="title">MANAGE</p>
           <li>
             <InsertChartIcon className="icon" />

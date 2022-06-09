@@ -166,7 +166,7 @@ const Register = () => {
                   ref={email}
                   className={`rInput ${emailErr ? 'inputErr' : ''}`}
                   onBlur={handleBlur}
-                  autocomplete='off'
+                  autoComplete='off'
                 />
               </div>
             </div>
