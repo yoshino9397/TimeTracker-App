@@ -134,30 +134,10 @@ const Login = () => {
           Login
         </button>
         {error && <span>{error.message}</span>}
-        {/* <h2 className="lTitle">Hi, Welcome Back</h2>
-        <p>Sign in with Email address</p>
-        <input
-          type="text"
-          placeholder="yoshino"
-          id="username"
-          onChange={handleChange}
-          className="lInput"
-        />
-        <input
-          type="password"
-          placeholder="12345"
-          id="password"
-          onChange={handleChange}
-          className="lInput"
-        />
-        <button disabled={loading} onClick={handleClick} className="lButton">
-          Login
-        </button>
-        <p>Don't have an account?</p>
-        <Link to="/register" style={{ textDecoration: "none" }}>
-          <button className="register">Register</button>
-        </Link>
-        {error && <span>{error.message}</span>} */}
+        <hr className="lHr" />
+        <a className="lChangeMode" href="/register">
+          Don't have an account?
+        </a>
       </div>
     </div>
   );
