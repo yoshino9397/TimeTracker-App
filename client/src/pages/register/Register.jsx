@@ -1,6 +1,5 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 import zxcvbn from 'zxcvbn';
 import * as yup from 'yup';
@@ -18,22 +17,26 @@ const passMessage = [
 ];
 
 const Register = () => {
-  const { error } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [emailLabelCss, setEmailLabelCss] = useState('');
   const [passLabelCss, setPassLabelCss] = useState('');
-  const [passStrengthColor, setPassStrengthColor] = useState(0);
+  const [passStrengthNum, setPassStrengthNum] = useState(0);
   const [emailErr, setEmailErr] = useState('');
   const [passErr, setPassErr] = useState('');
+  const [axiosErr, setAxiosErr] = useState('');
   const emailSchema = yup.object({
     email: yup
       .string()
       .email('Must be a valid email')
-      .max(255)
+      .max(50)
       .required('Email is required'),
   });
   const passSchema = yup.object({
-    password: yup.string().max(255).required('Password is required'),
+    password: yup
+      .string()
+      .max(50)
+      .required('Password is required')
+      .test('strong', 'Password is not strong', () => passStrengthNum === 4),
   });
 
   const email = useRef();
@@ -82,7 +85,7 @@ const Register = () => {
   const handleChange = (e) => {
     if (e?.target.value) {
       const result = zxcvbn(e?.target.value, [email.current.value]);
-      setPassStrengthColor(result.score);
+      setPassStrengthNum(result.score);
     }
   };
 
@@ -138,6 +141,8 @@ const Register = () => {
         navigate('/login');
       } catch (error) {
         console.log(error);
+        // setAxiosErr(error.response.data.message);
+        setAxiosErr('User has already existed');
       }
     }
   };
@@ -178,7 +183,6 @@ const Register = () => {
                 ref={email}
                 className={`rInput ${emailErr ? 'inputErr' : ''}`}
                 onBlur={handleBlur}
-                onChange={handleChange}
               />
               <label
                 htmlFor='email'
@@ -216,16 +220,30 @@ const Register = () => {
           </div>
           <div className='rPasswordStrengthContainer'>
             <div
-              className={`rPasswordStrength rPasswordStrengthColor${passStrengthColor}`}
+              className={`rPasswordStrength rPasswordStrengthColor${passStrengthNum}`}
+            ></div>
+            <div
+              className={`rPasswordStrength ${
+                passStrengthNum > 1
+                  ? `rPasswordStrengthColor${passStrengthNum}`
+                  : `rPasswordStrengthColor`
+              }`}
+            ></div>
+            <div
+              className={`rPasswordStrength ${
+                passStrengthNum > 3
+                  ? `rPasswordStrengthColor${passStrengthNum}`
+                  : `rPasswordStrengthColor`
+              }`}
             ></div>
             <h6 className='rPasswordStrengthMessage'>
-              {passMessage[passStrengthColor]}
+              {passMessage[passStrengthNum]}
             </h6>
           </div>
           <button id='rButton' className='rButton' type='submit'>
             Register
           </button>
-          {error && <span>{error.message}</span>}
+          {axiosErr && <div className='rSubmitErr'>{axiosErr}</div>}
         </form>
 
         <hr className='rHr' />

@@ -237,9 +237,14 @@ input::-webkit-textfield-decoration-container {
 }
 
 .rPasswordStrength {
-  width: 85px;
+  width: 50px;
   height: 8px;
   border-radius: 7px;
+  margin-right: 5px;
+}
+
+.rPasswordStrengthColor {
+  background-color: rgb(168, 168, 168);
 }
 
 .rPasswordStrengthColor0,
@@ -253,11 +258,11 @@ input::-webkit-textfield-decoration-container {
 }
 
 .rPasswordStrengthColor4 {
-  background-color: rgb(15, 214, 38);
+  background-color: rgb(19, 206, 41);
 }
 
 .rPasswordStrengthMessage {
-  padding-left: 16px;
+  padding-left: 11px;
 }
 
 .inputErr {
@@ -294,6 +299,15 @@ input::-webkit-textfield-decoration-container {
 
 .rButton:hover {
   background-color: #2d4059;
+}
+
+.rSubmitErr {
+  color: rgb(244, 67, 54);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.66;
+  text-align: center;
+  margin-top: 0.8rem;
 }
 
 .rHr {
