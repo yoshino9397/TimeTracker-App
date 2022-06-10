@@ -235,7 +235,6 @@
   outline: solid 2px rgb(33, 150, 243);
 }
 
-
 .lPasswordStrengthContainer {
   display: flex;
   align-items: center;
@@ -266,15 +265,6 @@
   padding-left: 16px;
 }
 
-.inputErr {
-  border-color: rgb(244, 67, 54) !important;
-  outline: solid 2px rgb(244, 67, 54) !important;
-}
-
-.labelErr {
-  color: rgb(244, 67, 54) !important;
-}
-
 .lInputErr {
   color: rgb(244, 67, 54);
   font-size: 0.75rem;
@@ -299,4 +289,23 @@
 
 .lButton:hover {
   background-color: #2d4059;
+}
+
+.lHr {
+  margin-top: 1rem;
+  width: 100%;
+  border: 1px solid rgb(238, 238, 238);
+}
+.lChangeMode {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(33, 33, 33);
+  line-height: 1.75;
+  text-decoration: none;
+  transition: color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+}
+
+.lChangeMode:hover {
+  color: rgba(33, 33, 33, 0.599);
 }
