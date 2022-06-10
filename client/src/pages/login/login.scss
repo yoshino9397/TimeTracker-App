@@ -235,7 +235,6 @@
   outline: solid 2px rgb(33, 150, 243);
 }
 
-
 .lPasswordStrengthContainer {
   display: flex;
   align-items: center;
@@ -264,15 +263,6 @@
 
 .lPasswordStrengthMessage {
   padding-left: 16px;
-}
-
-.inputErr {
-  border-color: rgb(244, 67, 54) !important;
-  outline: solid 2px rgb(244, 67, 54) !important;
-}
-
-.labelErr {
-  color: rgb(244, 67, 54) !important;
 }
 
 .lInputErr {

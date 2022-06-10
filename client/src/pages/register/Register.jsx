@@ -1,15 +1,12 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useContext, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
+import axios from 'axios';
+import zxcvbn from 'zxcvbn';
+import * as yup from 'yup';
 import './register.scss';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
-
-import zxcvbn from 'zxcvbn';
-import * as yup from 'yup';
 
 const passMessage = [
   'Weak',
@@ -20,28 +17,56 @@ const passMessage = [
 ];
 
 const Register = () => {
-  const { error } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [emailLabelCss, setEmailLabelCss] = useState('');
   const [passLabelCss, setPassLabelCss] = useState('');
-  const [passStrengthColor, setPassStrengthColor] = useState(0);
+  const [passStrengthNum, setPassStrengthNum] = useState(0);
   const [emailErr, setEmailErr] = useState('');
   const [passErr, setPassErr] = useState('');
+  const [axiosErr, setAxiosErr] = useState('');
   const emailSchema = yup.object({
     email: yup
       .string()
       .email('Must be a valid email')
-      .max(255)
+      .max(50)
       .required('Email is required'),
   });
   const passSchema = yup.object({
-    password: yup.string().max(255).required('Password is required'),
+    password: yup
+      .string()
+      .max(50)
+      .required('Password is required')
+      .test('strong', 'Password is not strong', () => passStrengthNum === 4),
   });
 
   const email = useRef();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      try {
+        const detect = document.querySelectorAll(
+          ':-internal-autofill-selected'
+        );
+        if (detect.length === 2) {
+          setEmailLabelCss('rInputLabelActive');
+          setPassLabelCss('rInputLabelActive');
+        } else if (detect[0].type === 'email') {
+          setEmailLabelCss('rInputLabelActive');
+        } else {
+          setPassLabelCss('rInputLabelActive');
+        }
+      } catch (error) {
+        console.log('error:', error);
+      }
+
+      clearInterval(interval);
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleBlur = (e) => {
+    setAxiosErr('');
     if (e.target.type === 'email') {
       if (e.target.value) setEmailLabelCss('rInputLabelActive');
       else setEmailLabelCss('');
@@ -61,7 +86,7 @@ const Register = () => {
   const handleChange = (e) => {
     if (e?.target.value) {
       const result = zxcvbn(e?.target.value, [email.current.value]);
-      setPassStrengthColor(result.score);
+      setPassStrengthNum(result.score);
     }
   };
 
@@ -106,6 +131,7 @@ const Register = () => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
+    setAxiosErr('');
     const result = await validateCheck(email, password);
     if (!result.some((el) => el === false)) {
       const user = {
@@ -117,6 +143,8 @@ const Register = () => {
         navigate('/login');
       } catch (error) {
         console.log(error);
+        // setAxiosErr(error.response.data.message);
+        setAxiosErr('User has already existed');
       }
     }
   };
@@ -148,9 +176,16 @@ const Register = () => {
           </div>
         </div>
 
-        <form noValidate onSubmit={handleSubmit}>
+        <form noValidate id='rForm' onSubmit={handleSubmit}>
           <div className={`rInputSetContainer`}>
             <div className={`rInputLabelContainer`}>
+              <input
+                type='email'
+                id='email'
+                ref={email}
+                className={`rInput ${emailErr ? 'inputErr' : ''}`}
+                onBlur={handleBlur}
+              />
               <label
                 htmlFor='email'
                 className={`rInputLabel ${emailLabelCss} ${
@@ -159,21 +194,18 @@ const Register = () => {
               >
                 Email Address
               </label>
-              <div className={`rInputContainer`}>
-                <input
-                  type='email'
-                  id='email'
-                  ref={email}
-                  className={`rInput ${emailErr ? 'inputErr' : ''}`}
-                  onBlur={handleBlur}
-                  autoComplete='off'
-                />
-              </div>
             </div>
             {emailErr && <div className='rInputErr'>{emailErr}</div>}
           </div>
           <div className={`rInputSetContainer`}>
             <div className={`rInputLabelContainer`}>
+              <input
+                type={passwordVisible ? 'text' : 'password'}
+                id='password'
+                className={`rInput ${passErr ? 'inputErr' : ''}`}
+                onBlur={handleBlur}
+                onChange={handleChange}
+              />
               <label
                 htmlFor='password'
                 className={`rInputLabel ${passLabelCss} ${
@@ -182,60 +214,45 @@ const Register = () => {
               >
                 Password
               </label>
-              <div className='rInputContainer'>
-                <input
-                  type={passwordVisible ? 'text' : 'password'}
-                  id='password'
-                  className={`rInput ${passErr ? 'inputErr' : ''}`}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  autocomplete='off'
-                />
-              </div>
             </div>
-            {passErr && <div className='rInputErr'>{passErr}</div>}
             <button className='rInputBtn' onClick={handleVisible}>
               {passwordVisible ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
+            {passErr && <div className='rInputErr'>{passErr}</div>}
           </div>
           <div className='rPasswordStrengthContainer'>
             <div
-              className={`rPasswordStrength rPasswordStrengthColor${passStrengthColor}`}
+              className={`rPasswordStrength rPasswordStrengthColor${passStrengthNum}`}
+            ></div>
+            <div
+              className={`rPasswordStrength ${
+                passStrengthNum > 1
+                  ? `rPasswordStrengthColor${passStrengthNum}`
+                  : `rPasswordStrengthColor`
+              }`}
+            ></div>
+            <div
+              className={`rPasswordStrength ${
+                passStrengthNum > 3
+                  ? `rPasswordStrengthColor${passStrengthNum}`
+                  : `rPasswordStrengthColor`
+              }`}
             ></div>
             <h6 className='rPasswordStrengthMessage'>
-              {passMessage[passStrengthColor]}
+              {passMessage[passStrengthNum]}
             </h6>
           </div>
-          {/* <div className={`rInputSetContainer`}>
-            <div className={`rInputLabelContainer`}>
-              <label
-                htmlFor='passwordAgain'
-                className={`rInputLabel`}
-              >
-                Password Again
-              </label>
-              <div className='rInputContainer'>
-                <input
-                  type='passwordAgain'
-                  ref={passwordAgain}
-                  className='rInput'
-                  required
-                />
-              </div>
-            </div>
-            <button className='rInputBtn' onClick={handleVisible}>
-              {passwordVisible === true ? (
-                <AiFillEye />
-              ) : (
-                <AiFillEyeInvisible />
-              )}
-            </button>
-          </div> */}
-          <button className='rButton' type='submit'>
+          <button id='rButton' className='rButton' type='submit'>
             Register
           </button>
-          {error && <span>{error.message}</span>}
+          {axiosErr && <div className='rSubmitErr'>{axiosErr}</div>}
         </form>
+
+        <hr className='rHr' />
+
+        <a className='rChangeMode' href='/login'>
+          Already have an account?
+        </a>
       </div>
     </div>
   );
