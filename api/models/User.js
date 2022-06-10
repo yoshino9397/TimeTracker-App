@@ -1,37 +1,36 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const validator = require("validator");
 const UserSchema = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     email: {
       type: String,
       required: true,
       unique: true,
-    },
-    country: {
-      type: String
-    },
-    img: {
-      type: String,
-    },
-    city: {
-      type: String
-    },
-    phone: {
-      type: String
+      max: 50,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is invalid");
+        }
+      },
     },
     password: {
-      type: String
+      type: String,
+      required: true,
+      minlength: 7,
+      trim: true,
+      validate(value) {
+        if (value.toLowerCase().includes("password")) {
+          throw new Error('Password cannot contain "password"');
+        }
+      },
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    duration: {
+      type: Number,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
