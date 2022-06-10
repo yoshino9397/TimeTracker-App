@@ -66,6 +66,7 @@ const Register = () => {
   }, []);
 
   const handleBlur = (e) => {
+    setAxiosErr('');
     if (e.target.type === 'email') {
       if (e.target.value) setEmailLabelCss('rInputLabelActive');
       else setEmailLabelCss('');
