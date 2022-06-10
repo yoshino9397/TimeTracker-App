@@ -130,6 +130,7 @@ const Register = () => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
+    setAxiosErr('');
     const result = await validateCheck(email, password);
     if (!result.some((el) => el === false)) {
       const user = {
