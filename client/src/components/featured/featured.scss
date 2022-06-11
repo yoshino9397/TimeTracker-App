@@ -11,8 +11,12 @@
     color: gray;
 
     .title {
-      font-size: 16px;
-      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0 10px;
+      font-size: 22px;
+      font-weight: 400;
+      color: #194350cc;
     }
   }
 
@@ -25,8 +29,9 @@
     gap: 30px;
 
     .featuredChart {
-      width: 100px;
-      height: 100px;
+      width: 180px;
+      height: 180px;
+      font-size: 13px;
     }
 
     .summary {
