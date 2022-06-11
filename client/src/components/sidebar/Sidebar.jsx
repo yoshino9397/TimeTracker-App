@@ -1,8 +1,6 @@
 import "./sidebar.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -39,7 +37,9 @@ const Sidebar = () => {
           <p className="title">TRACK</p>
           <li>
             <AccessAlarmIcon className="icon" />
-            <span>Timer</span>
+            <Link to="/timer" style={{ textDecoration: "none" }}>
+              <span>Timer</span>
+            </Link>
           </li>
           <p className="title">ANALYZE</p>
           <Link to="/" style={{ textDecoration: "none" }}>
