@@ -104,7 +104,17 @@
           transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
           cursor: pointer;
 
-          svg {
+          &:disabled {
+            cursor: auto;
+
+            svg {
+              width: 1.5rem;
+              height: 1.5rem;
+              fill: rgb(187, 187, 187);
+            }
+          }
+
+          &:not(:disabled) svg {
             width: 1.5rem;
             height: 1.5rem;
             fill: rgb(103, 103, 103);

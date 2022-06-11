@@ -1,16 +1,34 @@
+import { useEffect, useState, useRef, useContext } from 'react';
+import axios from 'axios';
+
 import Sidebar from '../../components/sidebar/Sidebar';
+import { AuthContext } from '../../context/AuthContext';
+
 import './timer.scss';
 import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from 'react-icons/bs';
 import { AiTwotoneSetting } from 'react-icons/ai';
-import { FaPauseCircle } from 'react-icons/fa';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { FaStopCircle } from 'react-icons/fa';
+import TimerShowSummary from './showSummary/TimerShowSummary';
+import TimerShowDetails from './showDetail/TimerShowDetails';
 
 let timerId;
 const Timer = () => {
+  const { user } = useContext(AuthContext);
+  const timeMinutes = Math.floor(user.duration / 60);
+  const timeSeconds = Math.floor(user.duration % 60);
+
   const [startTimer, setStartTimer] = useState(true);
-  const [settingTimerMin, setSettingTimerMin] = useState(0);
-  const [settingTimerSec, setSettingTimerSec] = useState(3);
+  // this value is pomodoro from settings
+  const [settingTimerMin, setSettingTimerMin] = useState(timeMinutes);
+  const [settingTimerSec, setSettingTimerSec] = useState(timeSeconds);
+  const [beginTime, setBeginTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const taskName = useRef();
+
+  const timerInit = () => {
+    setSettingTimerMin(timeMinutes);
+    setSettingTimerSec(timeSeconds); // initial time
+  };
 
   const countDown = () => {
     timerId = setTimeout(() => {
@@ -23,16 +41,45 @@ const Timer = () => {
     }, 1000);
   };
 
+  const taskSubmit = async () => {
+    console.log('task:', taskName.current.value);
+    console.log('user:', user);
+    console.log('user duration:', user.duration);
+    // const res = await axios.post('/tasks', {
+    //   userId: user._id,
+    //   title: taskName.current.value,
+    //   startTime: beginTime,
+    //   finishTime: endTime,
+    // });
+    // if (res.status === 200) {
+    //   // show task
+    // }
+    // console.log('res:', res);
+  };
+
   useEffect(() => {
     if (!startTimer) {
       if (settingTimerSec === 0 && settingTimerMin === 0) {
-        setStartTimer((prev) => !prev);
-        setSettingTimerSec(3);
+        setStartTimer(true); // stop
+        clearTimeout(timerId); // clear timer
+        timerInit();
+        taskSubmit();
       } else countDown();
-    } else clearTimeout(timerId);
+    }
   }, [startTimer, settingTimerSec]);
 
   const handleTimer = () => {
+    if (startTimer) {
+      console.log('begin date:', new Date());
+      setBeginTime(new Date());
+    } else {
+      console.log('end date:', new Date());
+      setEndTime(new Date());
+      clearTimeout(timerId); // clear timer
+      timerInit();
+      // api call
+      taskSubmit();
+    }
     setStartTimer((prev) => !prev);
   };
 
@@ -46,6 +93,7 @@ const Timer = () => {
               type='text'
               className='timerSetTaskInput'
               placeholder='Please enter task name'
+              ref={taskName}
             />
           </div>
           <button className='timerSetTag'>
@@ -60,9 +108,9 @@ const Timer = () => {
               </span>
             </div>
             <button className='timerStartBtn' onClick={handleTimer}>
-              {startTimer ? <BsPlayCircle /> : <FaPauseCircle />}
+              {startTimer ? <BsPlayCircle /> : <FaStopCircle />}
             </button>
-            <button className='timerAddBtn'>
+            <button className='timerAddBtn' disabled={!startTimer}>
               <BsPlusSquareDotted />
             </button>
           </div>
@@ -70,6 +118,8 @@ const Timer = () => {
             <AiTwotoneSetting />
           </button>
         </div>
+        <TimerShowSummary />
+        <TimerShowDetails />
       </div>
     </div>
   );
