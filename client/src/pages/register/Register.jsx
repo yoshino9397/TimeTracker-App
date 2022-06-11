@@ -51,9 +51,9 @@ const Register = () => {
         if (detect.length === 2) {
           setEmailLabelCss('rInputLabelActive');
           setPassLabelCss('rInputLabelActive');
-        } else if (detect[0].type === 'email') {
+        } else if (detect[0]?.type === 'email') {
           setEmailLabelCss('rInputLabelActive');
-        } else {
+        } else if (detect[1]?.type === 'password') {
           setPassLabelCss('rInputLabelActive');
         }
       } catch (error) {
@@ -75,6 +75,9 @@ const Register = () => {
       if (e.target.value) setPassLabelCss('rInputLabelActive');
       else setPassLabelCss('');
       validateCheck(null, e.target.value);
+
+      const result = zxcvbn(e.target.value, [email.current.value]);
+      setPassStrengthNum(result.score);
     }
   };
 
@@ -176,7 +179,13 @@ const Register = () => {
           </div>
         </div>
 
-        <form noValidate id='rForm' onSubmit={handleSubmit}>
+        <form
+          noValidate
+          autoComplete='off'
+          className='rForm'
+          id='rForm'
+          onSubmit={handleSubmit}
+        >
           <div className={`rInputSetContainer`}>
             <div className={`rInputLabelContainer`}>
               <input
@@ -203,6 +212,7 @@ const Register = () => {
                 type={passwordVisible ? 'text' : 'password'}
                 id='password'
                 className={`rInput ${passErr ? 'inputErr' : ''}`}
+                autoComplete='new-password'
                 onBlur={handleBlur}
                 onChange={handleChange}
               />
@@ -245,7 +255,7 @@ const Register = () => {
           <button id='rButton' className='rButton' type='submit'>
             Register
           </button>
-          {axiosErr && <div className='rSubmitErr'>{axiosErr}</div>}
+          {axiosErr && <span className='rSubmitErr'>{axiosErr}</span>}
         </form>
 
         <hr className='rHr' />

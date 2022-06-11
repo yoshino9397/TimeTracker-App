@@ -2,7 +2,7 @@
   flex: 1;
   border-right: 0.5px solid rgb(230, 227, 227);
   min-height: 100vh;
-  background-color: white;
+  background-color: #194350;
 
   .top {
     height: 50px;
@@ -13,13 +13,14 @@
     .logo {
       font-size: 20px;
       font-weight: bold;
-      color: #476388;
+      // color: #476388;
+      color: #fc938e;
     }
   }
 
   hr {
     height: 0;
-    border: 0.5px solid rgb(230, 227, 227);
+    border: 0.5px solid #FFC2B4;
   }
 
   .center {
@@ -33,7 +34,8 @@
       .title {
         font-size: 10px;
         font-weight: bold;
-        color: #999;
+        // color: #999;
+        color: #fc9893c9;
         margin-top: 15px;
         margin-bottom: 5px;
       }
@@ -45,18 +47,21 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #ece8ff;
+          // background-color: #ece8ff;     
+          background-color:#9dbeb976;
         }
 
         .icon {
           font-size: 18px;
-          color: #476388;
+          // color: #476388;
+          color:#fcc8bc
         }
 
         span{
             font-size: 13px;
             font-weight: 600;
-            color: #888;
+            // color: #888;
+            color: rgb(223, 220, 220);
             margin-left: 10px;
         }
       }
