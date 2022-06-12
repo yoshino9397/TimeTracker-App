@@ -3,24 +3,31 @@ import {
   AreaChart,
   Area,
   XAxis,
+  YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 
 const data = [
-  { name: "January", Total: 1200 },
-  { name: "February", Total: 2100 },
-  { name: "March", Total: 800 },
-  { name: "April", Total: 1600 },
-  { name: "May", Total: 900 },
-  { name: "June", Total: 1700 },
+  { name: "", Total: 0 },
+  { name: "Mon", Total: 4.2 },
+  { name: "Tues", Total: 2.4 },
+  { name: "Wed", Total: 4.8 },
+  { name: "Thu", Total: 6.6 },
+  { name: "Fri", Total: 7.0 },
+  { name: "Sat", Total: 2.3 },
+  { name: "Sun", Total: 4.5 },
 ];
 
 const Chart = ({ aspect, title }) => {
   return (
     <div className="chart">
-      <div className="title">{title}</div>
+      <div className="title">
+        <DateRangeIcon />
+        This week
+      </div>
       <ResponsiveContainer width="100%" aspect={aspect}>
         <AreaChart
           width={730}
@@ -30,17 +37,18 @@ const Chart = ({ aspect, title }) => {
         >
           <defs>
             <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+              <stop offset="5%" stopColor="#9DBEB9" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#9DBEB9" stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="name" stroke="gray" />
+          <YAxis unit="h" stroke="gray" />
           <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
           <Tooltip />
           <Area
             type="monotone"
             dataKey="Total"
-            stroke="#8884d8"
+            stroke="#194350"
             fillOpacity={1}
             fill="url(#total)"
           />

@@ -13,8 +13,7 @@
     .logo {
       font-size: 20px;
       font-weight: bold;
-      // color: #476388;
-      color: #fc938e;
+      color: rgb(235, 222, 222);
     }
   }
 
@@ -46,21 +45,18 @@
         padding: 5px;
         cursor: pointer;
 
-        &:hover {
-          // background-color: #ece8ff;     
-          background-color:#9dbeb976;
+        &:hover {   
+          background-color:#9dbeb936;
         }
 
         .icon {
           font-size: 18px;
-          // color: #476388;
           color:#fcc8bc
         }
 
         span{
             font-size: 13px;
             font-weight: 600;
-            // color: #888;
             color: rgb(223, 220, 220);
             margin-left: 10px;
         }
@@ -71,24 +67,15 @@
   .bottom{
       display: flex;
       align-items: center;
-      margin: 10px;
+      margin: 20px 10px;
 
       .colorOption{
-          width: 20px;
-          height: 20px;
-          border-radius: 5px;
-          border: 1px solid #476388;
+          font-size: 25px;
           cursor: pointer;
           margin: 5px;
-
-          &:nth-child(1){
-              background-color: whitesmoke;
-          }
-          &:nth-child(2){
-              background-color: #333;
-          }
-          &:nth-child(3){
-              background-color: rgb(63, 63, 206);
+          color:#d1d1d1;
+          &:hover {   
+            color:#fcc8bc;
           }
       }
   }

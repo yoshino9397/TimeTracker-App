@@ -4,17 +4,12 @@
   .homeContainer {
     flex: 6;
 
-    .widgets,
     .charts {
       display: flex;
       padding: 20px;
       gap: 20px;
-    }
-
-    .charts {
       padding: 5px 20px;
     }
-
     .listContainer {
       -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
       box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
@@ -22,9 +17,13 @@
       margin: 20px;
 
       .listTitle {
-        font-weight: 500;
-        color: gray;
+        font-size: 22px;
+        font-weight: 400;
+        color: #194350b9;
         margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 0 10px;
       }
     }
   }

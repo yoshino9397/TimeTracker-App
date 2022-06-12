@@ -6,92 +6,113 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useState } from "react";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const Tables = () => {
   const rows = [
     {
-      id: 1143155,
-      hotel: "The Paradise Hotel",
-      img: "https://live.staticflickr.com/4503/24223619048_99de8cc19c_3k.jpg",
-      applicant: "Azuma",
-      date: "13rd March",
-      country: "Japan",
-      property: "hotel",
-      status: "Approved",
+      title: "Play Game",
+      duration: "2.3h",
+      amount: "$30",
+      percentage: "10%",
     },
     {
-      id: 2235235,
-      hotel: "Seaside View Villa",
-      img: "https://live.staticflickr.com/4680/38206662275_66357ba3b5_6k.jpg",
-      applicant: "Mitsugi",
-      date: "25 June",
-      country: "Thailand",
-      property: "villa",
-      status: "Pending",
+      title: "Drink coffee",
+      duration: "2.3h",
+      amount: "$30",
+      percentage: "10%",
     },
     {
-      id: 2342353,
-      hotel: "Fishing House",
-      img: "https://live.staticflickr.com/8715/17721323862_337594552f_k.jpg",
-      applicant: "Matsuda",
-      date: "12 May",
-      country: "Taiwan",
-      property: "cabin",
-      status: "Pending",
+      title: "Walk",
+      duration: "2.3h",
+      amount: "$30",
+      percentage: "10%",
     },
     {
-      id: 2357741,
-      hotel: "Resort Hourai",
-      img: "https://live.staticflickr.com/2260/1846889405_912dd3fbea_k.jpg",
-      applicant: "Takara",
-      date: "28 January",
-      country: "Mexico",
-      property: "resort",
-      status: "Approved",
+      title: "Sleep",
+      duration: "2.3h",
+      amount: "$30",
+      percentage: "10%",
     },
     {
-      id: 2342355,
-      hotel: "Cottage South Breeze",
-      img: "https://live.staticflickr.com/65535/51031241107_7affec482b_6k.jpg",
-      applicant: "Nanjo",
-      date: "18 October",
-      country: "New Zealand",
-      property: "cottage",
-      status: "Pending",
+      title: "Read books",
+      duration: "2.3h",
+      amount: "$30",
+      percentage: "10%",
     },
   ];
+
+  const Row = ({ row }) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <>
+        <TableRow key={row.id} className="row">
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell>{row.title}</TableCell>
+          <TableCell>{row.duration}</TableCell>
+          <TableCell>{row.amount}</TableCell>
+          <TableCell>{row.percentage}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell
+            style={{
+              paddingBottom: 0,
+              paddingTop: 0,
+            }}
+            colSpan={6}
+          >
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Table>
+                <TableRow>
+                  <TableCell>
+                    <TaskAltIcon
+                      fontSize="small"
+                      sx={{ color: "gray", marginLeft: "20px" }}
+                    />
+                  </TableCell>
+                  <TableCell>{row.title}</TableCell>
+                  <TableCell>{row.duration}</TableCell>
+                  <TableCell>{row.amount}</TableCell>
+                  <TableCell>{row.percentage}</TableCell>
+                </TableRow>
+              </Table>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </>
+    );
+  };
+
   return (
-    <TableContainer component={Paper} className="table">
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell className="tableCell">Application ID</TableCell>
-            <TableCell className="tableCell">Hotels</TableCell>
-            <TableCell className="tableCell">Applicant</TableCell>
-            <TableCell className="tableCell">Date</TableCell>
-            <TableCell className="tableCell">Country</TableCell>
-            <TableCell className="tableCell">Property type</TableCell>
-            <TableCell className="tableCell">Status</TableCell>
+            <TableCell>
+              <KeyboardArrowDownIcon />
+            </TableCell>
+            <TableCell>TITLE</TableCell>
+            <TableCell>DURATION</TableCell>
+            <TableCell>AMOUNT</TableCell>
+            <TableCell>PERCENTAGE</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell className="tableCell">{row.id}</TableCell>
-              <TableCell className="tableCell">
-                <div className="cellWrapper">
-                  <img src={row.img} alt="" className="image" />
-                  {row.hotel}
-                </div>
-              </TableCell>
-              <TableCell className="tableCell">{row.applicant}</TableCell>
-              <TableCell className="tableCell">{row.date}</TableCell>
-              <TableCell className="tableCell">{row.country}</TableCell>
-              <TableCell className="tableCell">{row.property}</TableCell>
-              <TableCell className="tableCell">
-                <span className={`status ${row.status}`}>{row.status}</span>
-              </TableCell>
-            </TableRow>
+            <Row key={row.id} row={row} />
           ))}
         </TableBody>
       </Table>
