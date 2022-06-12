@@ -35,14 +35,14 @@ const TimerShowSummary = ({
             setTodaySumTime((prev) => prev + newTask.taskDuration);
           }
           console.log("tasks:", tasks);
-          tasks[absDate.findIndex((el) => el === checkAfterDate)].push({
+          tasks[absDate.findIndex((el) => el === checkAfterDate)].unshift({
             date: checkAfterDate,
             val: newTask,
           });
           addWeeklyTask(tasks);
           setWeekSumTime((prev) => prev + newTask.taskDuration);
         } else if (checkAfterDate > 0 && checkAfterDate < 8 - todayDay) {
-          tasks[absDate.findIndex((el) => el === checkAfterDate)].push({
+          tasks[absDate.findIndex((el) => el === checkAfterDate)].unshift({
             date: checkAfterDate,
             val: newTask,
           });

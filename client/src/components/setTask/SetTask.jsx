@@ -55,13 +55,7 @@ const SetTask = ({ setTask }) => {
         });
         if (res.status === 200) {
           // show task
-          setTask({
-            userId: user._id,
-            title: taskName.current.value || "no name",
-            startTime: beginTime,
-            finishTime: endTime,
-            taskDuration: duration,
-          });
+          setTask(res.data);
         }
         console.log("res:", res);
       }
