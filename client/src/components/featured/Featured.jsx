@@ -45,7 +45,7 @@ const Featured = () => {
     <div className="featured">
       <div className="top">
         <h1 className="title">
-          <AvTimerIcon />
+          <AvTimerIcon sx={{ fontSize: "28px" }} />
           Total Time
         </h1>
         <MoreVertIcon fontSize="small" />

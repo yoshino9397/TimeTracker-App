@@ -17,9 +17,13 @@
       margin: 20px;
 
       .listTitle {
-        font-weight: 500;
-        color: gray;
+        font-size: 22px;
+        font-weight: 400;
+        color: #194350b9;
         margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 0 10px;
       }
     }
   }
