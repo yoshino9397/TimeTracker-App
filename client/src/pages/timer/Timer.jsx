@@ -38,7 +38,9 @@ const Timer = () => {
         <div className='timerShowDetailsContainer'>
           {tasks.map(
             (data, idx) =>
-              data.length !== 0 && <TimerShowDetail key={idx} data={data} />
+              data.length !== 0 && (
+                <TimerShowDetail key={idx} data={[...data]} />
+              )
           )}
         </div>
       </div>

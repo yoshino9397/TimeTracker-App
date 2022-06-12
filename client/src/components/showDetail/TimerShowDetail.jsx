@@ -1,3 +1,4 @@
+import { compareAsc } from "date-fns";
 import { BsTagFill } from "react-icons/bs";
 
 import "./timerShowDetail.scss";
@@ -5,6 +6,9 @@ import "./timerShowDetail.scss";
 const TimerShowDetail = ({ data }) => {
   let totalTime = 0;
   data.map((el) => (totalTime += el.val.taskDuration));
+  data.sort((a, b) => {
+    return b.val.startTime.localeCompare(a.val.startTime);
+  });
 
   return (
     <div className='detailsDateContainer'>

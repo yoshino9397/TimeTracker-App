@@ -25,7 +25,6 @@ const TimerShowSummary = ({
 
   useEffect(() => {
     if (newTask.length !== 0) {
-      console.log("newTask:", newTask);
       const taskDate = format(new Date(newTask.startTime), "yyyy-MM-dd");
       if (taskDate.indexOf(todayMonth) === 0) {
         const checkBeforeDate = today.slice(8) - taskDate.slice(8);
@@ -34,7 +33,6 @@ const TimerShowSummary = ({
           if (checkBeforeDate === 0) {
             setTodaySumTime((prev) => prev + newTask.taskDuration);
           }
-          console.log("tasks:", tasks);
           tasks[absDate.findIndex((el) => el === checkAfterDate)].unshift({
             date: checkAfterDate,
             val: newTask,
