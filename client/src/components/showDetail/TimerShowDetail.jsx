@@ -11,9 +11,9 @@ import {
 const TimerShowDetail = ({ data }) => {
   const [checkBoxStatus, setCheckBoxStatus] = useState(false);
   const [checkBoxNum, setCheckBoxNum] = useState(0);
-  const [checkBoxData, setCheckBoxData] = useState(data);
+  const [checkBoxData, setCheckBoxData] = useState([]);
   let totalTime = 0;
-  console.log("data", data);
+  console.log("checkBoxData", checkBoxData);
   data.map((el) => (totalTime += el.val.taskDuration));
   data.sort((a, b) => b.val.startTime.localeCompare(a.val.startTime));
 
@@ -30,8 +30,19 @@ const TimerShowDetail = ({ data }) => {
   };
 
   const addCheckBoxData = (addFlg, data) => {
-    console.log("data", addFlg, data);
-    // setCheckBoxNum((prev) => prev + num);
+    console.log("addFlg", addFlg, "data", data);
+    if (addFlg === 1) {
+      setCheckBoxData((prev) => {
+        const tmpData = [...prev];
+        tmpData.splice(0, 0, data);
+        return tmpData;
+      });
+    } else {
+      setCheckBoxData((prev) => {
+        const tmpData = [...prev];
+        return tmpData.filter((el) => !(el === data));
+      });
+    }
   };
 
   return (
