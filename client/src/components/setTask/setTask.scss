@@ -1,0 +1,144 @@
+.timerSetContainer {
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  height: 5.245rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+
+  .timerSetTask {
+    width: 65%;
+
+    .timerSetTaskInput {
+      outline: none;
+      font-size: 1.245rem;
+      text-overflow: ellipsis;
+      background-color: transparent;
+      border: none;
+
+      &::placeholder {
+        color: rgb(160, 160, 160);
+      }
+    }
+  }
+
+  .timerSetTag {
+    min-width: 15%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    outline: 0px;
+    border: 0px;
+    text-align: center;
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    cursor: pointer;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: rgb(103, 103, 103);
+
+      &:hover {
+        fill: rgb(166, 166, 166);
+      }
+    }
+  }
+
+  .timerStartContainer {
+    display: flex;
+    align-items: center;
+
+    .timerBox {
+      outline: 0px;
+      border: 0px;
+      padding: 0.5rem;
+      font-size: 1.245rem;
+      color: rgb(160, 160, 160);
+
+      &:focus {
+        color: black;
+      }
+    }
+
+    .timerStartBtn {
+      width: 2.4rem;
+      height: 2.4rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      outline: 0px;
+      border: 0px;
+      text-align: center;
+      transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      cursor: pointer;
+
+      svg {
+        width: 1.75rem;
+        height: 1.75rem;
+        fill: rgb(103, 103, 103);
+
+        &:hover {
+          fill: rgb(166, 166, 166);
+        }
+      }
+    }
+
+    .timerAddBtn {
+      margin: 0 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      outline: 0px;
+      border: 0px;
+      text-align: center;
+      transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      cursor: pointer;
+
+      &:disabled {
+        cursor: auto;
+
+        svg {
+          width: 1.5rem;
+          height: 1.5rem;
+          fill: rgb(187, 187, 187);
+        }
+      }
+
+      &:not(:disabled) svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        fill: rgb(103, 103, 103);
+
+        &:hover {
+          fill: rgb(166, 166, 166);
+        }
+      }
+    }
+  }
+
+  .timerSetting {
+    margin-left: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    outline: 0px;
+    border: 0px;
+    text-align: center;
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    cursor: pointer;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: rgb(103, 103, 103);
+
+      &:hover {
+        fill: rgb(166, 166, 166);
+      }
+    }
+  }
+}
