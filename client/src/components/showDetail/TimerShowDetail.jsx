@@ -11,18 +11,27 @@ import {
 const TimerShowDetail = ({ data }) => {
   const [checkBoxStatus, setCheckBoxStatus] = useState(false);
   const [checkBoxNum, setCheckBoxNum] = useState(0);
+  const [checkBoxData, setCheckBoxData] = useState(data);
   let totalTime = 0;
-  console.log("data", data.length);
+  console.log("data", data);
   data.map((el) => (totalTime += el.val.taskDuration));
   data.sort((a, b) => b.val.startTime.localeCompare(a.val.startTime));
-  console.log("checkBoxNum:", checkBoxNum);
 
   const allSelect = () => {
     setCheckBoxStatus((prev) => !prev);
   };
 
   const addCheckBoxNum = (num) => {
-    setCheckBoxNum((prev) => prev + num);
+    setCheckBoxNum((prev) => {
+      if (prev + num === data.length) setCheckBoxStatus(true);
+      else setCheckBoxStatus(false);
+      return prev + num;
+    });
+  };
+
+  const addCheckBoxData = (addFlg, data) => {
+    console.log("data", addFlg, data);
+    // setCheckBoxNum((prev) => prev + num);
   };
 
   return (
@@ -42,10 +51,10 @@ const TimerShowDetail = ({ data }) => {
           <span className='detailDateSelect'>
             {checkBoxNum} / {data.length} items selected
           </span>
-          <button className='detailDateEdit' disabled={true}>
+          <button className='detailDateEdit' disabled={checkBoxNum === 0}>
             Edit
           </button>
-          <button className='detailDateDelete' disabled={true}>
+          <button className='detailDateDelete' disabled={checkBoxNum === 0}>
             Delete
           </button>
         </div>
@@ -63,6 +72,7 @@ const TimerShowDetail = ({ data }) => {
             el={el}
             checkBoxStatus={checkBoxStatus}
             addCheckBoxNum={addCheckBoxNum}
+            addCheckBoxData={addCheckBoxData}
           />
         ))}
       </div>

@@ -6,14 +6,25 @@ import "./timerShowDetailCard.scss";
 import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
 import { useEffect } from "react";
 
-const TimerShowDetailCard = ({ el, checkBoxStatus, addCheckBoxNum }) => {
+const TimerShowDetailCard = ({
+  el,
+  checkBoxStatus,
+  addCheckBoxNum,
+  addCheckBoxData,
+}) => {
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [checkBox, setCheckBox] = useState(checkBoxStatus);
 
   useEffect(() => {
     setCheckBox(checkBoxStatus);
-    if (checkBoxStatus && !checkBox) addCheckBoxNum(1);
-    if (!checkBoxStatus && checkBox) addCheckBoxNum(-1);
+    if (checkBoxStatus && !checkBox) {
+      addCheckBoxNum(1);
+      addCheckBoxData(1, el);
+    }
+    if (!checkBoxStatus && checkBox) {
+      addCheckBoxNum(-1);
+      addCheckBoxData(-1, el);
+    }
   }, [checkBoxStatus]);
 
   const handleModal = () => {
@@ -21,8 +32,13 @@ const TimerShowDetailCard = ({ el, checkBoxStatus, addCheckBoxNum }) => {
   };
 
   const handleCheckBox = () => {
-    if (!checkBox) addCheckBoxNum(1);
-    else addCheckBoxNum(-1);
+    if (!checkBox) {
+      addCheckBoxNum(1);
+      addCheckBoxData(1, el);
+    } else {
+      addCheckBoxNum(-1);
+      addCheckBoxData(-1, el);
+    }
     setCheckBox((prev) => !prev);
   };
 

@@ -32,17 +32,25 @@
         color: rgb(153, 153, 153);
       }
 
+      .detailDateEdit {
+        color: green;
+      }
+
+      .detailDateDelete {
+        color: rgb(217, 24, 24);
+      }
+
       .detailDateEdit,
       .detailDateDelete {
         border: none;
         margin-left: 1rem;
         font-size: 0.9rem;
         background-color: transparent;
-        color: rgb(153, 153, 153);
         cursor: pointer;
 
         &:disabled {
           cursor: auto;
+          color: rgb(153, 153, 153);
         }
       }
     }
