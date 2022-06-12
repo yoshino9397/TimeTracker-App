@@ -1,12 +1,12 @@
-import { useEffect, useState, useRef, useContext } from 'react';
-import axios from 'axios';
+import { useEffect, useState, useRef, useContext } from "react";
+import axios from "axios";
 
-import { AuthContext } from '../../../context/AuthContext';
-import './setTask.scss';
+import { AuthContext } from "../../context/AuthContext";
+import "./setTask.scss";
 
-import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from 'react-icons/bs';
-import { AiTwotoneSetting } from 'react-icons/ai';
-import { FaStopCircle } from 'react-icons/fa';
+import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from "react-icons/bs";
+import { AiTwotoneSetting } from "react-icons/ai";
+import { FaStopCircle } from "react-icons/fa";
 
 let timerId;
 const SetTask = ({ setTask }) => {
@@ -20,8 +20,8 @@ const SetTask = ({ setTask }) => {
   // const [settingTimerSec, setSettingTimerSec] = useState(timeSeconds);
   const [settingTimerMin, setSettingTimerMin] = useState(0);
   const [settingTimerSec, setSettingTimerSec] = useState(3);
-  const [endTime, setEndTime] = useState('');
-  const [beginTime, setBeginTime] = useState('');
+  const [endTime, setEndTime] = useState("");
+  const [beginTime, setBeginTime] = useState("");
   const taskName = useRef();
 
   const timerInit = () => {
@@ -44,11 +44,11 @@ const SetTask = ({ setTask }) => {
     const taskSubmit = async () => {
       if (endTime) {
         const duration = Math.floor((endTime - beginTime) / 1000);
-        console.log('endTime:', new Date(endTime));
-        setEndTime('');
-        const res = await axios.post('/tasks', {
+        console.log("endTime:", new Date(endTime));
+        setEndTime("");
+        const res = await axios.post("/tasks", {
           userId: user._id,
-          title: taskName.current.value || 'no name',
+          title: taskName.current.value || "no name",
           startTime: beginTime,
           finishTime: endTime,
           taskDuration: duration,
@@ -57,13 +57,13 @@ const SetTask = ({ setTask }) => {
           // show task
           setTask({
             userId: user._id,
-            title: taskName.current.value || 'no name',
+            title: taskName.current.value || "no name",
             startTime: beginTime,
             finishTime: endTime,
             taskDuration: duration,
           });
         }
-        console.log('res:', res);
+        console.log("res:", res);
       }
     };
     taskSubmit();
@@ -72,7 +72,7 @@ const SetTask = ({ setTask }) => {
   useEffect(() => {
     if (!startTimer) {
       if (settingTimerSec === 0 && settingTimerMin === 0) {
-        console.log('end date:', new Date().getTime());
+        console.log("end date:", new Date().getTime());
         clearTimeout(timerId); // clear timer
         timerInit();
         // api call
@@ -84,10 +84,10 @@ const SetTask = ({ setTask }) => {
 
   const handleTimer = () => {
     if (startTimer) {
-      console.log('begin date:', new Date().getTime());
+      console.log("begin date:", new Date().getTime());
       setBeginTime(new Date().getTime());
     } else {
-      console.log('end date:', new Date().getTime());
+      console.log("end date:", new Date().getTime());
       clearTimeout(timerId); // clear timer
       timerInit();
       // api call
@@ -112,8 +112,8 @@ const SetTask = ({ setTask }) => {
       <div className='timerStartContainer'>
         <div className='timerBox'>
           <span>
-            {`${('00' + settingTimerMin).slice(-2)}:${(
-              '00' + settingTimerSec
+            {`${("00" + settingTimerMin).slice(-2)}:${(
+              "00" + settingTimerSec
             ).slice(-2)}`}
           </span>
         </div>
