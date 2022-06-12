@@ -7,6 +7,7 @@ import "./setTask.scss";
 import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from "react-icons/bs";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
+import Projects from "../projects/Projects";
 
 let timerId;
 const SetTask = ({ setTask }) => {
@@ -22,6 +23,7 @@ const SetTask = ({ setTask }) => {
   const [settingTimerSec, setSettingTimerSec] = useState(3);
   const [endTime, setEndTime] = useState("");
   const [beginTime, setBeginTime] = useState("");
+  const [projectsOpen, setProjectsOpen] = useState(false);
   const taskName = useRef();
 
   const timerInit = () => {
@@ -95,8 +97,12 @@ const SetTask = ({ setTask }) => {
           ref={taskName}
         />
       </div>
-      <button className='timerSetTag'>
+      <button
+        className='timerSetTag'
+        onClick={() => setProjectsOpen((prev) => !prev)}
+      >
         <BsTagFill />
+        {projectsOpen && <Projects />}
       </button>
       <div className='timerStartContainer'>
         <div className='timerBox'>

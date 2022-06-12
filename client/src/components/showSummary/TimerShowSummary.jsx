@@ -88,25 +88,23 @@ const TimerShowSummary = ({
   };
 
   return (
-    <>
-      <div className='showSummaryContainer'>
-        <div className='showTodayTitle'>TODAY</div>
-        <div className='showTodayTime'>
-          {`${("00" + Math.floor(todaySumTime / 60 / 60)).slice(-2)}:${(
-            "00" +
-            (Math.floor(todaySumTime / 60) % 60)
-          ).slice(-2)}:${("00" + (todaySumTime % 60)).slice(-2)}`}
-        </div>
-        <hr className='timerShowSummaryHr' />
-        <div className='showThisWeekTitle'>THIS WEEK</div>
-        <div className='showThisWeekTime'>
-          {`${("00" + Math.floor(weekSumTime / 60 / 60)).slice(-2)}:${(
-            "00" +
-            (Math.floor(weekSumTime / 60) % 60)
-          ).slice(-2)}:${("00" + (weekSumTime % 60)).slice(-2)}`}
-        </div>
+    <div className='showSummaryContainer'>
+      <div className='showTodayTitle'>TODAY</div>
+      <div className='showTodayTime'>
+        {`${("00" + Math.floor(todaySumTime / 60 / 60)).slice(-2)}:${(
+          "00" +
+          (Math.floor(todaySumTime / 60) % 60)
+        ).slice(-2)}:${("00" + (todaySumTime % 60)).slice(-2)}`}
       </div>
-    </>
+      <hr className='timerShowSummaryHr' />
+      <div className='showThisWeekTitle'>THIS WEEK</div>
+      <div className='showThisWeekTime'>
+        {`${("00" + Math.floor(weekSumTime / 60 / 60)).slice(-2)}:${(
+          "00" +
+          (Math.floor(weekSumTime / 60) % 60)
+        ).slice(-2)}:${("00" + (weekSumTime % 60)).slice(-2)}`}
+      </div>
+    </div>
   );
 };
 

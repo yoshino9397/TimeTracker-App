@@ -1,5 +1,4 @@
-import { compareAsc } from "date-fns";
-import { BsTagFill } from "react-icons/bs";
+import TimerShowDetailCard from "../showDetailCard/TimerShowDetailCard";
 
 import "./timerShowDetail.scss";
 
@@ -36,29 +35,7 @@ const TimerShowDetail = ({ data }) => {
       </div>
       <div className='detailsTasksContainer'>
         {data.map((el, idx) => (
-          <div key={idx} className='detailsDateContainerTask'>
-            <div className='detailsTaskDateEditContainer'>
-              <input
-                className='detailTaskCheckBox'
-                type='checkbox'
-                name='detailsDate'
-                id='detailsDate'
-              />
-              <div className='detailTask'>{el.val.title}</div>
-              <div className='detailTaskTag'>
-                <button className='detailTaskTagBtn'>
-                  <BsTagFill />
-                </button>
-              </div>
-            </div>
-            <div className='detailTaskTimeSum'>
-              {`${("00" + Math.floor(el.val.taskDuration / 60 / 60)).slice(
-                -2
-              )}:${("00" + (Math.floor(el.val.taskDuration / 60) % 60)).slice(
-                -2
-              )}:${("00" + (el.val.taskDuration % 60)).slice(-2)}`}
-            </div>
-          </div>
+          <TimerShowDetailCard key={idx} el={el} />
         ))}
       </div>
     </div>
