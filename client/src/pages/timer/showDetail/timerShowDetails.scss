@@ -1,0 +1,78 @@
+.timerShowDetailsContainer {
+  border: 1px solid #ccc;
+
+  .detailsDateContainerTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem;
+
+    .detailsDateEditContainer {
+      display: flex;
+      align-items: center;
+
+      .detailDate {
+        margin-left: 1rem;
+      }
+
+      .detailDateSelect {
+        margin-left: 1rem;
+        font-size: 0.9rem;
+        color: rgb(153, 153, 153);
+      }
+
+      .detailDateEdit,
+      .detailDateDelete {
+        border: none;
+        margin-left: 1rem;
+        font-size: 0.9rem;
+        background-color: transparent;
+        color: rgb(153, 153, 153);
+        cursor: pointer;
+
+        &:disabled {
+          cursor: auto;
+        }
+      }
+    }
+  }
+
+  .detailsDateContainerTask {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem;
+
+    .detailsTaskDateEditContainer {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+
+      .detailTask {
+        margin-left: 1rem;
+        flex-grow: 2;
+      }
+
+      .detailTaskTag {
+        margin: 0 1rem;
+        flex-grow: 0.5;
+
+        .detailTaskTagBtn {
+          border: none;
+          background-color: transparent;
+
+          svg {
+            width: 1rem;
+            height: 1rem;
+            fill: rgb(103, 103, 103);
+            cursor: pointer;
+
+            &:hover {
+              fill: rgb(166, 166, 166);
+            }
+          }
+        }
+      }
+    }
+  }
+}

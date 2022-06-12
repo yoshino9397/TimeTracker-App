@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const TaskSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true },
@@ -7,11 +7,15 @@ const TaskSchema = new mongoose.Schema(
       required: true,
     },
     startTime: {
-      type: Date,
+      type: Number,
       required: true,
     },
     finishTime: {
-      type: Date,
+      type: Number,
+      required: true,
+    },
+    taskDuration: {
+      type: Number,
       required: true,
     },
     projectId: { type: String },
@@ -23,4 +27,4 @@ const TaskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Task", TaskSchema);
+module.exports = mongoose.model('Task', TaskSchema);
