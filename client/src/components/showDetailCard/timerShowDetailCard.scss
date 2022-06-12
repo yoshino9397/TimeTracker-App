@@ -9,6 +9,15 @@
     align-items: center;
     width: 80%;
 
+    .detailsDateCardEditCheckbox {
+      display: flex;
+      cursor: pointer;
+
+      svg {
+        fill: #929292;
+      }
+    }
+
     .detailTask {
       margin-left: 1rem;
       width: 80%;

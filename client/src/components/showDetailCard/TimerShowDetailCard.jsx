@@ -3,23 +3,35 @@ import { BsTagFill } from "react-icons/bs";
 import Projects from "../projects/Projects";
 
 import "./timerShowDetailCard.scss";
+import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
+import { useEffect } from "react";
 
-const TimerShowDetailCard = ({ el }) => {
+const TimerShowDetailCard = ({ el, checkBoxStatus, addCheckBoxNum }) => {
   const [projectsOpen, setProjectsOpen] = useState(false);
+  const [checkBox, setCheckBox] = useState(checkBoxStatus);
+
+  useEffect(() => {
+    setCheckBox(checkBoxStatus);
+    if (checkBoxStatus && !checkBox) addCheckBoxNum(1);
+    if (!checkBoxStatus && checkBox) addCheckBoxNum(-1);
+  }, [checkBoxStatus]);
 
   const handleModal = () => {
     setProjectsOpen((prev) => !prev);
   };
 
+  const handleCheckBox = () => {
+    if (!checkBox) addCheckBoxNum(1);
+    else addCheckBoxNum(-1);
+    setCheckBox((prev) => !prev);
+  };
+
   return (
     <div className='detailsDateContainerTask'>
       <div className='detailsTaskDateEditContainer'>
-        <input
-          className='detailTaskCheckBox'
-          type='checkbox'
-          name='detailsDate'
-          id='detailsDate'
-        />
+        <div className='detailsDateCardEditCheckbox' onClick={handleCheckBox}>
+          {checkBox ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+        </div>
         <div className='detailTask'>{el.val.title}</div>
         <div className='detailTaskTag'>
           <button className='detailTaskTagBtn' onClick={handleModal}>
