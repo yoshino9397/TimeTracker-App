@@ -14,6 +14,10 @@ const TaskSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    taskDuration: {
+      type: Number,
+      required: true,
+    },
     projectId: { type: String },
     projectTitle: { type: String },
     projectColorCode: {

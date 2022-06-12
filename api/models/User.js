@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
+const mongoose = require('mongoose');
+const validator = require('validator');
 const UserSchema = new mongoose.Schema(
   {
     email: {
@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema(
       lowercase: true,
       validate(value) {
         if (!validator.isEmail(value)) {
-          throw new Error("Email is invalid");
+          throw new Error('Email is invalid');
         }
       },
     },
@@ -21,16 +21,17 @@ const UserSchema = new mongoose.Schema(
       minlength: 7,
       trim: true,
       validate(value) {
-        if (value.toLowerCase().includes("password")) {
+        if (value.toLowerCase().includes('password')) {
           throw new Error('Password cannot contain "password"');
         }
       },
     },
     duration: {
       type: Number,
+      default: 1500,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model('User', UserSchema);
