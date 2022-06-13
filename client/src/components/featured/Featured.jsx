@@ -2,7 +2,7 @@ import "./featured.scss";
 import "./progressBar.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AvTimerIcon from "@mui/icons-material/AvTimer";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
@@ -45,24 +45,38 @@ const renderCustomizedLabel = ({
 
 const Featured = () => {
   const { user } = useContext(AuthContext);
-  const [durationAll, setDurationAll] = useState();
+  const [durationAll, setDurationAll] = useState(0);
+  const [info, setInfo] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`/tasks/user/${user._id}`);
-        // setDurationAll(res.data);
-        // for (let i = 0; i < res.data.length; i++) {
-        //   var sum = 0;
-        //   sum += durationAll[i].taskDuration;
-        //   return sum;
-        // }
-        console.log();
+        setInfo(res.data)
+        var sum = 0;
+        for (let i = 0; i < res.data.length; i++) {
+          sum += res.data[i].taskDuration;
+        }
+        setDurationAll(sum);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
+  }, [user._id]);
+
+  console.log(info);
+  
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const res = await axios.get(`/tasks/project/?${user._id}`);
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchProject();
   }, [user._id]);
 
   return (
@@ -78,6 +92,7 @@ const Featured = () => {
         <div className="featuredChart">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart width={400} height={400}>
+              <Legend layout="vertical" verticalAlign="top" align="top" />
               <Pie
                 data={data}
                 cx="50%"
@@ -102,7 +117,12 @@ const Featured = () => {
           <div className="item">
             <div className="itemTitle">CLOCKED HOURS</div>
             <div className="itemResult">
-              <div className="resultAmount">0:00:00</div>
+              <div className="resultAmount">
+                {`${("00" + Math.floor(durationAll / 3600)).slice(-2)}:${(
+                  "00" +
+                  (Math.floor(durationAll / 60) % 60)
+                ).slice(-2)}:${("00" + (durationAll % 60)).slice(-2)}`}
+              </div>
             </div>
           </div>
           <div className="item">
