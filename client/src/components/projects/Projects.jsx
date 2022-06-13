@@ -4,8 +4,9 @@ import "./project.scss";
 
 import { AuthContext } from "../../context/AuthContext";
 import { GoPrimitiveDot } from "react-icons/go";
+import { AiOutlinePlus } from "react-icons/ai";
 
-const Projects = ({ handleModal, setProject }) => {
+const Projects = ({ handleModal, setProject, handleAddProjectWindow }) => {
   const { user } = useContext(AuthContext);
   const [projects, setProjects] = useState([]);
 
@@ -40,6 +41,10 @@ const Projects = ({ handleModal, setProject }) => {
           </div>
         ))}
         <hr className='projectsHr' />
+        <div className='projectAdd' onClick={handleAddProjectWindow}>
+          <AiOutlinePlus />
+          Create A New Project
+        </div>
       </div>
     </>
   );

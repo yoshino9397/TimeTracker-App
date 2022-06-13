@@ -9,6 +9,7 @@ import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
 import { GoPrimitiveDot } from "react-icons/go";
 import Projects from "../projects/Projects";
+import AddProject from "../addProject/AddProject";
 
 let timerId;
 const SetTask = ({ setTask }) => {
@@ -26,6 +27,7 @@ const SetTask = ({ setTask }) => {
   const [beginTime, setBeginTime] = useState("");
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
+  const [addProjectWindow, setAddProjectWindow] = useState(false);
   const taskName = useRef();
 
   const timerInit = () => {
@@ -101,6 +103,11 @@ const SetTask = ({ setTask }) => {
     setStartTimer((prev) => !prev);
   };
 
+  const handleAddProjectWindow = () => {
+    console.log("handleAddProjectWindow");
+    setAddProjectWindow((prev) => !prev);
+  };
+
   return (
     <div className='timerSetContainer'>
       <div className='timerSetTask'>
@@ -126,7 +133,11 @@ const SetTask = ({ setTask }) => {
             <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
             {projectName.title}
             {projectsOpen && (
-              <Projects handleModal={handleModal} setProject={setProject} />
+              <Projects
+                handleModal={handleModal}
+                setProject={setProject}
+                handleAddProjectWindow={handleAddProjectWindow}
+              />
             )}
           </div>
         )}
@@ -135,7 +146,11 @@ const SetTask = ({ setTask }) => {
         <button className='timerSetTag' onClick={() => handleModal()}>
           <BsTagFill />
           {projectsOpen && (
-            <Projects handleModal={handleModal} setProject={setProject} />
+            <Projects
+              handleModal={handleModal}
+              setProject={setProject}
+              handleAddProjectWindow={handleAddProjectWindow}
+            />
           )}
         </button>
       )}
@@ -157,6 +172,9 @@ const SetTask = ({ setTask }) => {
       <button className='timerSetting'>
         <AiTwotoneSetting />
       </button>
+      {addProjectWindow && (
+        <AddProject handleAddProjectWindow={handleAddProjectWindow} />
+      )}
     </div>
   );
 };

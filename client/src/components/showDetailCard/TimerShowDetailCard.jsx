@@ -7,6 +7,7 @@ import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
 import { GoPrimitiveDot } from "react-icons/go";
 import { BsTagFill } from "react-icons/bs";
 import { useEffect } from "react";
+import AddProject from "../addProject/AddProject";
 
 const TimerShowDetailCard = ({
   el,
@@ -17,6 +18,7 @@ const TimerShowDetailCard = ({
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [checkBox, setCheckBox] = useState(false);
+  const [addProjectWindow, setAddProjectWindow] = useState(false);
 
   useEffect(() => {
     if (el.val.projectTitle) {
@@ -61,6 +63,11 @@ const TimerShowDetailCard = ({
     }
   };
 
+  const handleAddProjectWindow = () => {
+    console.log("handleAddProjectWindow");
+    setAddProjectWindow((prev) => !prev);
+  };
+
   return (
     <div className='detailsDateContainerTask'>
       <div className='detailsTaskDateEditContainer'>
@@ -86,7 +93,11 @@ const TimerShowDetailCard = ({
             <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
             {projectName.title}
             {projectsOpen && (
-              <Projects handleModal={handleModal} setProject={setProject} />
+              <Projects
+                handleModal={handleModal}
+                setProject={setProject}
+                handleAddProjectWindow={handleAddProjectWindow}
+              />
             )}
           </div>
         )}
@@ -95,7 +106,11 @@ const TimerShowDetailCard = ({
             <button className='detailTaskTagBtn' onClick={() => handleModal()}>
               <BsTagFill />
               {projectsOpen && (
-                <Projects handleModal={handleModal} setProject={setProject} />
+                <Projects
+                  handleModal={handleModal}
+                  setProject={setProject}
+                  handleAddProjectWindow={handleAddProjectWindow}
+                />
               )}
             </button>
           </div>
@@ -107,6 +122,9 @@ const TimerShowDetailCard = ({
           (Math.floor(el.val.taskDuration / 60) % 60)
         ).slice(-2)}:${("00" + (el.val.taskDuration % 60)).slice(-2)}`}
       </div>
+      {addProjectWindow && (
+        <AddProject handleAddProjectWindow={handleAddProjectWindow} />
+      )}
     </div>
   );
 };

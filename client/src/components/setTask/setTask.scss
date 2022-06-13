@@ -28,15 +28,18 @@
     }
 
     .timerSetProjectTag {
-      border-radius: 5px;
-      font-size: 0.8rem;
-      font-weight: 400;
-      white-space: nowrap;
-      padding: 0.2rem 0.5rem 0.2rem 0.3rem;
-      margin-right: 0.3rem;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
+      // border-radius: 5px;
+      // font-size: 0.8rem;
+      // font-weight: 400;
+      // white-space: nowrap;
+      // padding: 0.2rem 0.5rem 0.2rem 0.3rem;
+      // margin-right: 0.3rem;
+      // display: flex;
+      // align-items: center;
+      // cursor: pointer;
+      // position: relative;
+      border: none;
+      background-color: transparent;
       position: relative;
 
       .timerSetProjectTagBack {
@@ -65,12 +68,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: transparent;
-    outline: 0px;
-    border: 0px;
-    text-align: center;
-    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    // background-color: transparent;
+    // outline: 0px;
+    // border: 0px;
+    // text-align: center;
+    // transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     cursor: pointer;
+    border: none;
+    background-color: transparent;
     position: relative;
 
     svg {
