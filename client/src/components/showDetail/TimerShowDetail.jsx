@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TimerShowDetailCard from "../showDetailCard/TimerShowDetailCard";
+import { format } from "date-fns";
 
 import "./timerShowDetail.scss";
 import {
@@ -15,6 +16,11 @@ const TimerShowDetail = ({ data }) => {
   let totalTime = 0;
   data.map((el) => (totalTime += el.val.taskDuration));
   data.sort((a, b) => b.val.startTime.localeCompare(a.val.startTime));
+  const today = format(new Date(), "yyyy-MM-dd");
+  const yesterday = format(
+    new Date().setDate(new Date().getDate() - 1),
+    "yyyy-MM-dd"
+  );
 
   const handleModal = () => {
     setEditOpen((prev) => !prev);
@@ -53,7 +59,13 @@ const TimerShowDetail = ({ data }) => {
               <MdCheckBoxOutlineBlank />
             )}
           </div>
-          <div className='detailDate'>{data[0].val.startTime.slice(0, 10)}</div>
+          <div className='detailDate'>
+            {data[0].val.startTime.slice(0, 10) === today
+              ? "Today"
+              : data[0].val.startTime.slice(0, 10) === yesterday
+              ? "Yesterday"
+              : data[0].val.startTime.slice(0, 10)}
+          </div>
           <span className='detailDateSelect'>
             {checkBoxData.length} / {data.length} items selected
           </span>
