@@ -80,6 +80,7 @@ const SetTask = ({ setTask }) => {
 
   const setProject = (project) => {
     setProjectName(project);
+    // setProjectsOpen((prev) => !prev);
   };
 
   const handleModal = () => {
@@ -122,18 +123,20 @@ const SetTask = ({ setTask }) => {
             </span>
             <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
             {projectName.title}
+            {projectsOpen && (
+              <Projects handleModal={handleModal} setProject={setProject} />
+            )}
           </div>
         )}
       </div>
-      <button
-        className='timerSetTag'
-        onClick={() => setProjectsOpen((prev) => !prev)}
-      >
-        <BsTagFill />
-        {projectsOpen && (
-          <Projects handleModal={handleModal} setProject={setProject} />
-        )}
-      </button>
+      {!projectName && (
+        <button className='timerSetTag' onClick={() => handleModal()}>
+          <BsTagFill />
+          {projectsOpen && (
+            <Projects handleModal={handleModal} setProject={setProject} />
+          )}
+        </button>
+      )}
       <div className='timerStartContainer'>
         <div className='timerBox'>
           <span>
