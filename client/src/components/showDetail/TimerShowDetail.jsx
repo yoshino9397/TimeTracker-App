@@ -7,12 +7,18 @@ import {
   MdCheckBox,
   MdIndeterminateCheckBox,
 } from "react-icons/md";
+import Edit from "../edit/Edit";
 
 const TimerShowDetail = ({ data }) => {
   const [checkBoxData, setCheckBoxData] = useState([]);
+  const [editOpen, setEditOpen] = useState(false);
   let totalTime = 0;
   data.map((el) => (totalTime += el.val.taskDuration));
   data.sort((a, b) => b.val.startTime.localeCompare(a.val.startTime));
+
+  const handleModal = () => {
+    setEditOpen((prev) => !prev);
+  };
 
   const allSelect = () => {
     if (checkBoxData.length > 0) setCheckBoxData([]);
@@ -54,9 +60,13 @@ const TimerShowDetail = ({ data }) => {
           <button
             className='detailDateEdit'
             disabled={checkBoxData.length === 0}
+            onClick={handleModal}
           >
             Edit
           </button>
+          {editOpen && (
+            <Edit handleModal={handleModal} checkBoxData={checkBoxData} />
+          )}
           <button
             className='detailDateDelete'
             disabled={checkBoxData.length === 0}
