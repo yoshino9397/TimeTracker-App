@@ -7,6 +7,7 @@ import "./setTask.scss";
 import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from "react-icons/bs";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
+import Projects from "../projects/Projects";
 
 let timerId;
 const SetTask = ({ setTask }) => {
@@ -22,6 +23,7 @@ const SetTask = ({ setTask }) => {
   const [settingTimerSec, setSettingTimerSec] = useState(3);
   const [endTime, setEndTime] = useState("");
   const [beginTime, setBeginTime] = useState("");
+  const [projectsOpen, setProjectsOpen] = useState(false);
   const taskName = useRef();
 
   const timerInit = () => {
@@ -44,7 +46,6 @@ const SetTask = ({ setTask }) => {
     const taskSubmit = async () => {
       if (endTime) {
         const duration = Math.floor((endTime - beginTime) / 1000);
-        console.log("endTime:", new Date(endTime));
         setEndTime("");
         const res = await axios.post("/tasks", {
           userId: user._id,
@@ -54,16 +55,9 @@ const SetTask = ({ setTask }) => {
           taskDuration: duration,
         });
         if (res.status === 200) {
-          // show task
-          setTask({
-            userId: user._id,
-            title: taskName.current.value || "no name",
-            startTime: beginTime,
-            finishTime: endTime,
-            taskDuration: duration,
-          });
+          setTask(res.data);
         }
-        console.log("res:", res);
+        taskName.current.value = "";
       }
     };
     taskSubmit();
@@ -72,7 +66,6 @@ const SetTask = ({ setTask }) => {
   useEffect(() => {
     if (!startTimer) {
       if (settingTimerSec === 0 && settingTimerMin === 0) {
-        console.log("end date:", new Date().getTime());
         clearTimeout(timerId); // clear timer
         timerInit();
         // api call
@@ -84,10 +77,8 @@ const SetTask = ({ setTask }) => {
 
   const handleTimer = () => {
     if (startTimer) {
-      console.log("begin date:", new Date().getTime());
       setBeginTime(new Date().getTime());
     } else {
-      console.log("end date:", new Date().getTime());
       clearTimeout(timerId); // clear timer
       timerInit();
       // api call
@@ -106,8 +97,12 @@ const SetTask = ({ setTask }) => {
           ref={taskName}
         />
       </div>
-      <button className='timerSetTag'>
+      <button
+        className='timerSetTag'
+        onClick={() => setProjectsOpen((prev) => !prev)}
+      >
         <BsTagFill />
+        {projectsOpen && <Projects />}
       </button>
       <div className='timerStartContainer'>
         <div className='timerBox'>

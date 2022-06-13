@@ -20,16 +20,27 @@ const Timer = () => {
     setTasks(list);
   };
 
+  const addWeeklyTask = (task) => {
+    setTasks(task);
+  };
+
   return (
     <div className='timer'>
       <Sidebar />
       <div className='timerContainer'>
         <SetTask setTask={setTask} />
-        <TimerShowSummary newTask={newTask} setWeeklyTasks={setWeeklyTasks} />
+        <TimerShowSummary
+          tasks={[...tasks]}
+          newTask={newTask}
+          setWeeklyTasks={setWeeklyTasks}
+          addWeeklyTask={addWeeklyTask}
+        />
         <div className='timerShowDetailsContainer'>
           {tasks.map(
             (data, idx) =>
-              data.length !== 0 && <TimerShowDetail key={idx} data={data} />
+              data.length !== 0 && (
+                <TimerShowDetail key={idx} data={[...data]} />
+              )
           )}
         </div>
       </div>
