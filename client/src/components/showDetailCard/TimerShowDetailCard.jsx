@@ -35,9 +35,9 @@ const TimerShowDetailCard = ({
   const setProject = (project) => {
     setProjectName(project);
     const task = el.val;
-    task.projectId = project._id;
-    task.projectTitle = project.title;
-    task.projectColorCode = project.colorCode;
+    task.projectId = project._id || "";
+    task.projectTitle = project.title || "";
+    task.projectColorCode = project.colorCode || "";
     const taskSubmit = async () => {
       const res = await axios.put(`/tasks/${task._id}`, task);
       if (res.status === 200) {
