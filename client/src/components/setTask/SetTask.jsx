@@ -7,6 +7,7 @@ import "./setTask.scss";
 import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from "react-icons/bs";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
+import { GoPrimitiveDot } from "react-icons/go";
 import Projects from "../projects/Projects";
 
 let timerId;
@@ -24,7 +25,9 @@ const SetTask = ({ setTask }) => {
   const [endTime, setEndTime] = useState("");
   const [beginTime, setBeginTime] = useState("");
   const [projectsOpen, setProjectsOpen] = useState(false);
+  const [projectName, setProjectName] = useState("");
   const taskName = useRef();
+  console.log("projectName", projectName);
 
   const timerInit = () => {
     setSettingTimerMin(timeMinutes);
@@ -75,6 +78,14 @@ const SetTask = ({ setTask }) => {
     }
   }, [startTimer, settingTimerSec]);
 
+  const setProject = (project) => {
+    setProjectName(project);
+  };
+
+  const handleModal = () => {
+    setProjectsOpen((prev) => !prev);
+  };
+
   const handleTimer = () => {
     if (startTimer) {
       setBeginTime(new Date().getTime());
@@ -96,13 +107,32 @@ const SetTask = ({ setTask }) => {
           placeholder='Please enter task name'
           ref={taskName}
         />
+        {projectName && (
+          <div
+            className='timerSetProjectTag'
+            onClick={() => setProjectsOpen((prev) => !prev)}
+          >
+            <span
+              className='timerSetProjectTagBack'
+              style={{
+                backgroundColor: `${projectName.colorCode}`,
+              }}
+            >
+              &nbsp;
+            </span>
+            <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
+            {projectName.title}
+          </div>
+        )}
       </div>
       <button
         className='timerSetTag'
         onClick={() => setProjectsOpen((prev) => !prev)}
       >
         <BsTagFill />
-        {projectsOpen && <Projects />}
+        {projectsOpen && (
+          <Projects handleModal={handleModal} setProject={setProject} />
+        )}
       </button>
       <div className='timerStartContainer'>
         <div className='timerBox'>

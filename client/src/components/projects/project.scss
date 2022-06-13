@@ -10,10 +10,37 @@
 
 .projectsContainer {
   position: absolute;
-  top: 1.5rem;
-  right: -4rem;
-  border: 1px solid #ccc;
-  background-color: #f78b8b;
-  width: 10rem;
+  top: 2rem;
+  right: -7rem;
+  border: 0.5px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  width: 14rem;
+  padding: 0.5rem 0.5rem;
   z-index: 10;
+
+  .projectList {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.25rem;
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    font-weight: 400;
+
+    &:hover {
+      background-color: rgb(231, 231, 231);
+      border-radius: 3px;
+    }
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 0.25rem;
+    }
+  }
+
+  .projectsHr {
+    border: 0.5px solid rgb(226, 226, 226);
+    margin: 0.5rem 0;
+  }
 }
