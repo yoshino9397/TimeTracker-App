@@ -50,10 +50,21 @@ const getTasks = async (req, res, next) => {
   }
 };
 
+const getTasksByProject = async (req, res, next) => {
+  try {
+    const tasks = await Task.find({ projectId: req.params.id });
+    res.status(200).json(tasks);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 module.exports = {
   createTask,
   updateTask,
   deleteTask,
   getTask,
   getTasks,
+  getTasksByProject
 };

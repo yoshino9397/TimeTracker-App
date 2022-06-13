@@ -19,6 +19,6 @@ router.delete("/:id", deleteProject);
 //GET
 router.get("/:id", getProject);
 //GET ALL
-router.get("/", getProjects);
+router.get("/user/:id", getProjects);
 
 module.exports = router;
