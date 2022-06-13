@@ -6,6 +6,7 @@ import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
 import ViewListOutlinedIcon from "@mui/icons-material/ViewListOutlined";
 
+
 const Home = () => {
   return (
     <div className="home">

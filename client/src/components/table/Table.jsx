@@ -1,4 +1,6 @@
 import "./table.scss";
+import { useEffect } from "react";
+import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,49 +8,55 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { AuthContext } from "../../context/AuthContext";
 
 const Tables = () => {
-  const rows = [
-    {
-      title: "Play Game",
-      duration: "2.3h",
-      amount: "$30",
-      percentage: "10%",
-    },
-    {
-      title: "Drink coffee",
-      duration: "2.3h",
-      amount: "$30",
-      percentage: "10%",
-    },
-    {
-      title: "Walk",
-      duration: "2.3h",
-      amount: "$30",
-      percentage: "10%",
-    },
-    {
-      title: "Sleep",
-      duration: "2.3h",
-      amount: "$30",
-      percentage: "10%",
-    },
-    {
-      title: "Read books",
-      duration: "2.3h",
-      amount: "$30",
-      percentage: "10%",
-    },
-  ];
+  const { user } = useContext(AuthContext);
+  const [lists, setLists] = useState([]);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const fetchTable = async () => {
+      try {
+        const res = await axios.get(`/projects/user/${user._id}`);
+
+        setLists(
+          res.data.sort((p1, p2) => {
+            return new Date(p2.createdAt) - new Date(p1.createdAt);
+          })
+        );
+        
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchTable();
+  }, [user._id]);
 
   const Row = ({ row }) => {
     const [open, setOpen] = useState(false);
+    const [tasks, setTasks] = useState([]);
+
+    // useEffect(() => {
+    //   const fetchTask = async () => {
+    //     try {
+    //       const res = await axios.get(`/tasks/project/${row._id}`);
+    //       setTasks(res.data);
+    //       console.log(tasks);
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //   };
+    //   fetchTask();
+    // }, [row._id]);
+
     return (
       <>
         <TableRow key={row.id} className="row">
@@ -62,8 +70,7 @@ const Tables = () => {
             </IconButton>
           </TableCell>
           <TableCell>{row.title}</TableCell>
-          <TableCell>{row.duration}</TableCell>
-          <TableCell>{row.amount}</TableCell>
+          <TableCell>{user.duration}</TableCell>
           <TableCell>{row.percentage}</TableCell>
         </TableRow>
         <TableRow>
@@ -76,18 +83,18 @@ const Tables = () => {
           >
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Table>
-                <TableRow>
-                  <TableCell>
-                    <TaskAltIcon
-                      fontSize="small"
-                      sx={{ color: "gray", marginLeft: "20px" }}
-                    />
-                  </TableCell>
-                  <TableCell>{row.title}</TableCell>
-                  <TableCell>{row.duration}</TableCell>
-                  <TableCell>{row.amount}</TableCell>
-                  <TableCell>{row.percentage}</TableCell>
-                </TableRow>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      <IconButton size="small">
+                        <TaskAltIcon sx={{ color: "gray" }} />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="left">{tasks.title}</TableCell>
+                    <TableCell>{user.duration}</TableCell>
+                    <TableCell>{row.percentage}</TableCell>
+                  </TableRow>
+                </TableBody>
               </Table>
             </Collapse>
           </TableCell>
@@ -106,13 +113,12 @@ const Tables = () => {
             </TableCell>
             <TableCell>TITLE</TableCell>
             <TableCell>DURATION</TableCell>
-            <TableCell>AMOUNT</TableCell>
             <TableCell>PERCENTAGE</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.id} row={row} />
+          {lists.map((list) => (
+            <Row key={list.id} row={list} />
           ))}
         </TableBody>
       </Table>

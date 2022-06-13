@@ -44,12 +44,13 @@ const getProject = async (req, res, next) => {
 
 const getProjects = async (req, res, next) => {
   try {
-    const projects = await Project.find();
+    const projects = await Project.find({ userId: req.params.id });
     res.status(200).json(projects);
   } catch (err) {
     next(err);
   }
 };
+
 
 module.exports = {
   createProject,
