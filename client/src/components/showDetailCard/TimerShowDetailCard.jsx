@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { BsTagFill } from "react-icons/bs";
 import Projects from "../projects/Projects";
+import axios from "axios";
 
 import "./timerShowDetailCard.scss";
 import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
 import { GoPrimitiveDot } from "react-icons/go";
+import { BsTagFill } from "react-icons/bs";
 import { useEffect } from "react";
 
 const TimerShowDetailCard = ({
@@ -18,12 +19,32 @@ const TimerShowDetailCard = ({
   const [checkBox, setCheckBox] = useState(false);
 
   useEffect(() => {
+    if (el.val.projectTitle) {
+      setProjectName({
+        colorCode: el.val.projectColorCode,
+        title: el.val.projectTitle,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (checkBoxData.length === dataLength) setCheckBox(true);
     else if (checkBoxData.length === 0) setCheckBox(false);
   }, [checkBoxData]);
 
   const setProject = (project) => {
     setProjectName(project);
+    const task = el.val;
+    task.projectId = project._id;
+    task.projectTitle = project.title;
+    task.projectColorCode = project.colorCode;
+    const taskSubmit = async () => {
+      const res = await axios.put(`/tasks/${task._id}`, task);
+      if (res.status === 200) {
+        console.log(res.data);
+      }
+    };
+    taskSubmit();
   };
 
   const handleModal = () => {
@@ -46,7 +67,9 @@ const TimerShowDetailCard = ({
         <div className='detailsDateCardEditCheckbox' onClick={handleCheckBox}>
           {checkBox ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
         </div>
-        <div className='detailTask'>{el.val.title}</div>
+        <div className='detailTask' onClick={handleCheckBox}>
+          {el.val.title}
+        </div>
         {projectName && (
           <div
             className='detailsDateProjectTag'

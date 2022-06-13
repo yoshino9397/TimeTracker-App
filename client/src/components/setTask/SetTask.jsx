@@ -80,7 +80,6 @@ const SetTask = ({ setTask }) => {
 
   const setProject = (project) => {
     setProjectName(project);
-    // setProjectsOpen((prev) => !prev);
   };
 
   const handleModal = () => {
