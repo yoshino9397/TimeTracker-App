@@ -3,6 +3,9 @@ import "./progressBar.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AvTimerIcon from "@mui/icons-material/AvTimer";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 
 const data = [
   { name: "Project A", value: 400 },
@@ -41,6 +44,27 @@ const renderCustomizedLabel = ({
 };
 
 const Featured = () => {
+  const { user } = useContext(AuthContext);
+  const [durationAll, setDurationAll] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`/tasks/user/${user._id}`);
+        // setDurationAll(res.data);
+        // for (let i = 0; i < res.data.length; i++) {
+        //   var sum = 0;
+        //   sum += durationAll[i].taskDuration;
+        //   return sum;
+        // }
+        console.log();
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [user._id]);
+
   return (
     <div className="featured">
       <div className="top">
@@ -83,12 +107,6 @@ const Featured = () => {
           </div>
           <div className="item">
             <div className="itemTitle">BILLABLE HOURS</div>
-            <div className="itemResult">
-              <div className="resultAmount">0:00:00</div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="itemTitle">AMOUNT</div>
             <div className="itemResult">
               <div className="resultAmount">0:00:00</div>
             </div>
