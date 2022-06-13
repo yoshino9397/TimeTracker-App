@@ -8,24 +8,17 @@ import { useEffect } from "react";
 
 const TimerShowDetailCard = ({
   el,
-  checkBoxStatus,
-  addCheckBoxNum,
+  checkBoxData,
+  dataLength,
   addCheckBoxData,
 }) => {
   const [projectsOpen, setProjectsOpen] = useState(false);
-  const [checkBox, setCheckBox] = useState(checkBoxStatus);
+  const [checkBox, setCheckBox] = useState(false);
 
   useEffect(() => {
-    setCheckBox(checkBoxStatus);
-    if (checkBoxStatus && !checkBox) {
-      addCheckBoxNum(1);
-      addCheckBoxData(1, el);
-    }
-    if (!checkBoxStatus && checkBox) {
-      addCheckBoxNum(-1);
-      addCheckBoxData(-1, el);
-    }
-  }, [checkBoxStatus]);
+    if (checkBoxData.length === dataLength) setCheckBox(true);
+    else if (checkBoxData.length === 0) setCheckBox(false);
+  }, [checkBoxData]);
 
   const handleModal = () => {
     setProjectsOpen((prev) => !prev);
@@ -33,13 +26,12 @@ const TimerShowDetailCard = ({
 
   const handleCheckBox = () => {
     if (!checkBox) {
-      addCheckBoxNum(1);
       addCheckBoxData(1, el);
+      setCheckBox(true);
     } else {
-      addCheckBoxNum(-1);
       addCheckBoxData(-1, el);
+      setCheckBox(false);
     }
-    setCheckBox((prev) => !prev);
   };
 
   return (
