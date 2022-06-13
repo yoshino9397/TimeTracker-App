@@ -61,7 +61,7 @@ const Register = () => {
       }
 
       clearInterval(interval);
-    }, 50);
+    }, 500);
     return () => clearInterval(interval);
   }, []);
 

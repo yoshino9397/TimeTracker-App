@@ -1,0 +1,48 @@
+.detailsDateContainerTask {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.5rem;
+
+  .detailsTaskDateEditContainer {
+    display: flex;
+    align-items: center;
+    width: 80%;
+
+    .detailsDateCardEditCheckbox {
+      display: flex;
+      cursor: pointer;
+
+      svg {
+        fill: #929292;
+      }
+    }
+
+    .detailTask {
+      margin-left: 1rem;
+      width: 80%;
+    }
+
+    .detailTaskTag {
+      margin: 0 1rem;
+      flex-grow: 0.5;
+      position: relative;
+
+      .detailTaskTagBtn {
+        border: none;
+        background-color: transparent;
+
+        svg {
+          width: 1rem;
+          height: 1rem;
+          fill: rgb(103, 103, 103);
+          cursor: pointer;
+
+          &:hover {
+            fill: rgb(166, 166, 166);
+          }
+        }
+      }
+    }
+  }
+}

@@ -43,12 +43,22 @@ const getTask = async (req, res, next) => {
 
 const getTasks = async (req, res, next) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find({ userId: req.params.id });
     res.status(200).json(tasks);
   } catch (err) {
     next(err);
   }
 };
+
+const getTasksByProject = async (req, res, next) => {
+  try {
+    const tasks = await Task.find({ projectId: req.params.id });
+    res.status(200).json(tasks);
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 module.exports = {
   createTask,
@@ -56,4 +66,5 @@ module.exports = {
   deleteTask,
   getTask,
   getTasks,
+  getTasksByProject
 };

@@ -1,0 +1,64 @@
+.detailsDateContainer {
+  border-top: 1px solid rgb(236, 236, 236);
+  border-bottom: 1px solid rgb(236, 236, 236);
+  margin: 0 0 1.5rem;
+
+  .detailsDateContainerTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem;
+
+    .detailsDateEditContainer {
+      display: flex;
+      align-items: center;
+
+      .detailsDateEditCheckbox {
+        display: flex;
+        cursor: pointer;
+
+        svg {
+          fill: #929292;
+        }
+      }
+
+      .detailDate {
+        margin-left: 1rem;
+      }
+
+      .detailDateSelect {
+        margin-left: 1rem;
+        font-size: 0.9rem;
+        color: rgb(153, 153, 153);
+      }
+
+      .detailDateEdit {
+        color: green;
+      }
+
+      .detailDateDelete {
+        color: rgb(217, 24, 24);
+      }
+
+      .detailDateEdit,
+      .detailDateDelete {
+        border: none;
+        margin-left: 1rem;
+        font-size: 0.9rem;
+        background-color: transparent;
+        cursor: pointer;
+
+        &:disabled {
+          cursor: auto;
+          color: rgb(153, 153, 153);
+        }
+      }
+    }
+  }
+
+  .detailsTasksContainer {
+    margin-top: 1.25rem;
+    font-size: 1rem;
+    font-weight: 200;
+  }
+}

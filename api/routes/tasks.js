@@ -5,6 +5,7 @@ const {
   deleteTask,
   getTask,
   getTasks,
+  getTasksByProject,
 } = require("../controllers/task.js");
 
 const router = express.Router();
@@ -19,6 +20,7 @@ router.delete("/:id", deleteTask);
 //GET
 router.get("/:id", getTask);
 //GET ALL
-router.get("/", getTasks);
+router.get("/user/:id", getTasks);
+router.get("/project/:id", getTasksByProject);
 
 module.exports = router;
