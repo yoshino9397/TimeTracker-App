@@ -25,7 +25,7 @@ const TimerShowDetailCard = ({
         title: el.val.projectTitle,
       });
     }
-  }, []);
+  }, [el]);
 
   useEffect(() => {
     if (checkBoxData.length === dataLength) setCheckBox(true);

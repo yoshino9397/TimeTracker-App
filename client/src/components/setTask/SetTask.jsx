@@ -27,7 +27,6 @@ const SetTask = ({ setTask }) => {
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const taskName = useRef();
-  console.log("projectName", projectName);
 
   const timerInit = () => {
     setSettingTimerMin(timeMinutes);
@@ -56,11 +55,15 @@ const SetTask = ({ setTask }) => {
           startTime: beginTime,
           finishTime: endTime,
           taskDuration: duration,
+          projectId: projectName._id,
+          projectTitle: projectName.title,
+          projectColorCode: projectName.colorCode,
         });
         if (res.status === 200) {
           setTask(res.data);
         }
         taskName.current.value = "";
+        setProjectName("");
       }
     };
     taskSubmit();
