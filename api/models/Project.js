@@ -1,10 +1,21 @@
 const mongoose = require("mongoose");
 const ProjectSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true },
-    title: { type: String, required: true },
+    userId: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    title: {
+      type: String,
+      trim: true,
+      required: true,
+    },
     colorCode: {
       type: String,
+      trim: true,
+      lowercase: true,
+      required: true,
     },
   },
   { timestamps: true }

@@ -1,31 +1,55 @@
-import { useState } from "react";
-import { BsTagFill } from "react-icons/bs";
+import { useEffect, useState, useContext } from "react";
 import Projects from "../projects/Projects";
+import axios from "axios";
 
 import "./timerShowDetailCard.scss";
 import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
-import { useEffect } from "react";
+import { GoPrimitiveDot } from "react-icons/go";
+import { BsTagFill } from "react-icons/bs";
+
+import { ProjectsContext } from "../../context/ProjectsContext";
 
 const TimerShowDetailCard = ({
   el,
-  checkBoxStatus,
-  addCheckBoxNum,
+  checkBoxData,
+  dataLength,
   addCheckBoxData,
+  handleEditProjectWindow,
 }) => {
+  const { projects } = useContext(ProjectsContext);
   const [projectsOpen, setProjectsOpen] = useState(false);
-  const [checkBox, setCheckBox] = useState(checkBoxStatus);
+  const [projectName, setProjectName] = useState("");
+  const [checkBox, setCheckBox] = useState(false);
 
   useEffect(() => {
-    setCheckBox(checkBoxStatus);
-    if (checkBoxStatus && !checkBox) {
-      addCheckBoxNum(1);
-      addCheckBoxData(1, el);
+    if (el.val.projectTitle) {
+      projects?.forEach((project) => {
+        if (project._id === el.val.projectId) {
+          return setProjectName({
+            colorCode: project.colorCode,
+            title: project.title,
+          });
+        }
+      });
+    } else setProjectName("");
+  }, [el, projects]);
+
+  useEffect(() => {
+    if (checkBoxData.length === dataLength) setCheckBox(true);
+    else if (checkBoxData.length === 0) setCheckBox(false);
+  }, [checkBoxData]);
+
+  const setProject = async (project) => {
+    setProjectName(project);
+    const task = el.val;
+    task.projectId = project._id || "";
+    task.projectTitle = project.title || "";
+    task.projectColorCode = project.colorCode || "";
+    const res = await axios.put(`/tasks/${task._id}`, task);
+    if (res.status === 200) {
+      console.log(res.data);
     }
-    if (!checkBoxStatus && checkBox) {
-      addCheckBoxNum(-1);
-      addCheckBoxData(-1, el);
-    }
-  }, [checkBoxStatus]);
+  };
 
   const handleModal = () => {
     setProjectsOpen((prev) => !prev);
@@ -33,13 +57,12 @@ const TimerShowDetailCard = ({
 
   const handleCheckBox = () => {
     if (!checkBox) {
-      addCheckBoxNum(1);
       addCheckBoxData(1, el);
+      setCheckBox(true);
     } else {
-      addCheckBoxNum(-1);
       addCheckBoxData(-1, el);
+      setCheckBox(false);
     }
-    setCheckBox((prev) => !prev);
   };
 
   return (
@@ -48,13 +71,47 @@ const TimerShowDetailCard = ({
         <div className='detailsDateCardEditCheckbox' onClick={handleCheckBox}>
           {checkBox ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
         </div>
-        <div className='detailTask'>{el.val.title}</div>
-        <div className='detailTaskTag'>
-          <button className='detailTaskTagBtn' onClick={handleModal}>
-            <BsTagFill />
-          </button>
-          {projectsOpen && <Projects handleModal={handleModal} />}
+        <div className='detailTask' onClick={handleCheckBox}>
+          {el.val.title}
         </div>
+        {projectName && (
+          <div
+            className='detailsDateProjectTag'
+            onClick={() => setProjectsOpen((prev) => !prev)}
+          >
+            <span
+              className='detailsDateProjectTagBack'
+              style={{
+                backgroundColor: `${projectName.colorCode}`,
+              }}
+            >
+              &nbsp;
+            </span>
+            <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
+            {projectName.title}
+            {projectsOpen && (
+              <Projects
+                handleModal={handleModal}
+                setProject={setProject}
+                handleEditProjectWindow={handleEditProjectWindow}
+              />
+            )}
+          </div>
+        )}
+        {!projectName && (
+          <div className='detailTaskTag'>
+            <button className='detailTaskTagBtn' onClick={() => handleModal()}>
+              <BsTagFill />
+              {projectsOpen && (
+                <Projects
+                  handleModal={handleModal}
+                  setProject={setProject}
+                  handleEditProjectWindow={handleEditProjectWindow}
+                />
+              )}
+            </button>
+          </div>
+        )}
       </div>
       <div className='detailTaskTimeSum'>
         {`${("00" + Math.floor(el.val.taskDuration / 60 / 60)).slice(-2)}:${(
