@@ -29,7 +29,6 @@ const Chart = ({ aspect, title }) => {
   const { user } = useContext(AuthContext);
   const [weekData, setWeekData] = useState([{}]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
