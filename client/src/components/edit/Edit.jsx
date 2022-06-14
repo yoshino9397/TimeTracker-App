@@ -1,63 +1,196 @@
-import "./edit.scss";
+import { useContext, useState, useEffect } from "react";
+import { format } from "date-fns";
 
-const Edit = ({ handleModal, checkBoxData }) => {
-  console.log("edit data", checkBoxData);
+import { ProjectsContext } from "../../context/ProjectsContext";
+
+import "./edit.scss";
+import { GoPrimitiveDot } from "react-icons/go";
+import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+
+const INITIAL_COLORCODE = "#ccc";
+const INITIAL_PROJECTNAME = "No Project";
+const INITIAL_PROJECT = {
+  colorCode: INITIAL_COLORCODE,
+  title: INITIAL_PROJECTNAME,
+};
+const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
+  const { projects } = useContext(ProjectsContext);
+  const [projectName, setProjectName] = useState("");
+  const [projectsList, setProjectsList] = useState([
+    INITIAL_PROJECT,
+    ...projects,
+  ]);
+  const [selectOption, setSelectOption] = useState(false);
+  const thisDate = format(
+    new Date(checkBoxData[0].val.startTime),
+    "yyyy-MM-dd"
+  );
+  const startTime = new Date(checkBoxData[0].val.startTime)
+    .toString()
+    .slice(16, 24);
+  const finishTime = new Date(checkBoxData[0].val.finishTime)
+    .toString()
+    .slice(16, 24);
+
+  useEffect(() => {
+    if (checkBoxData[0].val.projectTitle) {
+      projectsList?.forEach((project) => {
+        if (project._id === checkBoxData[0].val.projectId) {
+          return setProjectName({
+            colorCode: project.colorCode,
+            title: project.title,
+          });
+        }
+      });
+    } else setProjectName("");
+  }, []);
+
+  const optionOpen = () => {
+    setSelectOption((prev) => !prev);
+  };
+
+  const handleOption = (project) => {
+    setProjectName({
+      colorCode: project.colorCode,
+      title: project.title,
+    });
+  };
 
   return (
     <>
-      <div className='editContainerBack' onClick={handleModal}></div>
-      <div className='editContainer'>
+      <div
+        className='editTaskContainerBack'
+        onClick={handleEditTaskWindow}
+      ></div>
+      <div className='editTaskContainer'>
+        <span className='editTaskContainerTitle'>Task Edit</span>
+
         <form
-          noValidate
+          // onSubmit={editProjects}
           autoComplete='off'
-          className='rForm'
-          id='rForm'
-          // onSubmit={handleSubmit}
+          className='editTaskForm'
         >
-          <div className={`rInputSetContainer`}>
-            <div className={`rInputLabelContainer`}>
-              <label
-                htmlFor='taskName'
-                // className={`rInputLabel ${emailLabelCss} ${
-                //   emailErr ? 'labelErr' : ''
-                // }`}
-              >
+          <div className='editTaskFormContainer'>
+            <div className='editTaskFormInputSetContainer'>
+              {/* <input type='hidden' name='project-id' value={project._id} /> */}
+              {/* <label htmlFor='project-List' className='editTaskFormLabel'>
                 Task Name
-              </label>
+              </label> */}
               <input
                 type='text'
-                id='taskName'
-                // ref={email}
-                // className={`rInput ${emailErr ? 'inputErr' : ''}`}
+                id='project-List'
+                name='project-List'
+                placeholder='Enter Task Name'
+                defaultValue={checkBoxData[0].val.title}
+                className='editTaskFormInput'
+                // className={`editProjectFormInput ${
+                //   inputErr ? "editTaskFormInputErr" : ""
+                // }`}
+                // ref={refAddProject}
                 // onBlur={handleBlur}
               />
-            </div>
-            {/* {emailErr && <div className='rInputErr'>{emailErr}</div>} */}
-          </div>
-          <div className={`rInputSetContainer`}>
-            <div className={`rInputLabelContainer`}>
-              <label
-                htmlFor='project'
-                // className={`rInputLabel ${passLabelCss} ${
-                //   passErr ? 'labelErr' : ''
-                // }`}
+
+              {/* <label htmlFor='project' className='editTaskFormLabel'>
+                Project Name
+              </label> */}
+              <select
+                id='project'
+                name='project'
+                // defaultValue={planInfo === "" ? categoryList[0] : project}
               >
-                Project
-              </label>
-              {/* <select id='project' name='project' defaultValue='project test'>
-                {projects.map((project, idx) => (
-                  <option value={project.title} key={idx}>
-                    {project.title}
+                <option>test</option>
+                {/* {categoryList.map((project) => (
+                  <option value={project} key={project}>
+                    {project}
                   </option>
-                ))}
-              </select> */}
+                ))} */}
+              </select>
+              <div className='editTaskFormSelect' onClick={optionOpen}>
+                <div className='editTaskFormSelectOption'>
+                  <GoPrimitiveDot
+                    style={{
+                      fill: `${projectName.colorCode || INITIAL_COLORCODE}`,
+                    }}
+                  />
+                  {projectName.title || "No Project"}
+                </div>
+                {selectOption ? <BiChevronUp /> : <BiChevronDown />}
+                {selectOption && (
+                  <div className='editTaskFormSelectOptionList'>
+                    {projectsList.map((project, idx) => (
+                      <div
+                        key={idx}
+                        className='optionListContainer'
+                        onClick={() => handleOption(project)}
+                      >
+                        <GoPrimitiveDot
+                          style={{ fill: `${project.colorCode}` }}
+                        />
+                        {project.title}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* <label htmlFor='task-date' className='editTaskFormLabel'>
+                Date
+              </label> */}
+              <div className='editTaskFormDate'>
+                <input
+                  type='date'
+                  id='task-date'
+                  name='task-date'
+                  min='2020-12-31'
+                  max='2040-12-31'
+                  defaultValue={thisDate}
+                  className='editTaskFormDateInput'
+                  required
+                />
+              </div>
+
+              <div className='editTaskFormTimeContainer'>
+                <div className='editTaskFormTimeSet'>
+                  <label htmlFor='start-time' className='editTaskFormLabel'>
+                    Start
+                  </label>
+                  <div className='editTaskFormTime'>
+                    <input
+                      type='time'
+                      id='start-time'
+                      name='start-time'
+                      max={finishTime}
+                      defaultValue={startTime}
+                      className='editTaskFormTimeInput'
+                      step='2'
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className='editTaskFormTimeSet'>
+                  <label htmlFor='start-time' className='editTaskFormLabel'>
+                    Stop
+                  </label>
+                  <div className='editTaskFormTime'>
+                    <input
+                      type='time'
+                      id='start-time'
+                      name='start-time'
+                      min={startTime}
+                      defaultValue={finishTime}
+                      className='editTaskFormTimeInput'
+                      step='2'
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            {/* {passErr && <div className='rInputErr'>{passErr}</div>} */}
           </div>
-          <button id='Save' className='save' type='submit'>
-            Save
+          <button className='editTaskFormBtn' type='submit'>
+            Submit
           </button>
-          {/* {axiosErr && <span className='rSubmitErr'>{axiosErr}</span>} */}
         </form>
       </div>
     </>
