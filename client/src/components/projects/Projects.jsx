@@ -5,7 +5,7 @@ import { ProjectsContext } from "../../context/ProjectsContext";
 import { GoPrimitiveDot } from "react-icons/go";
 import { AiOutlinePlus } from "react-icons/ai";
 
-const Projects = ({ handleModal, setProject, handleAddProjectWindow }) => {
+const Projects = ({ handleModal, setProject, handleEditProjectWindow }) => {
   const { projects } = useContext(ProjectsContext);
 
   return (
@@ -28,7 +28,7 @@ const Projects = ({ handleModal, setProject, handleAddProjectWindow }) => {
           </div>
         ))}
         <hr className='projectsHr' />
-        <div className='projectAdd' onClick={handleAddProjectWindow}>
+        <div className='projectAdd' onClick={handleEditProjectWindow}>
           <AiOutlinePlus />
           Create A New Project
         </div>

@@ -8,6 +8,7 @@ import "./timer.scss";
 import TimerShowSummary from "../../components/showSummary/TimerShowSummary";
 import SetTask from "../../components/setTask/SetTask";
 import TimerShowDetail from "../../components/showDetail/TimerShowDetail";
+import AddProject from "../../components/addProject/AddProject";
 
 const absDate = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 const Timer = () => {
@@ -15,6 +16,7 @@ const Timer = () => {
   const { dispatch } = useContext(ProjectsContext);
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [editProjectWindow, setEditProjectWindow] = useState(false);
 
   const loadProjects = async () => {
     try {
@@ -43,11 +45,18 @@ const Timer = () => {
     setTasks(task);
   };
 
+  const handleEditProjectWindow = () => {
+    setEditProjectWindow((prev) => !prev);
+  };
+
   return (
     <div className='timer'>
       <Sidebar />
       <div className='timerContainer'>
-        <SetTask setTask={setTask} />
+        <SetTask
+          setTask={setTask}
+          handleEditProjectWindow={handleEditProjectWindow}
+        />
         <TimerShowSummary
           tasks={[...tasks]}
           newTask={newTask}
@@ -58,11 +67,18 @@ const Timer = () => {
           {tasks.map(
             (data, idx) =>
               data.length !== 0 && (
-                <TimerShowDetail key={idx} data={[...data]} />
+                <TimerShowDetail
+                  key={idx}
+                  data={[...data]}
+                  handleEditProjectWindow={handleEditProjectWindow}
+                />
               )
           )}
         </div>
       </div>
+      {editProjectWindow && (
+        <AddProject handleEditProjectWindow={handleEditProjectWindow} />
+      )}
     </div>
   );
 };

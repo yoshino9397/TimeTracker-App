@@ -6,7 +6,7 @@ import { ProjectsContext } from "../../context/ProjectsContext";
 import "./addProject.scss";
 import EditProjectsList from "./editProjectsList/EditProjectsList";
 
-const AddProject = ({ handleAddProjectWindow }) => {
+const AddProject = ({ handleEditProjectWindow }) => {
   const { user } = useContext(AuthContext);
   const { projects, dispatch } = useContext(ProjectsContext);
   const [showProjectList, setShowProjectList] = useState(projects);
@@ -102,14 +102,14 @@ const AddProject = ({ handleAddProjectWindow }) => {
     const res = await axios.get(`/projects/user/${user._id}`);
     dispatch({ type: "PROJECT_CHANGE", payload: res.data });
     setRemoveProject([]);
-    handleAddProjectWindow();
+    handleEditProjectWindow();
   };
 
   return (
     <>
       <div
         className='addProjectContainerBack'
-        onClick={handleAddProjectWindow}
+        onClick={handleEditProjectWindow}
       />
       <div className='addProjectContainer'>
         <span className='addProjectContainerTitle'>Project List</span>

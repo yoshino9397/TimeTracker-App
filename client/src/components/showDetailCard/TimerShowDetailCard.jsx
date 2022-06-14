@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import Projects from "../projects/Projects";
-import AddProject from "../addProject/AddProject";
 import axios from "axios";
 
 import "./timerShowDetailCard.scss";
@@ -15,12 +14,12 @@ const TimerShowDetailCard = ({
   checkBoxData,
   dataLength,
   addCheckBoxData,
+  handleEditProjectWindow,
 }) => {
   const { projects } = useContext(ProjectsContext);
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [checkBox, setCheckBox] = useState(false);
-  const [addProjectWindow, setAddProjectWindow] = useState(false);
 
   useEffect(() => {
     if (el.val.projectTitle) {
@@ -69,11 +68,6 @@ const TimerShowDetailCard = ({
     }
   };
 
-  const handleAddProjectWindow = () => {
-    console.log("handleAddProjectWindow");
-    setAddProjectWindow((prev) => !prev);
-  };
-
   return (
     <div className='detailsDateContainerTask'>
       <div className='detailsTaskDateEditContainer'>
@@ -102,7 +96,7 @@ const TimerShowDetailCard = ({
               <Projects
                 handleModal={handleModal}
                 setProject={setProject}
-                handleAddProjectWindow={handleAddProjectWindow}
+                handleEditProjectWindow={handleEditProjectWindow}
               />
             )}
           </div>
@@ -115,7 +109,7 @@ const TimerShowDetailCard = ({
                 <Projects
                   handleModal={handleModal}
                   setProject={setProject}
-                  handleAddProjectWindow={handleAddProjectWindow}
+                  handleEditProjectWindow={handleEditProjectWindow}
                 />
               )}
             </button>
@@ -128,9 +122,6 @@ const TimerShowDetailCard = ({
           (Math.floor(el.val.taskDuration / 60) % 60)
         ).slice(-2)}:${("00" + (el.val.taskDuration % 60)).slice(-2)}`}
       </div>
-      {addProjectWindow && (
-        <AddProject handleAddProjectWindow={handleAddProjectWindow} />
-      )}
     </div>
   );
 };

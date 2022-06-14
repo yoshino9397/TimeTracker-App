@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TimerShowDetailCard from "../showDetailCard/TimerShowDetailCard";
+import Edit from "../../components/edit/Edit";
 import { format } from "date-fns";
 
 import "./timerShowDetail.scss";
@@ -8,9 +9,8 @@ import {
   MdCheckBox,
   MdIndeterminateCheckBox,
 } from "react-icons/md";
-import Edit from "../edit/Edit";
 
-const TimerShowDetail = ({ data }) => {
+const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
   const [checkBoxData, setCheckBoxData] = useState([]);
   const [editOpen, setEditOpen] = useState(false);
   let totalTime = 0;
@@ -21,10 +21,6 @@ const TimerShowDetail = ({ data }) => {
     new Date().setDate(new Date().getDate() - 1),
     "yyyy-MM-dd"
   );
-
-  const handleModal = () => {
-    setEditOpen((prev) => !prev);
-  };
 
   const allSelect = () => {
     if (checkBoxData.length > 0) setCheckBoxData([]);
@@ -46,65 +42,75 @@ const TimerShowDetail = ({ data }) => {
     }
   };
 
+  const handleEditTaskWindow = () => {
+    setEditOpen((prev) => !prev);
+  };
+
   return (
-    <div className='detailsDateContainer'>
-      <div className='detailsDateContainerTitle'>
-        <div className='detailsDateEditContainer'>
-          <div className='detailsDateEditCheckbox' onClick={allSelect}>
-            {checkBoxData.length === data.length ? (
-              <MdCheckBox />
-            ) : checkBoxData.length !== 0 ? (
-              <MdIndeterminateCheckBox />
-            ) : (
-              <MdCheckBoxOutlineBlank />
-            )}
+    <>
+      <div className='detailsDateContainer'>
+        <div className='detailsDateContainerTitle'>
+          <div className='detailsDateEditContainer'>
+            <div className='detailsDateEditCheckbox' onClick={allSelect}>
+              {checkBoxData.length === data.length ? (
+                <MdCheckBox />
+              ) : checkBoxData.length !== 0 ? (
+                <MdIndeterminateCheckBox />
+              ) : (
+                <MdCheckBoxOutlineBlank />
+              )}
+            </div>
+            <div className='detailDate'>
+              {data[0].val.startTime.slice(0, 10) === today
+                ? "Today"
+                : data[0].val.startTime.slice(0, 10) === yesterday
+                ? "Yesterday"
+                : data[0].val.startTime.slice(0, 10)}
+            </div>
+            <span className='detailDateSelect'>
+              {checkBoxData.length} / {data.length} items selected
+            </span>
+            <button
+              className='detailDateEdit'
+              disabled={checkBoxData.length === 0}
+              onClick={handleEditTaskWindow}
+            >
+              Edit
+            </button>
+            <button
+              className='detailDateDelete'
+              disabled={checkBoxData.length === 0}
+            >
+              Delete
+            </button>
           </div>
-          <div className='detailDate'>
-            {data[0].val.startTime.slice(0, 10) === today
-              ? "Today"
-              : data[0].val.startTime.slice(0, 10) === yesterday
-              ? "Yesterday"
-              : data[0].val.startTime.slice(0, 10)}
+          <div className='detailTimeSum'>
+            {`${("00" + Math.floor(totalTime / 60 / 60)).slice(-2)}:${(
+              "00" +
+              (Math.floor(totalTime / 60) % 60)
+            ).slice(-2)}:${("00" + (totalTime % 60)).slice(-2)}`}
           </div>
-          <span className='detailDateSelect'>
-            {checkBoxData.length} / {data.length} items selected
-          </span>
-          <button
-            className='detailDateEdit'
-            disabled={checkBoxData.length === 0}
-            onClick={handleModal}
-          >
-            Edit
-          </button>
-          {editOpen && (
-            <Edit handleModal={handleModal} checkBoxData={checkBoxData} />
-          )}
-          <button
-            className='detailDateDelete'
-            disabled={checkBoxData.length === 0}
-          >
-            Delete
-          </button>
         </div>
-        <div className='detailTimeSum'>
-          {`${("00" + Math.floor(totalTime / 60 / 60)).slice(-2)}:${(
-            "00" +
-            (Math.floor(totalTime / 60) % 60)
-          ).slice(-2)}:${("00" + (totalTime % 60)).slice(-2)}`}
+        <div className='detailsTasksContainer'>
+          {data.map((el, idx) => (
+            <TimerShowDetailCard
+              key={idx}
+              el={el}
+              checkBoxData={checkBoxData}
+              dataLength={data.length}
+              addCheckBoxData={addCheckBoxData}
+              handleEditProjectWindow={handleEditProjectWindow}
+            />
+          ))}
         </div>
       </div>
-      <div className='detailsTasksContainer'>
-        {data.map((el, idx) => (
-          <TimerShowDetailCard
-            key={idx}
-            el={el}
-            checkBoxData={checkBoxData}
-            dataLength={data.length}
-            addCheckBoxData={addCheckBoxData}
-          />
-        ))}
-      </div>
-    </div>
+      {editOpen && (
+        <Edit
+          handleEditTaskWindow={handleEditTaskWindow}
+          checkBoxData={checkBoxData}
+        />
+      )}
+    </>
   );
 };
 
