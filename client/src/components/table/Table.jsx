@@ -19,20 +19,16 @@ import { AuthContext } from "../../context/AuthContext";
 const Tables = () => {
   const { user } = useContext(AuthContext);
   const [lists, setLists] = useState([]);
-  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const fetchTable = async () => {
       try {
         const res = await axios.get(`/projects/user/${user._id}`);
-
         setLists(
           res.data.sort((p1, p2) => {
             return new Date(p2.createdAt) - new Date(p1.createdAt);
           })
         );
-        
-
       } catch (err) {
         console.log(err);
       }
@@ -41,21 +37,28 @@ const Tables = () => {
   }, [user._id]);
 
   const Row = ({ row }) => {
+    const [tasks, setTasks] = useState([{}]);
     const [open, setOpen] = useState(false);
-    const [tasks, setTasks] = useState([]);
+    const [duration, setDuration] = useState(0);
 
-    // useEffect(() => {
-    //   const fetchTask = async () => {
-    //     try {
-    //       const res = await axios.get(`/tasks/project/${row._id}`);
-    //       setTasks(res.data);
-    //       console.log(tasks);
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   };
-    //   fetchTask();
-    // }, [row._id]);
+    useEffect(() => {
+      const fetchRow = async () => {
+        try {
+          const res = await axios.get(`/tasks/project/${row._id}`);
+          setTasks(res.data);
+
+          var sum = 0;
+          for (let i = 0; i < res.data.length; i++) {
+            sum += res.data[i].taskDuration;
+          }
+          setDuration(sum);
+          console.log(sum);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchRow();
+    }, [row._id]);
 
     return (
       <>
@@ -70,35 +73,37 @@ const Tables = () => {
             </IconButton>
           </TableCell>
           <TableCell>{row.title}</TableCell>
-          <TableCell>{user.duration}</TableCell>
+          <TableCell>{duration}</TableCell>
           <TableCell>{row.percentage}</TableCell>
         </TableRow>
-        <TableRow>
-          <TableCell
-            style={{
-              paddingBottom: 0,
-              paddingTop: 0,
-            }}
-            colSpan={6}
-          >
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <IconButton size="small">
-                        <TaskAltIcon sx={{ color: "gray" }} />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="left">{tasks.title}</TableCell>
-                    <TableCell>{user.duration}</TableCell>
-                    <TableCell>{row.percentage}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Collapse>
-          </TableCell>
-        </TableRow>
+        {tasks.map((task) => (
+          <TableRow key={task.id}>
+            <TableCell
+              style={{
+                paddingBottom: 0,
+                paddingTop: 0,
+              }}
+              colSpan={6}
+            >
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <Table>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <IconButton size="small">
+                          <TaskAltIcon sx={{ color: "gray" }} />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="left">{task.title}</TableCell>
+                      <TableCell>{task.taskDuration}</TableCell>
+                      <TableCell>{row.percentage}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        ))}
       </>
     );
   };
