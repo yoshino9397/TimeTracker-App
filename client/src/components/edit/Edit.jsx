@@ -116,20 +116,23 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
                 </div>
                 {selectOption ? <BiChevronUp /> : <BiChevronDown />}
                 {selectOption && (
-                  <div className='editTaskFormSelectOptionList'>
-                    {projectsList.map((project, idx) => (
-                      <div
-                        key={idx}
-                        className='optionListContainer'
-                        onClick={() => handleOption(project)}
-                      >
-                        <GoPrimitiveDot
-                          style={{ fill: `${project.colorCode}` }}
-                        />
-                        {project.title}
-                      </div>
-                    ))}
-                  </div>
+                  <>
+                    <div className='editTaskFormSelectOptionListBack'></div>
+                    <div className='editTaskFormSelectOptionList'>
+                      {projectsList.map((project, idx) => (
+                        <div
+                          key={idx}
+                          className='optionListContainer'
+                          onClick={() => handleOption(project)}
+                        >
+                          <GoPrimitiveDot
+                            style={{ fill: `${project.colorCode}` }}
+                          />
+                          {project.title}
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
 
