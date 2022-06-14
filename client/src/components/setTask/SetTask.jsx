@@ -7,10 +7,11 @@ import "./setTask.scss";
 import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from "react-icons/bs";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
+import { GoPrimitiveDot } from "react-icons/go";
 import Projects from "../projects/Projects";
 
 let timerId;
-const SetTask = ({ setTask }) => {
+const SetTask = ({ setTask, handleEditProjectWindow }) => {
   const { user } = useContext(AuthContext);
   const timeMinutes = Math.floor(user.duration / 60);
   const timeSeconds = Math.floor(user.duration % 60);
@@ -24,6 +25,7 @@ const SetTask = ({ setTask }) => {
   const [endTime, setEndTime] = useState("");
   const [beginTime, setBeginTime] = useState("");
   const [projectsOpen, setProjectsOpen] = useState(false);
+  const [projectName, setProjectName] = useState("");
   const taskName = useRef();
 
   const timerInit = () => {
@@ -53,11 +55,15 @@ const SetTask = ({ setTask }) => {
           startTime: beginTime,
           finishTime: endTime,
           taskDuration: duration,
+          projectId: projectName._id,
+          projectTitle: projectName.title,
+          projectColorCode: projectName.colorCode,
         });
         if (res.status === 200) {
           setTask(res.data);
         }
         taskName.current.value = "";
+        setProjectName("");
       }
     };
     taskSubmit();
@@ -74,6 +80,14 @@ const SetTask = ({ setTask }) => {
       } else countDown();
     }
   }, [startTimer, settingTimerSec]);
+
+  const setProject = (project) => {
+    setProjectName(project);
+  };
+
+  const handleModal = () => {
+    setProjectsOpen((prev) => !prev);
+  };
 
   const handleTimer = () => {
     if (startTimer) {
@@ -96,14 +110,43 @@ const SetTask = ({ setTask }) => {
           placeholder='Please enter task name'
           ref={taskName}
         />
+        {projectName && (
+          <div
+            className='timerSetProjectTag'
+            onClick={() => setProjectsOpen((prev) => !prev)}
+          >
+            <span
+              className='timerSetProjectTagBack'
+              style={{
+                backgroundColor: `${projectName.colorCode}`,
+              }}
+            >
+              &nbsp;
+            </span>
+            <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
+            {projectName.title}
+            {projectsOpen && (
+              <Projects
+                handleModal={handleModal}
+                setProject={setProject}
+                handleEditProjectWindow={handleEditProjectWindow}
+              />
+            )}
+          </div>
+        )}
       </div>
-      <button
-        className='timerSetTag'
-        onClick={() => setProjectsOpen((prev) => !prev)}
-      >
-        <BsTagFill />
-        {projectsOpen && <Projects />}
-      </button>
+      {!projectName && (
+        <button className='timerSetTag' onClick={() => handleModal()}>
+          <BsTagFill />
+          {projectsOpen && (
+            <Projects
+              handleModal={handleModal}
+              setProject={setProject}
+              handleEditProjectWindow={handleEditProjectWindow}
+            />
+          )}
+        </button>
+      )}
       <div className='timerStartContainer'>
         <div className='timerBox'>
           <span>
