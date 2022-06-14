@@ -37,20 +37,20 @@ const Edit = ({ handleModal, checkBoxData }) => {
           <div className={`rInputSetContainer`}>
             <div className={`rInputLabelContainer`}>
               <label
-                htmlFor='password'
+                htmlFor='project'
                 // className={`rInputLabel ${passLabelCss} ${
                 //   passErr ? 'labelErr' : ''
                 // }`}
               >
                 Project
               </label>
-              <select
-                id='category'
-                name='category'
-                // defaultValue={planInfo === '' ? categoryList[0] : category}
-              >
-                <option>test</option>
-              </select>
+              {/* <select id='project' name='project' defaultValue='project test'>
+                {projects.map((project, idx) => (
+                  <option value={project.title} key={idx}>
+                    {project.title}
+                  </option>
+                ))}
+              </select> */}
             </div>
             {/* {passErr && <div className='rInputErr'>{passErr}</div>} */}
           </div>

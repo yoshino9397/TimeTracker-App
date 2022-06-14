@@ -1,25 +1,13 @@
-import { useContext, useState, useEffect } from "react";
-import axios from "axios";
+import { useContext } from "react";
 import "./project.scss";
 
 import { AuthContext } from "../../context/AuthContext";
+import { ProjectsContext } from "../../context/ProjectsContext";
 import { GoPrimitiveDot } from "react-icons/go";
 import { AiOutlinePlus } from "react-icons/ai";
 
 const Projects = ({ handleModal, setProject, handleAddProjectWindow }) => {
-  const { user } = useContext(AuthContext);
-  const [projects, setProjects] = useState([]);
-
-  const loadProjects = async () => {
-    const res = await axios.get(`/projects/user/${user._id}`);
-    if (res.status === 200) {
-      setProjects(res.data);
-    }
-  };
-
-  useEffect(() => {
-    loadProjects();
-  }, []);
+  const { projects } = useContext(ProjectsContext);
 
   return (
     <>

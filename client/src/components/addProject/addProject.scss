@@ -4,20 +4,57 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #c1f78b40;
-  z-index: 5;
+  background-color: #6262629c;
+  z-index: 1;
 }
 
-// .editContainer {
-//   position: fixed;
-//   top: 50%;
-//   left: 50%;
-//   margin-top: -35%;
-//   margin-left: -35%;
-//   // top: 1.5rem;
-//   // right: -4rem;
-//   border: 1px solid #ccc;
-//   background-color: #f78b8b;
-//   width: 70%;
-//   z-index: 10;
-// }
+.addProjectContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -25%;
+  margin-left: -25%;
+  padding: 1rem 1rem;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 50%;
+  border-radius: 0.6rem;
+  z-index: 10;
+
+  .addProjectContainerTitle {
+    padding: 0 1rem;
+    line-height: 3rem;
+  }
+
+  .editProjectForm {
+    color: #616161;
+
+    & button {
+      margin: 0 auto;
+      display: flex;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #fff;
+      color: #616161;
+      font-size: 1.1rem;
+      font-weight: 550;
+      transition: all 0.3s ease-in-out;
+
+      // @media only screen and (max-width: ($bp-small)) {
+      //   font-size: 0.9rem;
+      // }
+
+      &:hover {
+        color: rgb(94, 53, 177);
+        background-color: rgb(237, 231, 246);
+      }
+
+      &:active {
+        background-color: #fff;
+        color: #616161;
+      }
+    }
+  }
+}
