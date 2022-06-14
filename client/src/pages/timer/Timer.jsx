@@ -17,6 +17,7 @@ const Timer = () => {
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState([]);
   const [editProjectWindow, setEditProjectWindow] = useState(false);
+  const [loadFlg, setLoadFlg] = useState(false);
 
   const loadProjects = async () => {
     try {
@@ -49,6 +50,10 @@ const Timer = () => {
     setEditProjectWindow((prev) => !prev);
   };
 
+  const handleReload = () => {
+    setLoadFlg((prev) => !prev);
+  };
+
   return (
     <div className='timer'>
       <Sidebar />
@@ -62,6 +67,7 @@ const Timer = () => {
           newTask={newTask}
           setWeeklyTasks={setWeeklyTasks}
           addWeeklyTask={addWeeklyTask}
+          loadFlg={loadFlg}
         />
         <div className='timerShowDetailsContainer'>
           {tasks.map(
@@ -71,6 +77,7 @@ const Timer = () => {
                   key={idx}
                   data={[...data]}
                   handleEditProjectWindow={handleEditProjectWindow}
+                  handleReload={handleReload}
                 />
               )
           )}

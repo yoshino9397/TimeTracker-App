@@ -12,7 +12,7 @@ import {
   MdIndeterminateCheckBox,
 } from "react-icons/md";
 
-const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
+const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
   const [checkBoxData, setCheckBoxData] = useState([]);
   const [editOpen, setEditOpen] = useState(false);
   let totalTime = 0;
@@ -53,6 +53,11 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
 
   const handleEditTaskWindow = () => {
     setEditOpen((prev) => !prev);
+    if (editOpen) handleReload();
+  };
+
+  const removeCheck = () => {
+    setCheckBoxData([]);
   };
 
   const handleDelete = () => {
@@ -134,6 +139,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
         <Edit
           handleEditTaskWindow={handleEditTaskWindow}
           checkBoxData={checkBoxData}
+          removeCheck={removeCheck}
         />
       )}
     </>

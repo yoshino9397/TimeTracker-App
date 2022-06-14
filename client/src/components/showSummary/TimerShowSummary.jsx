@@ -12,6 +12,7 @@ const TimerShowSummary = ({
   newTask,
   setWeeklyTasks,
   addWeeklyTask,
+  loadFlg,
 }) => {
   const { user } = useContext(AuthContext);
   const [todaySumTime, setTodaySumTime] = useState(0);
@@ -53,7 +54,7 @@ const TimerShowSummary = ({
 
   useEffect(() => {
     loadTasks();
-  }, []);
+  }, [loadFlg]);
 
   const loadTasks = async () => {
     const res = await axios.get(`/tasks/user/${user._id}`);
