@@ -19,7 +19,7 @@ const TaskSchema = new mongoose.Schema(
       required: true,
     },
     projectId: { type: String },
-    projectTitle: { type: String },
+    name: { type: String },
     projectColorCode: {
       type: String,
     },

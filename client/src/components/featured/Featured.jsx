@@ -46,18 +46,25 @@ const renderCustomizedLabel = ({
 const Featured = () => {
   const { user } = useContext(AuthContext);
   const [durationAll, setDurationAll] = useState(0);
-  const [info, setInfo] = useState();
+  const [projectDuration, setProjectDuration] = useState([{}]);
+  const [titleProject, setTitleProject] = useState([]);
+  const [dataName, setDataName] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/tasks/user/${user._id}`);
-        setInfo(res.data)
+        let arr = [];
         var sum = 0;
+        const res = await axios.get(`/tasks/user/${user._id}`);
+        console.log(res.data);
+
         for (let i = 0; i < res.data.length; i++) {
           sum += res.data[i].taskDuration;
+          arr.push({ time: res.data[i].taskDuration });
         }
+        setTitleProject(arr);
         setDurationAll(sum);
+        setProjectDuration(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -65,19 +72,25 @@ const Featured = () => {
     fetchData();
   }, [user._id]);
 
-  console.log(info);
-  
+  console.log(titleProject);
+
   useEffect(() => {
-    const fetchProject = async () => {
+    const fetchRow = async () => {
       try {
-        const res = await axios.get(`/tasks/project/?${user._id}`);
-        console.log(res.data);
+        let array = [];
+        const res = await axios.get(`/projects/user/${user._id}`);
+        for (let i = 0; i < res.data.length; i++) {
+          array.push({ name: res.data[i].title });
+        }
+        setDataName(array);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchProject();
+    fetchRow();
   }, [user._id]);
+
+  console.log(dataName);
 
   return (
     <div className="featured">
@@ -94,16 +107,16 @@ const Featured = () => {
             <PieChart width={400} height={400}>
               <Legend layout="vertical" verticalAlign="top" align="top" />
               <Pie
-                data={data}
+                data={projectDuration}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
                 label={renderCustomizedLabel}
                 outerRadius={80}
                 fill="#8884d8"
-                dataKey="value"
+                dataKey="taskDuration"
               >
-                {data.map((entry, index) => (
+                {projectDuration.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
@@ -128,7 +141,11 @@ const Featured = () => {
           <div className="item">
             <div className="itemTitle">BILLABLE HOURS</div>
             <div className="itemResult">
-              <div className="resultAmount">0:00:00</div>
+              <div className="resultAmount">{`${(
+                "00" + Math.floor(durationAll / 3600)
+              ).slice(-2)}:${("00" + (Math.floor(durationAll / 60) % 60)).slice(
+                -2
+              )}:${("00" + (durationAll % 60)).slice(-2)}`}</div>
             </div>
           </div>
         </div>
