@@ -7,9 +7,10 @@ import "./edit.scss";
 import { GoPrimitiveDot } from "react-icons/go";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
-const INITIAL_COLORCODE = "#ccc";
-const INITIAL_PROJECTNAME = "No Project";
+const INITIAL_COLORCODE = "transparent";
+const INITIAL_PROJECTNAME = "----";
 const INITIAL_PROJECT = {
+  id: "none",
   colorCode: INITIAL_COLORCODE,
   title: INITIAL_PROJECTNAME,
 };
@@ -35,6 +36,7 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
     .slice(16, 24);
   const minTime = useRef(startTime);
   const maxTime = useRef(finishTime);
+  console.log("projectName", projectName);
 
   useEffect(() => {
     if (checkBoxData[0].val.projectTitle) {
@@ -54,10 +56,14 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
   };
 
   const handleOption = (project) => {
-    setProjectName({
-      colorCode: project.colorCode,
-      title: project.title,
-    });
+    if (project.id !== "none") {
+      setProjectName({
+        colorCode: project.colorCode,
+        title: project.title,
+      });
+    } else {
+      setProjectName("");
+    }
   };
 
   const checkTimeValidation = (e) => {
@@ -127,7 +133,7 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
                       fill: `${projectName.colorCode || INITIAL_COLORCODE}`,
                     }}
                   />
-                  {projectName.title || "No Project"}
+                  {projectName.title || INITIAL_PROJECTNAME}
                 </div>
                 {selectOption ? <BiChevronUp /> : <BiChevronDown />}
                 {selectOption && (
