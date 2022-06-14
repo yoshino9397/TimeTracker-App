@@ -13,8 +13,8 @@
   top: 40%;
   left: 50%;
   margin-top: -25%;
-  margin-left: -25%;
-  min-width: 55%;
+  margin-left: -32.5%;
+  min-width: 65%;
   z-index: 2;
 
   background-color: rgb(255, 255, 255);
@@ -244,7 +244,26 @@
               background-color: #46638a54;
             }
           }
+
+          .timeInputErr {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 0 0 0.8pt rgb(244, 67, 54);
+          }
+
+          .timeLabelErr {
+            color: rgb(244, 67, 54);
+          }
         }
+      }
+
+      .timeInputErrMsg {
+        color: rgb(244, 67, 54);
+        font-size: 0.9rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+        margin-left: 0.3rem;
       }
     }
 

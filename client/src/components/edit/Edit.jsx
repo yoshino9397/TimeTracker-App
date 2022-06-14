@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 
 import { ProjectsContext } from "../../context/ProjectsContext";
@@ -21,6 +21,8 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
     ...projects,
   ]);
   const [selectOption, setSelectOption] = useState(false);
+  const [timeInputErr, setTimeInputErr] = useState(false);
+  const [timeInputErrMsg, setTimeInputErrMsg] = useState("");
   const thisDate = format(
     new Date(checkBoxData[0].val.startTime),
     "yyyy-MM-dd"
@@ -31,6 +33,8 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
   const finishTime = new Date(checkBoxData[0].val.finishTime)
     .toString()
     .slice(16, 24);
+  const minTime = useRef(startTime);
+  const maxTime = useRef(finishTime);
 
   useEffect(() => {
     if (checkBoxData[0].val.projectTitle) {
@@ -54,6 +58,17 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
       colorCode: project.colorCode,
       title: project.title,
     });
+  };
+
+  const checkTimeValidation = (e) => {
+    console.log("e", e);
+    if (e.target.id === "start-time") {
+      setTimeInputErr(e.target.value >= maxTime.current.value);
+      setTimeInputErrMsg("Start time should be set to a time before Stop time");
+    } else {
+      setTimeInputErr(e.target.value <= minTime.current.value);
+      setTimeInputErrMsg("Start time should be set to a time before Stop time");
+    }
   };
 
   return (
@@ -154,41 +169,64 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
 
               <div className='editTaskFormTimeContainer'>
                 <div className='editTaskFormTimeSet'>
-                  <label htmlFor='start-time' className='editTaskFormLabel'>
+                  <label
+                    htmlFor='start-time'
+                    className={`editTaskFormLabel ${
+                      timeInputErr ? "timeLabelErr" : ""
+                    }`}
+                  >
                     Start
                   </label>
-                  <div className='editTaskFormTime'>
+                  <div
+                    className={`editTaskFormTime ${
+                      timeInputErr ? "timeInputErr" : ""
+                    }`}
+                  >
                     <input
                       type='time'
                       id='start-time'
                       name='start-time'
-                      max={finishTime}
+                      ref={minTime}
                       defaultValue={startTime}
                       className='editTaskFormTimeInput'
                       step='2'
                       required
+                      onBlur={checkTimeValidation}
                     />
                   </div>
                 </div>
 
                 <div className='editTaskFormTimeSet'>
-                  <label htmlFor='start-time' className='editTaskFormLabel'>
+                  <label
+                    htmlFor='finish-time'
+                    className={`editTaskFormLabel ${
+                      timeInputErr ? "timeLabelErr" : ""
+                    }`}
+                  >
                     Stop
                   </label>
-                  <div className='editTaskFormTime'>
+                  <div
+                    className={`editTaskFormTime ${
+                      timeInputErr ? "timeInputErr" : ""
+                    }`}
+                  >
                     <input
                       type='time'
-                      id='start-time'
-                      name='start-time'
-                      min={startTime}
+                      id='finish-time'
+                      name='finish-time'
+                      ref={maxTime}
                       defaultValue={finishTime}
                       className='editTaskFormTimeInput'
                       step='2'
                       required
+                      onBlur={checkTimeValidation}
                     />
                   </div>
                 </div>
               </div>
+              {timeInputErr && (
+                <div className='timeInputErrMsg'>{timeInputErrMsg}</div>
+              )}
             </div>
           </div>
           <button className='editTaskFormBtn' type='submit'>
