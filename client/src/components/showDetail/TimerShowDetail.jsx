@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import TimerShowDetailCard from "../showDetailCard/TimerShowDetailCard";
 import Edit from "../../components/edit/Edit";
 import { format } from "date-fns";
@@ -16,15 +18,22 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
   let totalTime = 0;
   data.forEach((el) => (totalTime += el.val.taskDuration));
   data.sort((a, b) => b.val.startTime.localeCompare(a.val.startTime));
+  const [showData, setShowData] = useState(data);
   const today = format(new Date(), "yyyy-MM-dd");
   const yesterday = format(
     new Date().setDate(new Date().getDate() - 1),
     "yyyy-MM-dd"
   );
 
+  useEffect(() => {
+    data.forEach((el) => (totalTime += el.val.taskDuration));
+    data.sort((a, b) => b.val.startTime.localeCompare(a.val.startTime));
+    setShowData(data);
+  }, [data]);
+
   const allSelect = () => {
     if (checkBoxData.length > 0) setCheckBoxData([]);
-    else setCheckBoxData(data);
+    else setCheckBoxData(showData);
   };
 
   const addCheckBoxData = (addFlg, addData) => {
@@ -46,13 +55,29 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
     setEditOpen((prev) => !prev);
   };
 
+  const handleDelete = () => {
+    checkBoxData.forEach(async (removeEl) => {
+      // delete
+      try {
+        await axios.delete(`/tasks/${removeEl.val._id}`);
+      } catch (err) {
+        console.log("err:", err);
+      }
+      // remove from array
+      setShowData((prev) =>
+        prev.filter((el) => el.val._id !== removeEl.val._id)
+      );
+    });
+    setCheckBoxData([]);
+  };
+
   return (
     <>
       <div className='detailsDateContainer'>
         <div className='detailsDateContainerTitle'>
           <div className='detailsDateEditContainer'>
             <div className='detailsDateEditCheckbox' onClick={allSelect}>
-              {checkBoxData.length === data.length ? (
+              {checkBoxData.length === showData.length ? (
                 <MdCheckBox />
               ) : checkBoxData.length !== 0 ? (
                 <MdIndeterminateCheckBox />
@@ -61,14 +86,14 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
               )}
             </div>
             <div className='detailDate'>
-              {data[0].val.startTime.slice(0, 10) === today
+              {showData[0].val.startTime.slice(0, 10) === today
                 ? "Today"
-                : data[0].val.startTime.slice(0, 10) === yesterday
+                : showData[0].val.startTime.slice(0, 10) === yesterday
                 ? "Yesterday"
-                : data[0].val.startTime.slice(0, 10)}
+                : showData[0].val.startTime.slice(0, 10)}
             </div>
             <span className='detailDateSelect'>
-              {checkBoxData.length} / {data.length} items selected
+              {checkBoxData.length} / {showData.length} items selected
             </span>
             <button
               className='detailDateEdit'
@@ -80,6 +105,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
             <button
               className='detailDateDelete'
               disabled={checkBoxData.length === 0}
+              onClick={handleDelete}
             >
               Delete
             </button>
@@ -92,12 +118,12 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
           </div>
         </div>
         <div className='detailsTasksContainer'>
-          {data.map((el, idx) => (
+          {showData.map((el, idx) => (
             <TimerShowDetailCard
               key={idx}
               el={el}
               checkBoxData={checkBoxData}
-              dataLength={data.length}
+              dataLength={showData.length}
               addCheckBoxData={addCheckBoxData}
               handleEditProjectWindow={handleEditProjectWindow}
             />
