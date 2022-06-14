@@ -36,7 +36,6 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
     .slice(16, 24);
   const minTime = useRef(startTime);
   const maxTime = useRef(finishTime);
-  console.log("projectName", projectName);
 
   useEffect(() => {
     if (checkBoxData[0].val.projectTitle) {
@@ -77,6 +76,11 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
     }
   };
 
+  const submitTask = async (e) => {
+    e.preventDefault();
+    console.log("e", e);
+  };
+
   return (
     <>
       <div
@@ -86,11 +90,7 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
       <div className='editTaskContainer'>
         <span className='editTaskContainerTitle'>Task Edit</span>
 
-        <form
-          // onSubmit={editProjects}
-          autoComplete='off'
-          className='editTaskForm'
-        >
+        <form onSubmit={submitTask} autoComplete='off' className='editTaskForm'>
           <div className='editTaskFormContainer'>
             <div className='editTaskFormInputSetContainer'>
               {/* <input type='hidden' name='project-id' value={project._id} /> */}

@@ -39,19 +39,16 @@ const TimerShowDetailCard = ({
     else if (checkBoxData.length === 0) setCheckBox(false);
   }, [checkBoxData]);
 
-  const setProject = (project) => {
+  const setProject = async (project) => {
     setProjectName(project);
     const task = el.val;
     task.projectId = project._id || "";
     task.projectTitle = project.title || "";
     task.projectColorCode = project.colorCode || "";
-    const taskSubmit = async () => {
-      const res = await axios.put(`/tasks/${task._id}`, task);
-      if (res.status === 200) {
-        console.log(res.data);
-      }
-    };
-    taskSubmit();
+    const res = await axios.put(`/tasks/${task._id}`, task);
+    if (res.status === 200) {
+      console.log(res.data);
+    }
   };
 
   const handleModal = () => {
