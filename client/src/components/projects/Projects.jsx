@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import "./project.scss";
 
-import { AuthContext } from "../../context/AuthContext";
 import { ProjectsContext } from "../../context/ProjectsContext";
 import { GoPrimitiveDot } from "react-icons/go";
 import { AiOutlinePlus } from "react-icons/ai";

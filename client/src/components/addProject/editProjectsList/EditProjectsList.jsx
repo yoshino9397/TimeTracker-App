@@ -1,110 +1,120 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { BiTrash, BiEdit } from "react-icons/bi";
 import { SketchPicker } from "react-color";
 
+import { AuthContext } from "../../../context/AuthContext";
 import "./editProjectsList.scss";
 
+const DEFAULT_COLOR = "#ef93b6";
 const EditProjectsList = ({
   project,
-  // color,
   mode,
   addShowList,
   removeShowList,
+  setErrMsg,
 }) => {
-  const refAddCategory = useRef();
+  const { user } = useContext(AuthContext);
+  const refAddProject = useRef();
   const refAddColor = useRef();
+  const [inputErr, setInputErr] = useState("");
   const [sketchPickerColor, setSketchPickerColor] = useState(
-    project.colorCode ? project.colorCode : "#ef93b6"
+    project.colorCode ? project.colorCode : DEFAULT_COLOR
   );
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
-  let clickCount = 0;
 
   useEffect(() => {
-    setSketchPickerColor(project.colorCode ? project.colorCode : "#ef93b6");
+    setSketchPickerColor(project.colorCode ? project.colorCode : DEFAULT_COLOR);
   }, [project.colorCode]);
 
   const displayChange = () => {
     setDisplayColorPicker((prev) => !prev);
   };
 
-  const handleSingleOrDoubleClick = () => {
-    clickCount++;
+  const handleBlur = (e) => {
+    if (e.target.value === "") {
+      setInputErr("Please enter project name");
+      if (!mode) setErrMsg("Please enter project name");
+    } else {
+      setInputErr("");
+      if (!mode) setErrMsg("");
+    }
+  };
 
-    if (clickCount < 2) {
-      setTimeout(() => {
-        if (clickCount > 1) {
-          if (!mode) {
-            removeShowList(project);
-          }
-        } else {
-          if (mode) {
-            const projectData = refAddCategory.current.value;
-            const colorData = refAddColor.current.value;
-            addShowList(projectData, colorData);
-            refAddCategory.current.value = "";
-            setSketchPickerColor("#ef93b6");
-          }
-        }
-        clickCount = 0;
-      }, 200);
+  const handleSingleOrDoubleClick = () => {
+    if (inputErr === "") {
+      if (!mode) {
+        removeShowList(project);
+      } else {
+        const projectData = refAddProject.current.value;
+        const colorData = refAddColor.current.value;
+        addShowList({
+          colorCode: colorData,
+          title: projectData,
+          userId: user._id,
+        });
+        refAddProject.current.value = "";
+        setSketchPickerColor(DEFAULT_COLOR);
+      }
     }
   };
 
   return (
     <div className='editProjectFormContainer'>
-      <span
-        className='editProjectFormColorIcon'
-        style={{ backgroundColor: sketchPickerColor }}
-        onClick={displayChange}
-      ></span>
-      {displayColorPicker && (
-        <>
-          <div
-            className='editProjectFormColorPaletteClose'
-            onClick={displayChange}
-          ></div>
-          <SketchPicker
-            onChange={(color) => {
-              setSketchPickerColor(color.hex);
-            }}
-            color={sketchPickerColor}
-            className='editProjectFormColorPalette'
+      <div className='formInputSetContainer'>
+        <input type='hidden' name='project-id' value={project._id} />
+        <span
+          className='editProjectFormColorIcon'
+          style={{ backgroundColor: sketchPickerColor }}
+          onClick={displayChange}
+        ></span>
+        {displayColorPicker && (
+          <>
+            <div
+              className='editProjectFormColorPaletteClose'
+              onClick={displayChange}
+            ></div>
+            <SketchPicker
+              onChange={(color) => {
+                setSketchPickerColor(color.hex);
+              }}
+              color={sketchPickerColor}
+              className='editProjectFormColorPalette'
+            />
+          </>
+        )}
+        <input
+          type='hidden'
+          name='project-color'
+          value={sketchPickerColor}
+          className='editProjectFormInput'
+          ref={refAddColor}
+        />
+        <label htmlFor='project-List' className='editProjectFormLabel'></label>
+        <input
+          type='text'
+          id='project-List'
+          name='project-List'
+          placeholder='Enter Project Name'
+          defaultValue={project.title}
+          className={`editProjectFormInput ${
+            inputErr ? "editProjectFormInputErr" : ""
+          }`}
+          ref={refAddProject}
+          onBlur={handleBlur}
+        />
+        {mode ? (
+          <BiEdit
+            className='editProjectFormIconEdit'
+            onClick={() => handleSingleOrDoubleClick()}
           />
-        </>
-      )}
-      <input
-        type='hidden'
-        name='project-color'
-        value={sketchPickerColor}
-        className='editProjectFormInput'
-        ref={refAddColor}
-      />
-      <label
-        htmlFor='project-List'
-        // key={project}
-        className='editProjectFormLabel'
-      ></label>
-      <input
-        type='text'
-        id='project-List'
-        name='project-List'
-        defaultValue={project.title}
-        className='editProjectFormInput'
-        required
-        autoComplete='off'
-        ref={refAddCategory}
-      />
-      {mode ? (
-        <BiEdit
-          className='editProjectFormIconEdit'
-          onClick={() => handleSingleOrDoubleClick()}
-        />
-      ) : (
-        <BiTrash
-          className='editProjectFormIconDelete'
-          onClick={() => handleSingleOrDoubleClick()}
-        />
-      )}
+        ) : (
+          <BiTrash
+            className='editProjectFormIconDelete'
+            onClick={() => handleSingleOrDoubleClick()}
+          />
+        )}
+      </div>
+      {inputErr && <div className='formInputErr'>{inputErr}</div>}
     </div>
   );
 };

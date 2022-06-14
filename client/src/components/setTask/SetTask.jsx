@@ -104,7 +104,6 @@ const SetTask = ({ setTask }) => {
   };
 
   const handleAddProjectWindow = () => {
-    console.log("handleAddProjectWindow");
     setAddProjectWindow((prev) => !prev);
   };
 

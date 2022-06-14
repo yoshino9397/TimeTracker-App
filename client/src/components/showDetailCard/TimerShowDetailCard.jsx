@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Projects from "../projects/Projects";
+import AddProject from "../addProject/AddProject";
 import axios from "axios";
 
 import "./timerShowDetailCard.scss";
 import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
 import { GoPrimitiveDot } from "react-icons/go";
 import { BsTagFill } from "react-icons/bs";
-import { useEffect } from "react";
-import AddProject from "../addProject/AddProject";
+
+import { ProjectsContext } from "../../context/ProjectsContext";
 
 const TimerShowDetailCard = ({
   el,
@@ -15,6 +16,7 @@ const TimerShowDetailCard = ({
   dataLength,
   addCheckBoxData,
 }) => {
+  const { projects } = useContext(ProjectsContext);
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [checkBox, setCheckBox] = useState(false);
@@ -22,12 +24,16 @@ const TimerShowDetailCard = ({
 
   useEffect(() => {
     if (el.val.projectTitle) {
-      setProjectName({
-        colorCode: el.val.projectColorCode,
-        title: el.val.projectTitle,
+      projects?.forEach((project) => {
+        if (project._id === el.val.projectId) {
+          return setProjectName({
+            colorCode: project.colorCode,
+            title: project.title,
+          });
+        }
       });
-    }
-  }, [el]);
+    } else setProjectName("");
+  }, [el, projects]);
 
   useEffect(() => {
     if (checkBoxData.length === dataLength) setCheckBox(true);

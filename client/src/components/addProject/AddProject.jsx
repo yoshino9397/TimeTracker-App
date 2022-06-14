@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 
 import { AuthContext } from "../../context/AuthContext";
@@ -6,49 +6,104 @@ import { ProjectsContext } from "../../context/ProjectsContext";
 import "./addProject.scss";
 import EditProjectsList from "./editProjectsList/EditProjectsList";
 
-const AddProject = ({ handleAddProjectWindow, color }) => {
+const AddProject = ({ handleAddProjectWindow }) => {
   const { user } = useContext(AuthContext);
   const { projects, dispatch } = useContext(ProjectsContext);
-  console.log("AddProject", projects);
   const [showProjectList, setShowProjectList] = useState(projects);
-  // const [showColorList, setShowColorList] = useState(projects);
+  const [submitErrCheck, setSubmitErrCheck] = useState("");
+  const [submitErrFlg, setSubmitErrFlg] = useState(false);
+  const [removeProject, setRemoveProject] = useState([]);
+  console.log("removeProject", removeProject);
 
-  const addShowList = (project, color) => {
+  const addShowList = (project) => {
     const existingListIndex = projects.findIndex(
-      (projectList) => projectList === project
+      (projectList) => projectList.title === project.title
     );
     if (existingListIndex === -1) {
       setShowProjectList((prev) => [...prev, project]);
-    } else {
-      // const chgColor = showColorList.slice();
-      // chgColor.splice(existingListIndex, 1, color);
-      // setShowColorList(chgColor);
     }
   };
 
   const removeShowList = (project) => {
     const existingListIndex = showProjectList.findIndex(
-      (projectList) => projectList === project
+      (projectList) => projectList.title === project.title
     );
     if (existingListIndex !== -1) {
       const chgCategory = showProjectList.slice();
-      // const chgColor = showColorList.slice();
-      chgCategory.splice(existingListIndex, 1);
-      // chgColor.splice(existingListIndex, 1);
+      const removeProject = chgCategory.splice(existingListIndex, 1)[0];
+      setRemoveProject((prev) => [...prev, removeProject]);
       setShowProjectList(chgCategory);
-      // setShowColorList(chgColor);
     }
   };
 
-  // const loadProjects = async () => {
-  //   try {
-  //     const res = await axios.get(`/projects/user/${user._id}`);
-  //     dispatch({ type: "PROJECT_CHANGE", payload: res.data });
-  //   } catch (err) {
-  //     dispatch({ type: "PROJECT_CHANGE_FAILURE", payload: err.response.data });
-  //     console.log("err:", err);
-  //   }
-  // };
+  const setErrMsg = (err) => {
+    setSubmitErrCheck(err);
+  };
+
+  const editProjects = async (e) => {
+    e.preventDefault();
+    if (submitErrCheck) {
+      return setSubmitErrFlg(true);
+    } else setSubmitErrFlg(false);
+
+    for (let i = 0; i < e.target.length - 1; i += 3) {
+      if (e.target[i].value !== "") {
+        const existingTitleIndex = projects.findIndex(
+          (projectList) => projectList.title === e.target[i + 2].value
+        );
+        if (existingTitleIndex !== -1) {
+          const existingCodeIndex = projects.findIndex(
+            (projectList) => projectList.colorCode === e.target[i + 1].value
+          );
+          if (existingCodeIndex !== -1) continue;
+        }
+
+        try {
+          await axios.put(`/projects/${e.target[i].value}`, {
+            colorCode: e.target[i + 1].value,
+            title: e.target[i + 2].value,
+          });
+        } catch (err) {
+          dispatch({
+            type: "PROJECT_CHANGE_FAILURE",
+            payload: err,
+          });
+          console.log("err:", err);
+        }
+      } else {
+        try {
+          await axios.post(`/projects/`, {
+            userId: user._id,
+            title: e.target[i + 2].value,
+            colorCode: e.target[i + 1].value,
+          });
+        } catch (err) {
+          dispatch({
+            type: "PROJECT_CHANGE_FAILURE",
+            payload: err,
+          });
+          console.log("err:", err);
+        }
+      }
+    }
+
+    removeProject.forEach(async (el) => {
+      try {
+        await axios.delete(`/projects/${el._id}`);
+      } catch (err) {
+        dispatch({
+          type: "PROJECT_CHANGE_FAILURE",
+          payload: err,
+        });
+        console.log("err:", err);
+      }
+    });
+
+    const res = await axios.get(`/projects/user/${user._id}`);
+    dispatch({ type: "PROJECT_CHANGE", payload: res.data });
+    setRemoveProject([]);
+    handleAddProjectWindow();
+  };
 
   return (
     <>
@@ -60,13 +115,14 @@ const AddProject = ({ handleAddProjectWindow, color }) => {
         <span className='addProjectContainerTitle'>Project List</span>
         <EditProjectsList
           project=''
-          color=''
           mode={true}
           addShowList={addShowList}
           removeShowList={removeShowList}
+          setErrMsg={setErrMsg}
         />
+        <hr className='editProjectsListHr' />
         <form
-          // onSubmit={editCategory}
+          onSubmit={editProjects}
           autoComplete='off'
           className='editProjectForm'
         >
@@ -76,10 +132,16 @@ const AddProject = ({ handleAddProjectWindow, color }) => {
               mode={false}
               addShowList={addShowList}
               removeShowList={removeShowList}
+              setErrMsg={setErrMsg}
               key={idx}
             />
           ))}
-          <button type='submit'>Submit</button>
+          <button className='editProjectFormBtn' type='submit'>
+            Submit
+          </button>
+          {submitErrFlg && (
+            <div className='formSubmitInputErr'>{submitErrCheck}</div>
+          )}
         </form>
       </div>
     </>

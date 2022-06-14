@@ -14,7 +14,7 @@ const TimerShowDetail = ({ data }) => {
   const [checkBoxData, setCheckBoxData] = useState([]);
   const [editOpen, setEditOpen] = useState(false);
   let totalTime = 0;
-  data.map((el) => (totalTime += el.val.taskDuration));
+  data.forEach((el) => (totalTime += el.val.taskDuration));
   data.sort((a, b) => b.val.startTime.localeCompare(a.val.startTime));
   const today = format(new Date(), "yyyy-MM-dd");
   const yesterday = format(
