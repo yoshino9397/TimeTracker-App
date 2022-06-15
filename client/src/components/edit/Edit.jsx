@@ -2,6 +2,7 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { format, formatDistanceStrict } from "date-fns";
 import axios from "axios";
 
+import { AuthContext } from "../../context/AuthContext";
 import { ProjectsContext } from "../../context/ProjectsContext";
 
 import "./edit.scss";
@@ -15,7 +16,8 @@ const INITIAL_PROJECT = {
   colorCode: INITIAL_COLORCODE,
   title: INITIAL_PROJECTNAME,
 };
-const Edit = ({ handleEditTaskWindow, checkBoxData, removeCheck }) => {
+const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
+  const { user } = useContext(AuthContext);
   const { projects } = useContext(ProjectsContext);
   const [projectName, setProjectName] = useState("");
   const [projectsList, setProjectsList] = useState([
@@ -26,10 +28,25 @@ const Edit = ({ handleEditTaskWindow, checkBoxData, removeCheck }) => {
   const [timeInputErr, setTimeInputErr] = useState(false);
   const [timeInputErrMsg, setTimeInputErrMsg] = useState("");
   const [submitErrFlg, setSubmitErrFlg] = useState(false);
-  const thisDate = format(
-    new Date(checkBoxData[0].val.startTime),
-    "yyyy-MM-dd"
-  );
+  if (mode === "new") {
+    checkBoxData = [
+      {
+        date: 0,
+        val: {
+          _id: "",
+          userId: "",
+          title: "",
+          startTime: new Date(),
+          finishTime: new Date(new Date().getTime() + 1000),
+          taskDuration: 0,
+          projectColorCode: "",
+          projectId: "",
+          projectTitle: "",
+        },
+      },
+    ];
+  }
+
   const startTimeDate = format(
     new Date(checkBoxData[0].val.startTime),
     "yyyy-MM-dd"
@@ -78,7 +95,6 @@ const Edit = ({ handleEditTaskWindow, checkBoxData, removeCheck }) => {
   };
 
   const checkTimeValidation = (e) => {
-    console.log("e", e);
     if (e.target.id === "start-time") {
       setTimeInputErr(e.target.value >= maxTime.current.value);
       setTimeInputErrMsg("Start time should be set to a time before Stop time");
@@ -100,20 +116,36 @@ const Edit = ({ handleEditTaskWindow, checkBoxData, removeCheck }) => {
       new Date(e.target[4].value),
       { unit: "second" }
     );
+    duration.split(" ");
 
-    try {
-      await axios.put(`/tasks/${e.target[0].value}`, {
-        title: e.target[1].value,
-        startTime: new Date(e.target[4].value),
-        finishTime: new Date(e.target[5].value),
-        taskDuration: duration.slice(0, -8),
-        projectId: e.target[2].value,
-      });
-    } catch (err) {
-      console.log("err:", err);
+    if (mode === "new") {
+      try {
+        await axios.post("/tasks", {
+          userId: user._id,
+          title: e.target[1].value || "no name",
+          startTime: new Date(e.target[4].value),
+          finishTime: new Date(e.target[5].value),
+          taskDuration: duration[0],
+          projectId: e.target[2].value,
+        });
+      } catch (err) {
+        console.log("err:", err);
+      }
+    } else {
+      try {
+        await axios.put(`/tasks/${e.target[0].value}`, {
+          title: e.target[1].value,
+          startTime: new Date(e.target[4].value),
+          finishTime: new Date(e.target[5].value),
+          taskDuration: duration[0],
+          projectId: e.target[2].value,
+        });
+      } catch (err) {
+        console.log("err:", err);
+      }
+      removeCheck();
     }
     handleEditTaskWindow();
-    removeCheck();
   };
 
   return (

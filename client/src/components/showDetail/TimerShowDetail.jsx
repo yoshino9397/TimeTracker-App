@@ -91,11 +91,12 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
               )}
             </div>
             <div className='detailDate'>
-              {showData[0].val.startTime.slice(0, 10) === today
+              {format(new Date(data[0].val.startTime), "yyyy-MM-dd") === today
                 ? "Today"
-                : showData[0].val.startTime.slice(0, 10) === yesterday
+                : format(new Date(data[0].val.startTime), "yyyy-MM-dd") ===
+                  yesterday
                 ? "Yesterday"
-                : showData[0].val.startTime.slice(0, 10)}
+                : format(new Date(data[0].val.startTime), "yyyy-MM-dd")}
             </div>
             <span className='detailDateSelect'>
               {checkBoxData.length} / {showData.length} items selected

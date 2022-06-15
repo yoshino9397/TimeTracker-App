@@ -9,9 +9,10 @@ import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
 import { GoPrimitiveDot } from "react-icons/go";
 import Projects from "../projects/Projects";
+import Edit from "../edit/Edit";
 
 let timerId;
-const SetTask = ({ setTask, handleEditProjectWindow }) => {
+const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const { user } = useContext(AuthContext);
   const timeMinutes = Math.floor(user.duration / 60);
   const timeSeconds = Math.floor(user.duration % 60);
@@ -26,6 +27,7 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
   const [beginTime, setBeginTime] = useState("");
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
   const taskName = useRef();
 
   const timerInit = () => {
@@ -101,6 +103,11 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
     setStartTimer((prev) => !prev);
   };
 
+  const handleEditTaskWindow = () => {
+    setEditOpen((prev) => !prev);
+    if (editOpen) handleReload();
+  };
+
   return (
     <div className='timerSetContainer'>
       <div className='timerSetTask'>
@@ -158,13 +165,21 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
         <button className='timerStartBtn' onClick={handleTimer}>
           {startTimer ? <BsPlayCircle /> : <FaStopCircle />}
         </button>
-        <button className='timerAddBtn' disabled={!startTimer}>
+        <button
+          className='timerAddBtn'
+          disabled={!startTimer}
+          onClick={handleEditTaskWindow}
+        >
           <BsPlusSquareDotted />
         </button>
       </div>
       <button className='timerSetting'>
         <AiTwotoneSetting />
       </button>
+
+      {editOpen && (
+        <Edit handleEditTaskWindow={handleEditTaskWindow} mode='new' />
+      )}
     </div>
   );
 };

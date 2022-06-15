@@ -61,6 +61,7 @@ const Timer = () => {
         <SetTask
           setTask={setTask}
           handleEditProjectWindow={handleEditProjectWindow}
+          handleReload={handleReload}
         />
         <TimerShowSummary
           tasks={[...tasks]}
