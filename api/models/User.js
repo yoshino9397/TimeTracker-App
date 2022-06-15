@@ -33,7 +33,7 @@ const UserSchema = new mongoose.Schema(
     },
     shortBreak: {
       type: Number,
-      default: 250,
+      default: 300,
       trim: true,
     },
     longBreak: {

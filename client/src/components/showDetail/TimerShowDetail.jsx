@@ -67,21 +67,23 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
     checkBoxData.forEach(async (removeEl) => {
       // delete
       try {
-        await axios.delete(`/tasks/${removeEl.val._id}`);
+        const res = await axios.delete(`/tasks/${removeEl.val._id}`);
+        // remove from array
+        if (res.status === 200) {
+          setShowData((prev) =>
+            prev.filter((el) => el.val._id !== removeEl.val._id)
+          );
+        }
       } catch (err) {
         console.log("err:", err);
       }
-      // remove from array
-      setShowData((prev) =>
-        prev.filter((el) => el.val._id !== removeEl.val._id)
-      );
     });
     setCheckBoxData([]);
     const interval = setInterval(() => {
       handleReload();
 
       clearInterval(interval);
-    }, 100);
+    }, 200);
   };
 
   return (

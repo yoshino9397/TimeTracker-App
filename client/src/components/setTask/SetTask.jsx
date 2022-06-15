@@ -19,6 +19,10 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const { user } = useContext(AuthContext);
   const timeMinutes = Math.floor(user.duration / 60);
   const timeSeconds = Math.floor(user.duration % 60);
+  const shortBreakTimeMinutes = Math.floor(user.shortBreak / 60);
+  const shortBreakTimeSeconds = Math.floor(user.shortBreak % 60);
+  const longBreakTimeMinutes = Math.floor(user.longBreak / 60);
+  const longBreakTimeSeconds = Math.floor(user.longBreak % 60);
 
   const [startTimer, setStartTimer] = useState(true);
   const [pomodoroCycle, setPomodoroCycle] = useState(0);
@@ -36,12 +40,12 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const timerInit = (mode = "") => {
     if (mode === "shortBreak") {
       // break time
-      setSettingTimerMin(5);
-      setSettingTimerSec(0);
+      setSettingTimerMin(shortBreakTimeMinutes);
+      setSettingTimerSec(shortBreakTimeSeconds);
     } else if (mode === "longBreak") {
       // long break time
-      setSettingTimerMin(15);
-      setSettingTimerSec(0);
+      setSettingTimerMin(longBreakTimeMinutes);
+      setSettingTimerSec(longBreakTimeSeconds);
     } else {
       setSettingTimerMin(timeMinutes);
       setSettingTimerSec(timeSeconds); // initial time
@@ -144,9 +148,14 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   return (
     <div className='timerSetContainer'>
       <div className='timerSetTask'>
-        {pomodoroCycle % 2 ? (
+        {pomodoroCycle === 7 ? (
           <div className='timerSetTaskBreakMsg'>
-            <span>Break Time...</span>
+            <span>Long Break Time...</span>
+            <BiCoffee />
+          </div>
+        ) : pomodoroCycle % 2 ? (
+          <div className='timerSetTaskBreakMsg'>
+            <span>Short Break Time...</span>
             <BiCoffee />
           </div>
         ) : (

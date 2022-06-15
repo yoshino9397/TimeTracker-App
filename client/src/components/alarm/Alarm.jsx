@@ -6,6 +6,11 @@ import { useState, useEffect } from "react";
 const Alarm = ({ handleAlarmWindow, pomodoroCycle }) => {
   const [audio] = useState(new Audio(soundfile));
 
+  const audioStop = () => {
+    audio.pause();
+    handleAlarmWindow();
+  };
+
   useEffect(() => {
     audio.play();
     const interval = setInterval(() => {
@@ -25,10 +30,10 @@ const Alarm = ({ handleAlarmWindow, pomodoroCycle }) => {
         ) : (
           <div className='alarmMsg'>Break Time Finish!</div>
         )}
-        <button className='alarmStopBtn' onClick={handleAlarmWindow}>
+        <button className='alarmStopBtn' onClick={audioStop}>
           OK
         </button>
-        <Confetti />
+        {pomodoroCycle % 2 ? <Confetti /> : ""}
       </div>
     </>
   );
