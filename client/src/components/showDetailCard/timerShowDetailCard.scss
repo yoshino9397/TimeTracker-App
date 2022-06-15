@@ -23,6 +23,11 @@
     .detailTask {
       margin-left: 1rem;
       width: 80%;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1 1 auto;
     }
 
     .detailsDateProjectTag {
