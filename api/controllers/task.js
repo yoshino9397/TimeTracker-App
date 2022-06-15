@@ -1,9 +1,18 @@
 const Task = require("../models/Task.js");
+const Project = require("../models/Project.js");
 
 const createTask = async (req, res) => {
+  const projectId = req.params.projectid;
   const newTask = new Task(req.body);
   try {
     const savedTask = await newTask.save();
+    try {
+      await Project.findByIdAndUpdate(projectId, {
+        $push: { tasks: { id: savedTask._id, time: savedTask.taskDuration } },
+      });
+    } catch (err) {
+      next(err);
+    }
     res.status(200).json(savedTask);
   } catch (err) {
     res.status(500).json(err);
@@ -24,8 +33,16 @@ const updateTask = async (req, res, next) => {
 };
 
 const deleteTask = async (req, res, next) => {
+  const projectId = req.params.projectid;
   try {
     await Task.findByIdAndDelete(req.params.id);
+    try {
+      await Project.findByIdAndUpdate(projectId, {
+        $pull: { tasks: { id: req.params.id } },
+      });
+    } catch (err) {
+      next(err);
+    }
     res.status(200).json("Task has been deleted.");
   } catch (err) {
     next(err);
@@ -59,12 +76,11 @@ const getTasksByProject = async (req, res, next) => {
   }
 };
 
-
 module.exports = {
   createTask,
   updateTask,
   deleteTask,
   getTask,
   getTasks,
-  getTasksByProject
+  getTasksByProject,
 };

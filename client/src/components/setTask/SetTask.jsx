@@ -49,7 +49,7 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
       if (endTime) {
         const duration = Math.floor((endTime - beginTime) / 1000);
         setEndTime("");
-        const res = await axios.post("/tasks", {
+        const res = await axios.post(`/tasks/${projectName._id}`, {
           userId: user._id,
           title: taskName.current.value || "no name",
           startTime: beginTime,
@@ -102,21 +102,21 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
   };
 
   return (
-    <div className='timerSetContainer'>
-      <div className='timerSetTask'>
+    <div className="timerSetContainer">
+      <div className="timerSetTask">
         <input
-          type='text'
-          className='timerSetTaskInput'
-          placeholder='Please enter task name'
+          type="text"
+          className="timerSetTaskInput"
+          placeholder="Please enter task name"
           ref={taskName}
         />
         {projectName && (
           <div
-            className='timerSetProjectTag'
+            className="timerSetProjectTag"
             onClick={() => setProjectsOpen((prev) => !prev)}
           >
             <span
-              className='timerSetProjectTagBack'
+              className="timerSetProjectTagBack"
               style={{
                 backgroundColor: `${projectName.colorCode}`,
               }}
@@ -136,7 +136,7 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
         )}
       </div>
       {!projectName && (
-        <button className='timerSetTag' onClick={() => handleModal()}>
+        <button className="timerSetTag" onClick={() => handleModal()}>
           <BsTagFill />
           {projectsOpen && (
             <Projects
@@ -147,22 +147,22 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
           )}
         </button>
       )}
-      <div className='timerStartContainer'>
-        <div className='timerBox'>
+      <div className="timerStartContainer">
+        <div className="timerBox">
           <span>
             {`${("00" + settingTimerMin).slice(-2)}:${(
               "00" + settingTimerSec
             ).slice(-2)}`}
           </span>
         </div>
-        <button className='timerStartBtn' onClick={handleTimer}>
+        <button className="timerStartBtn" onClick={handleTimer}>
           {startTimer ? <BsPlayCircle /> : <FaStopCircle />}
         </button>
-        <button className='timerAddBtn' disabled={!startTimer}>
+        <button className="timerAddBtn" disabled={!startTimer}>
           <BsPlusSquareDotted />
         </button>
       </div>
-      <button className='timerSetting'>
+      <button className="timerSetting">
         <AiTwotoneSetting />
       </button>
     </div>
