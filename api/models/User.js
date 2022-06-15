@@ -31,6 +31,16 @@ const UserSchema = new mongoose.Schema(
       default: 1500,
       trim: true,
     },
+    shortBreak: {
+      type: Number,
+      default: 250,
+      trim: true,
+    },
+    longBreak: {
+      type: Number,
+      default: 900,
+      trim: true,
+    },
   },
   { timestamps: true }
 );

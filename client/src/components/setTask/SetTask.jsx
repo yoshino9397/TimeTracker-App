@@ -8,8 +8,11 @@ import { BsTagFill, BsPlayCircle, BsPlusSquareDotted } from "react-icons/bs";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
 import { GoPrimitiveDot } from "react-icons/go";
+import { BiCoffee } from "react-icons/bi";
+
 import Projects from "../projects/Projects";
 import Edit from "../edit/Edit";
+import Alarm from "../alarm/Alarm";
 
 let timerId;
 const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
@@ -18,21 +21,31 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const timeSeconds = Math.floor(user.duration % 60);
 
   const [startTimer, setStartTimer] = useState(true);
+  const [pomodoroCycle, setPomodoroCycle] = useState(0);
   // this value is pomodoro from settings
-  // const [settingTimerMin, setSettingTimerMin] = useState(timeMinutes);
-  // const [settingTimerSec, setSettingTimerSec] = useState(timeSeconds);
-  const [settingTimerMin, setSettingTimerMin] = useState(0);
-  const [settingTimerSec, setSettingTimerSec] = useState(3);
+  const [settingTimerMin, setSettingTimerMin] = useState(timeMinutes);
+  const [settingTimerSec, setSettingTimerSec] = useState(timeSeconds);
   const [endTime, setEndTime] = useState("");
   const [beginTime, setBeginTime] = useState("");
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [editOpen, setEditOpen] = useState(false);
+  const [alarmOpen, setAlarmOpen] = useState(false);
   const taskName = useRef();
 
-  const timerInit = () => {
-    setSettingTimerMin(timeMinutes);
-    setSettingTimerSec(timeSeconds); // initial time
+  const timerInit = (mode = "") => {
+    if (mode === "shortBreak") {
+      // break time
+      setSettingTimerMin(5);
+      setSettingTimerSec(0);
+    } else if (mode === "longBreak") {
+      // long break time
+      setSettingTimerMin(15);
+      setSettingTimerSec(0);
+    } else {
+      setSettingTimerMin(timeMinutes);
+      setSettingTimerSec(timeSeconds); // initial time
+    }
   };
 
   const countDown = () => {
@@ -47,38 +60,53 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   };
 
   useEffect(() => {
-    const taskSubmit = async () => {
-      if (endTime) {
-        const duration = Math.floor((endTime - beginTime) / 1000);
-        setEndTime("");
-        const res = await axios.post("/tasks", {
-          userId: user._id,
-          title: taskName.current.value || "no name",
-          startTime: beginTime,
-          finishTime: endTime,
-          taskDuration: duration,
-          projectId: projectName._id,
-          projectTitle: projectName.title,
-          projectColorCode: projectName.colorCode,
-        });
-        if (res.status === 200) {
-          setTask(res.data);
+    if (pomodoroCycle % 2) {
+      if (pomodoroCycle === 7) {
+        timerInit("longBreak");
+      } else timerInit("shortBreak");
+    } else timerInit();
+    if (pomodoroCycle === 8) setPomodoroCycle(0);
+  }, [pomodoroCycle]);
+
+  useEffect(() => {
+    if (pomodoroCycle % 2) {
+      setPomodoroCycle((prev) => prev + 1);
+    } else {
+      const taskSubmit = async () => {
+        if (endTime) {
+          const duration = Math.floor((endTime - beginTime) / 1000);
+          setEndTime("");
+          const res = await axios.post("/tasks", {
+            userId: user._id,
+            title: taskName.current.value || "no name",
+            startTime: beginTime,
+            finishTime: endTime,
+            taskDuration: duration,
+            projectId: projectName._id,
+            projectTitle: projectName.title,
+            projectColorCode: projectName.colorCode,
+          });
+          if (res.status === 200) {
+            setTask(res.data);
+          }
+          taskName.current.value = "";
+          setProjectName("");
+          setPomodoroCycle((prev) => prev + 1);
         }
-        taskName.current.value = "";
-        setProjectName("");
-      }
-    };
-    taskSubmit();
+      };
+      taskSubmit();
+    }
   }, [endTime]);
 
   useEffect(() => {
     if (!startTimer) {
       if (settingTimerSec === 0 && settingTimerMin === 0) {
         clearTimeout(timerId); // clear timer
-        timerInit();
+        // timerInit();
         // api call
         setStartTimer(true); // stop
         setEndTime(new Date().getTime());
+        setAlarmOpen(true);
       } else countDown();
     }
   }, [startTimer, settingTimerSec]);
@@ -96,7 +124,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       setBeginTime(new Date().getTime());
     } else {
       clearTimeout(timerId); // clear timer
-      timerInit();
+      // timerInit();
       // api call
       setEndTime(new Date().getTime());
     }
@@ -108,15 +136,27 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
     if (editOpen) handleReload();
   };
 
+  const handleAlarmWindow = () => {
+    setAlarmOpen((prev) => !prev);
+    // if (editOpen) handleReload();
+  };
+
   return (
     <div className='timerSetContainer'>
       <div className='timerSetTask'>
-        <input
-          type='text'
-          className='timerSetTaskInput'
-          placeholder='Please enter task name'
-          ref={taskName}
-        />
+        {pomodoroCycle % 2 ? (
+          <div className='timerSetTaskBreakMsg'>
+            <span>Break Time...</span>
+            <BiCoffee />
+          </div>
+        ) : (
+          <input
+            type='text'
+            className='timerSetTaskInput'
+            placeholder='Please enter task name'
+            ref={taskName}
+          />
+        )}
       </div>
       {projectName && (
         <div
@@ -142,7 +182,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           )}
         </div>
       )}
-      {!projectName && (
+      {pomodoroCycle % 2 !== 1 && !projectName && (
         <button className='timerSetTag' onClick={() => handleModal()}>
           <BsTagFill />
           {projectsOpen && (
@@ -179,6 +219,12 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
 
       {editOpen && (
         <Edit handleEditTaskWindow={handleEditTaskWindow} mode='new' />
+      )}
+      {alarmOpen && (
+        <Alarm
+          handleAlarmWindow={handleAlarmWindow}
+          pomodoroCycle={pomodoroCycle}
+        />
       )}
     </div>
   );

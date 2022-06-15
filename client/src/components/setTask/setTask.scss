@@ -12,8 +12,23 @@
     min-width: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex: 1 1 auto;
+
+    .timerSetTaskBreakMsg {
+      font-size: 1.245rem;
+      font-weight: 500;
+      // color: rgba(52, 196, 98, 0.736);
+      color: rgb(160, 160, 160);
+      display: flex;
+      align-items: center;
+
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-left: 0.25rem;
+      }
+    }
 
     .timerSetTaskInput {
       width: 100%;
@@ -110,10 +125,6 @@
       padding: 0.5rem;
       font-size: 1.245rem;
       color: rgb(160, 160, 160);
-
-      &:focus {
-        color: black;
-      }
     }
 
     .timerStartBtn {
