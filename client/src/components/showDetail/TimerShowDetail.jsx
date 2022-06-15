@@ -24,6 +24,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
     new Date().setDate(new Date().getDate() - 1),
     "yyyy-MM-dd"
   );
+  // console.log("checkBoxData", checkBoxData);
 
   useEffect(() => {
     data.forEach((el) => (totalTime += el.val.taskDuration));
@@ -53,7 +54,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
 
   const handleEditTaskWindow = () => {
     setEditOpen((prev) => !prev);
-    if (editOpen) handleReload();
+    // if (editOpen) handleReload();
   };
 
   const removeCheck = () => {

@@ -118,8 +118,9 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
     duration.split(" ");
 
     if (mode === "new") {
+      console.log("e", e, "duration[0]", duration[0]);
       try {
-        await axios.post("/tasks", {
+        await axios.post("/tasks/none", {
           userId: user._id,
           title: e.target[1].value || "no name",
           startTime: new Date(e.target[4].value),
@@ -132,14 +133,20 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
       }
       handleEditTaskWindow();
     } else {
+      // console.log("checkBoxData", checkBoxData);
+      console.log("checkBoxData", checkBoxData.length);
       try {
-        await axios.put(`/tasks/${e.target[0].value}`, {
-          title: e.target[1].value,
-          startTime: new Date(e.target[4].value),
-          finishTime: new Date(e.target[5].value),
-          taskDuration: duration[0],
-          projectId: e.target[2].value,
-        });
+        for (let i = 0; i < checkBoxData.length; i++) {
+          const id = checkBoxData[i].val._id;
+          console.log("id", id);
+        }
+        // await axios.put(`/tasks/${e.target[0].value}`, {
+        //   title: e.target[1].value,
+        //   startTime: new Date(e.target[4].value),
+        //   finishTime: new Date(e.target[5].value),
+        //   taskDuration: duration[0],
+        //   projectId: e.target[2].value,
+        // });
       } catch (err) {
         console.log("err:", err);
       }
@@ -155,7 +162,11 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
       ></div>
       <div className='editTaskContainer'>
         <span className='editTaskContainerTitle'>
-          {mode === "new" ? "Create New Task" : "Edit Task"}
+          {mode === "new"
+            ? "Create New Task"
+            : checkBoxData.length > 1
+            ? `Edit ${checkBoxData.length} Tasks`
+            : "Edit Task"}
         </span>
 
         <form onSubmit={submitTask} autoComplete='off' className='editTaskForm'>
@@ -175,7 +186,9 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
                 id='project-List'
                 name='project-List'
                 placeholder='Enter Task Name'
-                defaultValue={checkBoxData[0].val.title}
+                defaultValue={
+                  checkBoxData.length > 1 ? "" : checkBoxData[0].val.title
+                }
                 className='editTaskFormInput'
               />
 
@@ -194,10 +207,16 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
                 <div className='editTaskFormSelectOption'>
                   <GoPrimitiveDot
                     style={{
-                      fill: `${projectName.colorCode || INITIAL_COLORCODE}`,
+                      fill: `${
+                        checkBoxData.length > 1
+                          ? INITIAL_COLORCODE
+                          : projectName.colorCode || INITIAL_COLORCODE
+                      }`,
                     }}
                   />
-                  {projectName.title || INITIAL_PROJECTNAME}
+                  {checkBoxData.length > 1
+                    ? INITIAL_PROJECTNAME
+                    : projectName.title || INITIAL_PROJECTNAME}
                 </div>
                 {selectOption ? <BiChevronUp /> : <BiChevronDown />}
                 {selectOption && (

@@ -109,21 +109,21 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   };
 
   return (
-    <div className="timerSetContainer">
-      <div className="timerSetTask">
+    <div className='timerSetContainer'>
+      <div className='timerSetTask'>
         <input
-          type="text"
-          className="timerSetTaskInput"
-          placeholder="Please enter task name"
+          type='text'
+          className='timerSetTaskInput'
+          placeholder='Please enter task name'
           ref={taskName}
         />
         {projectName && (
           <div
-            className="timerSetProjectTag"
+            className='timerSetProjectTag'
             onClick={() => setProjectsOpen((prev) => !prev)}
           >
             <span
-              className="timerSetProjectTagBack"
+              className='timerSetProjectTagBack'
               style={{
                 backgroundColor: `${projectName.colorCode}`,
               }}
@@ -143,7 +143,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
         )}
       </div>
       {!projectName && (
-        <button className="timerSetTag" onClick={() => handleModal()}>
+        <button className='timerSetTag' onClick={() => handleModal()}>
           <BsTagFill />
           {projectsOpen && (
             <Projects
@@ -154,30 +154,26 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           )}
         </button>
       )}
-      <div className="timerStartContainer">
-        <div className="timerBox">
+      <div className='timerStartContainer'>
+        <div className='timerBox'>
           <span>
             {`${("00" + settingTimerMin).slice(-2)}:${(
               "00" + settingTimerSec
             ).slice(-2)}`}
           </span>
         </div>
-        <button className="timerStartBtn" onClick={handleTimer}>
+        <button className='timerStartBtn' onClick={handleTimer}>
           {startTimer ? <BsPlayCircle /> : <FaStopCircle />}
         </button>
-<<<<<<< HEAD
         <button
           className='timerAddBtn'
           disabled={!startTimer}
           onClick={handleEditTaskWindow}
         >
-=======
-        <button className="timerAddBtn" disabled={!startTimer}>
->>>>>>> 85542ad9d2b67b4a259675148103db800ba02735
           <BsPlusSquareDotted />
         </button>
       </div>
-      <button className="timerSetting">
+      <button className='timerSetting'>
         <AiTwotoneSetting />
       </button>
 
