@@ -77,7 +77,11 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
       );
     });
     setCheckBoxData([]);
-    handleReload();
+    const interval = setInterval(() => {
+      handleReload();
+
+      clearInterval(interval);
+    }, 100);
   };
 
   return (
