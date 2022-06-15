@@ -106,7 +106,6 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
 
   const submitTask = async (e) => {
     e.preventDefault();
-    console.log("checkBoxData", checkBoxData);
     if (timeInputErr) {
       return setSubmitErrFlg(true);
     } else setSubmitErrFlg(false);
@@ -155,7 +154,9 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
         onClick={handleEditTaskWindow}
       ></div>
       <div className='editTaskContainer'>
-        <span className='editTaskContainerTitle'>Task Edit</span>
+        <span className='editTaskContainerTitle'>
+          {mode === "new" ? "Create New Task" : "Edit Task"}
+        </span>
 
         <form onSubmit={submitTask} autoComplete='off' className='editTaskForm'>
           <input
