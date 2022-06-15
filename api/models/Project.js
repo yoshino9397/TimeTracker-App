@@ -17,6 +17,9 @@ const ProjectSchema = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
+    tasks: {
+      type: [{ id: String, time: Number }],
+    },
   },
   { timestamps: true }
 );

@@ -7,15 +7,6 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
-const data = [
-  { name: "Project A", value: 400 },
-  { name: "Project B", value: 300 },
-  { name: "Project C", value: 300 },
-  { name: "Project D", value: 200 },
-];
-
-const COLORS = ["#FF8882", "#194350cc", "#FFC2B4", "#9DBEB9"];
-
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
   cx,
@@ -46,14 +37,15 @@ const renderCustomizedLabel = ({
 const Featured = () => {
   const { user } = useContext(AuthContext);
   const [durationAll, setDurationAll] = useState(0);
-  const [info, setInfo] = useState();
+  const [data, setData] = useState([]);
+  const [color, setColor] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/tasks/user/${user._id}`);
-        setInfo(res.data)
         var sum = 0;
+        const res = await axios.get(`/tasks/user/${user._id}`);
+
         for (let i = 0; i < res.data.length; i++) {
           sum += res.data[i].taskDuration;
         }
@@ -65,19 +57,37 @@ const Featured = () => {
     fetchData();
   }, [user._id]);
 
-  console.log(info);
-  
   useEffect(() => {
-    const fetchProject = async () => {
+    const fetchRow = async () => {
       try {
-        const res = await axios.get(`/tasks/project/?${user._id}`);
+        let array = [];
+        let colorArr = [];
+        let num = 0;
+        const res = await axios.get(`/projects/user/${user._id}`);
         console.log(res.data);
+
+        for (let i = 0; i < res.data.length; i++) {
+          colorArr.push(res.data[i].colorCode);
+
+          for (let j = 0; j < res.data[i].tasks.length; j++) {
+            // res.data[i].tasks[j].time += res.data[i].task[j].time;
+            num += res.data[i].tasks[j].time;
+          }
+          array.push({
+            name: res.data[i].title,
+            value: num,
+          });
+        }
+        setColor(colorArr);
+        setData(array);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchProject();
+    fetchRow();
   }, [user._id]);
+
+  console.log(data);
 
   return (
     <div className="featured">
@@ -106,7 +116,7 @@ const Featured = () => {
                 {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
+                    fill={color[index % color.length]}
                   />
                 ))}
               </Pie>
@@ -128,7 +138,11 @@ const Featured = () => {
           <div className="item">
             <div className="itemTitle">BILLABLE HOURS</div>
             <div className="itemResult">
-              <div className="resultAmount">0:00:00</div>
+              <div className="resultAmount">{`${(
+                "00" + Math.floor(durationAll / 3600)
+              ).slice(-2)}:${("00" + (Math.floor(durationAll / 60) % 60)).slice(
+                -2
+              )}:${("00" + (durationAll % 60)).slice(-2)}`}</div>
             </div>
           </div>
         </div>

@@ -11,12 +11,12 @@ const {
 const router = express.Router();
 
 //CREATE
-router.post("/", createTask);
+router.post("/:projectid", createTask);
 
 //UPDATE
 router.put("/:id", updateTask);
 //DELETE
-router.delete("/:id", deleteTask);
+router.delete("/:id/:projectid", deleteTask);
 //GET
 router.get("/:id", getTask);
 //GET ALL

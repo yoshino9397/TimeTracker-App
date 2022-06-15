@@ -2,7 +2,6 @@ const Project = require("../models/Project.js");
 
 const createProject = async (req, res) => {
   const newProject = new Project(req.body);
-
   try {
     const savedProject = await newProject.save();
     res.status(200).json(savedProject);
@@ -50,7 +49,6 @@ const getProjects = async (req, res, next) => {
     next(err);
   }
 };
-
 
 module.exports = {
   createProject,
