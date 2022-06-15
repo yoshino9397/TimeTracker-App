@@ -117,31 +117,31 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           placeholder='Please enter task name'
           ref={taskName}
         />
-        {projectName && (
-          <div
-            className='timerSetProjectTag'
-            onClick={() => setProjectsOpen((prev) => !prev)}
-          >
-            <span
-              className='timerSetProjectTagBack'
-              style={{
-                backgroundColor: `${projectName.colorCode}`,
-              }}
-            >
-              &nbsp;
-            </span>
-            <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
-            {projectName.title}
-            {projectsOpen && (
-              <Projects
-                handleModal={handleModal}
-                setProject={setProject}
-                handleEditProjectWindow={handleEditProjectWindow}
-              />
-            )}
-          </div>
-        )}
       </div>
+      {projectName && (
+        <div
+          className='timerSetProjectTag timerSetTag'
+          onClick={() => setProjectsOpen((prev) => !prev)}
+        >
+          <span
+            className='timerSetProjectTagBack'
+            style={{
+              backgroundColor: `${projectName.colorCode}`,
+            }}
+          >
+            &nbsp;
+          </span>
+          <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
+          <span className='timerSetProjectTagTitle'>{projectName.title}</span>
+          {projectsOpen && (
+            <Projects
+              handleModal={handleModal}
+              setProject={setProject}
+              handleEditProjectWindow={handleEditProjectWindow}
+            />
+          )}
+        </div>
+      )}
       {!projectName && (
         <button className='timerSetTag' onClick={() => handleModal()}>
           <BsTagFill />
