@@ -13,7 +13,6 @@ const AddProject = ({ handleEditProjectWindow }) => {
   const [submitErrCheck, setSubmitErrCheck] = useState("");
   const [submitErrFlg, setSubmitErrFlg] = useState(false);
   const [removeProject, setRemoveProject] = useState([]);
-  console.log("removeProject", removeProject);
 
   const addShowList = (project) => {
     const existingListIndex = projects.findIndex(
