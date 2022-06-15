@@ -1,5 +1,5 @@
 import "./table.scss";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -14,12 +14,34 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { AuthContext } from "../../context/AuthContext";
 
 const Tables = ({ lists }) => {
   const Row = ({ row }) => {
+    const { user } = useContext(AuthContext);
     const [tasks, setTasks] = useState([{}]);
     const [open, setOpen] = useState(false);
     const [duration, setDuration] = useState(0);
+    const [durationAll, setDurationAll] = useState(0);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          var sum = 0;
+          const res = await axios.get(`/tasks/user/${user._id}`);
+
+          for (let i = 0; i < res.data.length; i++) {
+            sum += res.data[i].taskDuration;
+          }
+          setDurationAll(sum);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchData();
+    }, [user._id]);
+
+    console.log(durationAll);
 
     useEffect(() => {
       const fetchRow = async () => {
@@ -53,7 +75,7 @@ const Tables = ({ lists }) => {
           </TableCell>
           <TableCell>{row.title}</TableCell>
           <TableCell>{duration}</TableCell>
-          <TableCell>{row.percentage}</TableCell>
+          <TableCell>{Math.floor((duration / durationAll) * 100)}%</TableCell>
         </TableRow>
         {tasks.map((task) => (
           <TableRow key={task.id}>
@@ -75,7 +97,9 @@ const Tables = ({ lists }) => {
                       </TableCell>
                       <TableCell align="left">{task.title}</TableCell>
                       <TableCell>{task.taskDuration}</TableCell>
-                      <TableCell>{row.percentage}</TableCell>
+                      <TableCell>
+                        {Math.floor((task.taskDuration / durationAll) * 100)}%
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -96,7 +120,7 @@ const Tables = ({ lists }) => {
               <KeyboardArrowDownIcon />
             </TableCell>
             <TableCell>TITLE</TableCell>
-            <TableCell>DURATION</TableCell>
+            <TableCell>DURATION (s)</TableCell>
             <TableCell>PERCENTAGE</TableCell>
           </TableRow>
         </TableHead>
