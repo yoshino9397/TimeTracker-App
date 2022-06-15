@@ -51,7 +51,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       if (endTime) {
         const duration = Math.floor((endTime - beginTime) / 1000);
         setEndTime("");
-        const res = await axios.post(`/tasks/${projectName._id}`, {
+        const res = await axios.post("/tasks", {
           userId: user._id,
           title: taskName.current.value || "no name",
           startTime: beginTime,

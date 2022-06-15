@@ -67,10 +67,11 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
   const maxTime = useRef(finishTime);
 
   useEffect(() => {
-    if (checkBoxData[0].val.projectTitle) {
+    if (checkBoxData[0].val.projectId) {
       projectsList?.forEach((project) => {
         if (project._id === checkBoxData[0].val.projectId) {
           return setProjectName({
+            id: project._id,
             colorCode: project.colorCode,
             title: project.title,
           });
@@ -86,6 +87,7 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
   const handleOption = (project) => {
     if (project.id !== "none") {
       setProjectName({
+        id: project._id,
         colorCode: project.colorCode,
         title: project.title,
       });
@@ -118,9 +120,8 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
     duration.split(" ");
 
     if (mode === "new") {
-      console.log("e", e, "duration[0]", duration[0]);
       try {
-        await axios.post("/tasks/none", {
+        await axios.post("/tasks", {
           userId: user._id,
           title: e.target[1].value || "no name",
           startTime: new Date(e.target[4].value),
@@ -133,20 +134,16 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
       }
       handleEditTaskWindow();
     } else {
-      // console.log("checkBoxData", checkBoxData);
-      console.log("checkBoxData", checkBoxData.length);
       try {
         for (let i = 0; i < checkBoxData.length; i++) {
-          const id = checkBoxData[i].val._id;
-          console.log("id", id);
+          await axios.put(`/tasks/${checkBoxData[i].val._id}`, {
+            title: e.target[1].value,
+            startTime: new Date(e.target[4].value),
+            finishTime: new Date(e.target[5].value),
+            taskDuration: duration[0],
+            projectId: e.target[2].value,
+          });
         }
-        // await axios.put(`/tasks/${e.target[0].value}`, {
-        //   title: e.target[1].value,
-        //   startTime: new Date(e.target[4].value),
-        //   finishTime: new Date(e.target[5].value),
-        //   taskDuration: duration[0],
-        //   projectId: e.target[2].value,
-        // });
       } catch (err) {
         console.log("err:", err);
       }
@@ -195,10 +192,10 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
               <input
                 type='hidden'
                 name='project-id'
-                defaultValue={checkBoxData[0].val.projectId}
+                defaultValue={projectName.id}
               />
               <label htmlFor='project' className='editTaskFormLabel'></label>
-              <select id='project' name='project' value={projectName.title}>
+              <select id='project' name='project' value={projectName.id}>
                 {projectsList.map((project, idx) => (
                   <option key={idx} value={project.title}></option>
                 ))}
@@ -207,16 +204,10 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
                 <div className='editTaskFormSelectOption'>
                   <GoPrimitiveDot
                     style={{
-                      fill: `${
-                        checkBoxData.length > 1
-                          ? INITIAL_COLORCODE
-                          : projectName.colorCode || INITIAL_COLORCODE
-                      }`,
+                      fill: `${projectName.colorCode || INITIAL_COLORCODE}`,
                     }}
                   />
-                  {checkBoxData.length > 1
-                    ? INITIAL_PROJECTNAME
-                    : projectName.title || INITIAL_PROJECTNAME}
+                  {projectName.title || INITIAL_PROJECTNAME}
                 </div>
                 {selectOption ? <BiChevronUp /> : <BiChevronDown />}
                 {selectOption && (
