@@ -131,6 +131,7 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
       } catch (err) {
         console.log("err:", err);
       }
+      handleEditTaskWindow();
     } else {
       try {
         await axios.put(`/tasks/${e.target[0].value}`, {
@@ -145,7 +146,6 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
       }
       removeCheck();
     }
-    handleEditTaskWindow();
   };
 
   return (

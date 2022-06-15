@@ -57,7 +57,9 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
   };
 
   const removeCheck = () => {
+    setEditOpen((prev) => !prev);
     setCheckBoxData([]);
+    if (editOpen) handleReload();
   };
 
   const handleDelete = () => {
@@ -74,6 +76,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
       );
     });
     setCheckBoxData([]);
+    handleReload();
   };
 
   return (
