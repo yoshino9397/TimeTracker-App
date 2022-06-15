@@ -9,9 +9,10 @@ import { AiTwotoneSetting } from "react-icons/ai";
 import { FaStopCircle } from "react-icons/fa";
 import { GoPrimitiveDot } from "react-icons/go";
 import Projects from "../projects/Projects";
+import Edit from "../edit/Edit";
 
 let timerId;
-const SetTask = ({ setTask, handleEditProjectWindow }) => {
+const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const { user } = useContext(AuthContext);
   const timeMinutes = Math.floor(user.duration / 60);
   const timeSeconds = Math.floor(user.duration % 60);
@@ -26,6 +27,7 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
   const [beginTime, setBeginTime] = useState("");
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
   const taskName = useRef();
 
   const timerInit = () => {
@@ -101,22 +103,27 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
     setStartTimer((prev) => !prev);
   };
 
+  const handleEditTaskWindow = () => {
+    setEditOpen((prev) => !prev);
+    if (editOpen) handleReload();
+  };
+
   return (
-    <div className="timerSetContainer">
-      <div className="timerSetTask">
+    <div className='timerSetContainer'>
+      <div className='timerSetTask'>
         <input
-          type="text"
-          className="timerSetTaskInput"
-          placeholder="Please enter task name"
+          type='text'
+          className='timerSetTaskInput'
+          placeholder='Please enter task name'
           ref={taskName}
         />
         {projectName && (
           <div
-            className="timerSetProjectTag"
+            className='timerSetProjectTag'
             onClick={() => setProjectsOpen((prev) => !prev)}
           >
             <span
-              className="timerSetProjectTagBack"
+              className='timerSetProjectTagBack'
               style={{
                 backgroundColor: `${projectName.colorCode}`,
               }}
@@ -136,7 +143,7 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
         )}
       </div>
       {!projectName && (
-        <button className="timerSetTag" onClick={() => handleModal()}>
+        <button className='timerSetTag' onClick={() => handleModal()}>
           <BsTagFill />
           {projectsOpen && (
             <Projects
@@ -147,24 +154,32 @@ const SetTask = ({ setTask, handleEditProjectWindow }) => {
           )}
         </button>
       )}
-      <div className="timerStartContainer">
-        <div className="timerBox">
+      <div className='timerStartContainer'>
+        <div className='timerBox'>
           <span>
             {`${("00" + settingTimerMin).slice(-2)}:${(
               "00" + settingTimerSec
             ).slice(-2)}`}
           </span>
         </div>
-        <button className="timerStartBtn" onClick={handleTimer}>
+        <button className='timerStartBtn' onClick={handleTimer}>
           {startTimer ? <BsPlayCircle /> : <FaStopCircle />}
         </button>
-        <button className="timerAddBtn" disabled={!startTimer}>
+        <button
+          className='timerAddBtn'
+          disabled={!startTimer}
+          onClick={handleEditTaskWindow}
+        >
           <BsPlusSquareDotted />
         </button>
       </div>
-      <button className="timerSetting">
+      <button className='timerSetting'>
         <AiTwotoneSetting />
       </button>
+
+      {editOpen && (
+        <Edit handleEditTaskWindow={handleEditTaskWindow} mode='new' />
+      )}
     </div>
   );
 };
