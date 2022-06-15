@@ -12,7 +12,7 @@ import {
   MdIndeterminateCheckBox,
 } from "react-icons/md";
 
-const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
+const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
   const [checkBoxData, setCheckBoxData] = useState([]);
   const [editOpen, setEditOpen] = useState(false);
   let totalTime = 0;
@@ -24,6 +24,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
     new Date().setDate(new Date().getDate() - 1),
     "yyyy-MM-dd"
   );
+  // console.log("checkBoxData", checkBoxData);
 
   useEffect(() => {
     data.forEach((el) => (totalTime += el.val.taskDuration));
@@ -53,6 +54,13 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
 
   const handleEditTaskWindow = () => {
     setEditOpen((prev) => !prev);
+    // if (editOpen) handleReload();
+  };
+
+  const removeCheck = () => {
+    setEditOpen((prev) => !prev);
+    setCheckBoxData([]);
+    if (editOpen) handleReload();
   };
 
   const handleDelete = () => {
@@ -69,6 +77,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
       );
     });
     setCheckBoxData([]);
+    handleReload();
   };
 
   return (
@@ -86,11 +95,12 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
               )}
             </div>
             <div className='detailDate'>
-              {showData[0].val.startTime.slice(0, 10) === today
+              {format(new Date(data[0].val.startTime), "yyyy-MM-dd") === today
                 ? "Today"
-                : showData[0].val.startTime.slice(0, 10) === yesterday
+                : format(new Date(data[0].val.startTime), "yyyy-MM-dd") ===
+                  yesterday
                 ? "Yesterday"
-                : showData[0].val.startTime.slice(0, 10)}
+                : format(new Date(data[0].val.startTime), "yyyy-MM-dd")}
             </div>
             <span className='detailDateSelect'>
               {checkBoxData.length} / {showData.length} items selected
@@ -134,6 +144,7 @@ const TimerShowDetail = ({ data, handleEditProjectWindow }) => {
         <Edit
           handleEditTaskWindow={handleEditTaskWindow}
           checkBoxData={checkBoxData}
+          removeCheck={removeCheck}
         />
       )}
     </>

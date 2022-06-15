@@ -1,6 +1,8 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import { format } from "date-fns";
+import { format, formatDistanceStrict } from "date-fns";
+import axios from "axios";
 
+import { AuthContext } from "../../context/AuthContext";
 import { ProjectsContext } from "../../context/ProjectsContext";
 
 import "./edit.scss";
@@ -14,7 +16,8 @@ const INITIAL_PROJECT = {
   colorCode: INITIAL_COLORCODE,
   title: INITIAL_PROJECTNAME,
 };
-const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
+const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
+  const { user } = useContext(AuthContext);
   const { projects } = useContext(ProjectsContext);
   const [projectName, setProjectName] = useState("");
   const [projectsList, setProjectsList] = useState([
@@ -24,16 +27,42 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
   const [selectOption, setSelectOption] = useState(false);
   const [timeInputErr, setTimeInputErr] = useState(false);
   const [timeInputErrMsg, setTimeInputErrMsg] = useState("");
-  const thisDate = format(
+  const [submitErrFlg, setSubmitErrFlg] = useState(false);
+  if (mode === "new") {
+    checkBoxData = [
+      {
+        date: 0,
+        val: {
+          _id: "",
+          userId: "",
+          title: "",
+          startTime: new Date(),
+          finishTime: new Date(new Date().getTime() + 1000),
+          taskDuration: 0,
+          projectColorCode: "",
+          projectId: "",
+          projectTitle: "",
+        },
+      },
+    ];
+  }
+
+  const startTimeDate = format(
     new Date(checkBoxData[0].val.startTime),
     "yyyy-MM-dd"
   );
-  const startTime = new Date(checkBoxData[0].val.startTime)
-    .toString()
-    .slice(16, 24);
-  const finishTime = new Date(checkBoxData[0].val.finishTime)
-    .toString()
-    .slice(16, 24);
+  const startTime =
+    startTimeDate +
+    "T" +
+    new Date(checkBoxData[0].val.startTime).toString().slice(16, 24);
+  const finishTimeDate = format(
+    new Date(checkBoxData[0].val.finishTime),
+    "yyyy-MM-dd"
+  );
+  const finishTime =
+    finishTimeDate +
+    "T" +
+    new Date(checkBoxData[0].val.finishTime).toString().slice(16, 24);
   const minTime = useRef(startTime);
   const maxTime = useRef(finishTime);
 
@@ -66,7 +95,6 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
   };
 
   const checkTimeValidation = (e) => {
-    console.log("e", e);
     if (e.target.id === "start-time") {
       setTimeInputErr(e.target.value >= maxTime.current.value);
       setTimeInputErrMsg("Start time should be set to a time before Stop time");
@@ -78,7 +106,52 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
 
   const submitTask = async (e) => {
     e.preventDefault();
-    console.log("e", e);
+    if (timeInputErr) {
+      return setSubmitErrFlg(true);
+    } else setSubmitErrFlg(false);
+
+    const duration = formatDistanceStrict(
+      new Date(e.target[5].value),
+      new Date(e.target[4].value),
+      { unit: "second" }
+    );
+    duration.split(" ");
+
+    if (mode === "new") {
+      console.log("e", e, "duration[0]", duration[0]);
+      try {
+        await axios.post("/tasks/none", {
+          userId: user._id,
+          title: e.target[1].value || "no name",
+          startTime: new Date(e.target[4].value),
+          finishTime: new Date(e.target[5].value),
+          taskDuration: duration[0],
+          projectId: e.target[2].value,
+        });
+      } catch (err) {
+        console.log("err:", err);
+      }
+      handleEditTaskWindow();
+    } else {
+      // console.log("checkBoxData", checkBoxData);
+      console.log("checkBoxData", checkBoxData.length);
+      try {
+        for (let i = 0; i < checkBoxData.length; i++) {
+          const id = checkBoxData[i].val._id;
+          console.log("id", id);
+        }
+        // await axios.put(`/tasks/${e.target[0].value}`, {
+        //   title: e.target[1].value,
+        //   startTime: new Date(e.target[4].value),
+        //   finishTime: new Date(e.target[5].value),
+        //   taskDuration: duration[0],
+        //   projectId: e.target[2].value,
+        // });
+      } catch (err) {
+        console.log("err:", err);
+      }
+      removeCheck();
+    }
   };
 
   return (
@@ -88,52 +161,62 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
         onClick={handleEditTaskWindow}
       ></div>
       <div className='editTaskContainer'>
-        <span className='editTaskContainerTitle'>Task Edit</span>
+        <span className='editTaskContainerTitle'>
+          {mode === "new"
+            ? "Create New Task"
+            : checkBoxData.length > 1
+            ? `Edit ${checkBoxData.length} Tasks`
+            : "Edit Task"}
+        </span>
 
         <form onSubmit={submitTask} autoComplete='off' className='editTaskForm'>
+          <input
+            type='hidden'
+            name='task-id'
+            defaultValue={checkBoxData[0].val._id}
+          />
           <div className='editTaskFormContainer'>
             <div className='editTaskFormInputSetContainer'>
-              {/* <input type='hidden' name='project-id' value={project._id} /> */}
-              {/* <label htmlFor='project-List' className='editTaskFormLabel'>
-                Task Name
-              </label> */}
+              <label
+                htmlFor='project-List'
+                className='editTaskFormLabel'
+              ></label>
               <input
                 type='text'
                 id='project-List'
                 name='project-List'
                 placeholder='Enter Task Name'
-                defaultValue={checkBoxData[0].val.title}
+                defaultValue={
+                  checkBoxData.length > 1 ? "" : checkBoxData[0].val.title
+                }
                 className='editTaskFormInput'
-                // className={`editProjectFormInput ${
-                //   inputErr ? "editTaskFormInputErr" : ""
-                // }`}
-                // ref={refAddProject}
-                // onBlur={handleBlur}
               />
 
-              {/* <label htmlFor='project' className='editTaskFormLabel'>
-                Project Name
-              </label> */}
-              <select
-                id='project'
-                name='project'
-                // defaultValue={planInfo === "" ? categoryList[0] : project}
-              >
-                <option>test</option>
-                {/* {categoryList.map((project) => (
-                  <option value={project} key={project}>
-                    {project}
-                  </option>
-                ))} */}
+              <input
+                type='hidden'
+                name='project-id'
+                defaultValue={checkBoxData[0].val.projectId}
+              />
+              <label htmlFor='project' className='editTaskFormLabel'></label>
+              <select id='project' name='project' value={projectName.title}>
+                {projectsList.map((project, idx) => (
+                  <option key={idx} value={project.title}></option>
+                ))}
               </select>
               <div className='editTaskFormSelect' onClick={optionOpen}>
                 <div className='editTaskFormSelectOption'>
                   <GoPrimitiveDot
                     style={{
-                      fill: `${projectName.colorCode || INITIAL_COLORCODE}`,
+                      fill: `${
+                        checkBoxData.length > 1
+                          ? INITIAL_COLORCODE
+                          : projectName.colorCode || INITIAL_COLORCODE
+                      }`,
                     }}
                   />
-                  {projectName.title || INITIAL_PROJECTNAME}
+                  {checkBoxData.length > 1
+                    ? INITIAL_PROJECTNAME
+                    : projectName.title || INITIAL_PROJECTNAME}
                 </div>
                 {selectOption ? <BiChevronUp /> : <BiChevronDown />}
                 {selectOption && (
@@ -157,22 +240,6 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
                 )}
               </div>
 
-              {/* <label htmlFor='task-date' className='editTaskFormLabel'>
-                Date
-              </label> */}
-              <div className='editTaskFormDate'>
-                <input
-                  type='date'
-                  id='task-date'
-                  name='task-date'
-                  min='2020-12-31'
-                  max='2040-12-31'
-                  defaultValue={thisDate}
-                  className='editTaskFormDateInput'
-                  required
-                />
-              </div>
-
               <div className='editTaskFormTimeContainer'>
                 <div className='editTaskFormTimeSet'>
                   <label
@@ -181,7 +248,7 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
                       timeInputErr ? "timeLabelErr" : ""
                     }`}
                   >
-                    Start
+                    Start Time
                   </label>
                   <div
                     className={`editTaskFormTime ${
@@ -189,14 +256,13 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
                     }`}
                   >
                     <input
-                      type='time'
+                      type='datetime-local'
                       id='start-time'
                       name='start-time'
                       ref={minTime}
                       defaultValue={startTime}
                       className='editTaskFormTimeInput'
-                      step='2'
-                      required
+                      step='1'
                       onBlur={checkTimeValidation}
                     />
                   </div>
@@ -209,7 +275,7 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
                       timeInputErr ? "timeLabelErr" : ""
                     }`}
                   >
-                    Stop
+                    Stop Time
                   </label>
                   <div
                     className={`editTaskFormTime ${
@@ -217,14 +283,13 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
                     }`}
                   >
                     <input
-                      type='time'
+                      type='datetime-local'
                       id='finish-time'
                       name='finish-time'
                       ref={maxTime}
                       defaultValue={finishTime}
                       className='editTaskFormTimeInput'
-                      step='2'
-                      required
+                      step='1'
                       onBlur={checkTimeValidation}
                     />
                   </div>
@@ -239,6 +304,9 @@ const Edit = ({ handleEditTaskWindow, checkBoxData }) => {
             Submit
           </button>
         </form>
+        {submitErrFlg && (
+          <div className='timeInputErrMsg'>Please clear error</div>
+        )}
       </div>
     </>
   );
