@@ -8,34 +8,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { AuthContext } from "../../context/AuthContext";
 
-const Tables = () => {
-  const { user } = useContext(AuthContext);
-  const [lists, setLists] = useState([]);
-
-  useEffect(() => {
-    const fetchTable = async () => {
-      try {
-        const res = await axios.get(`/projects/user/${user._id}`);
-        setLists(
-          res.data.sort((p1, p2) => {
-            return new Date(p2.createdAt) - new Date(p1.createdAt);
-          })
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchTable();
-  }, [user._id]);
-
+const Tables = ({ lists }) => {
   const Row = ({ row }) => {
     const [tasks, setTasks] = useState([{}]);
     const [open, setOpen] = useState(false);
@@ -52,7 +32,6 @@ const Tables = () => {
             sum += res.data[i].taskDuration;
           }
           setDuration(sum);
-          console.log(sum);
         } catch (err) {
           console.log(err);
         }
