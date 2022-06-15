@@ -137,7 +137,7 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
       try {
         for (let i = 0; i < checkBoxData.length; i++) {
           await axios.put(`/tasks/${checkBoxData[i].val._id}`, {
-            title: e.target[1].value,
+            title: e.target[1].value || "no name",
             startTime: new Date(e.target[4].value),
             finishTime: new Date(e.target[5].value),
             taskDuration: duration[0],
