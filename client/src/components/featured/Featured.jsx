@@ -62,15 +62,12 @@ const Featured = () => {
       try {
         let array = [];
         let colorArr = [];
-        let num = 0;
         const res = await axios.get(`/projects/user/${user._id}`);
-        console.log(res.data);
 
         for (let i = 0; i < res.data.length; i++) {
+          let num = 0;
           colorArr.push(res.data[i].colorCode);
-
           for (let j = 0; j < res.data[i].tasks.length; j++) {
-            // res.data[i].tasks[j].time += res.data[i].task[j].time;
             num += res.data[i].tasks[j].time;
           }
           array.push({
@@ -86,8 +83,6 @@ const Featured = () => {
     };
     fetchRow();
   }, [user._id]);
-
-  console.log(data);
 
   return (
     <div className="featured">

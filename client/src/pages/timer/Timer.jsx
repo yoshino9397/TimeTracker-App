@@ -31,6 +31,7 @@ const Timer = () => {
   useEffect(() => {
     loadData();
   }, []);
+  
   console.log(useCalculate(getTasks, getProjects));
 
   const loadProjects = async () => {

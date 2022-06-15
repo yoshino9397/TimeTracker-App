@@ -38,7 +38,7 @@ const Chart = ({ aspect, title }) => {
             return new Date(p2.createdAt) - new Date(p1.createdAt);
           })
         );
-        // console.log(res.data);
+        
       } catch (err) {
         console.log(err);
       }
