@@ -33,12 +33,7 @@ const TimerShowSummary = ({
 
   // set init Monday
   useEffect(() => {
-    const todayDay = format(new Date(), "c");
-    if (todayDay === "2") {
-      setBaseMonday(format(new Date(), "yyyy-MM-dd"));
-    } else {
-      setBaseMonday(format(previousMonday(new Date()), "yyyy-MM-dd"));
-    }
+    thisWeek();
   }, []);
 
   useEffect(() => {
@@ -117,19 +112,28 @@ const TimerShowSummary = ({
   };
 
   const prevWeek = () => {
-    setBaseMonday(previousMonday(baseMonday));
+    setBaseMonday(format(previousMonday(parseISO(baseMonday)), "yyyy-MM-dd"));
   };
 
   const nextWeek = () => {
-    setBaseMonday(nextMonday(baseMonday));
+    setBaseMonday(format(nextMonday(parseISO(baseMonday)), "yyyy-MM-dd"));
+  };
+
+  const thisWeek = () => {
+    const todayDay = format(new Date(), "c");
+    if (todayDay === "2") {
+      setBaseMonday(format(new Date(), "yyyy-MM-dd"));
+    } else {
+      setBaseMonday(format(previousMonday(new Date()), "yyyy-MM-dd"));
+    }
   };
 
   return (
     <div className='showSummaryContainer'>
       <div className='showLeftItem'>
-        <BiChevronLeft className='testetst' onClick={prevWeek} />
-        <span>Today</span>
-        <BiChevronRight />
+        <BiChevronLeft onClick={prevWeek} />
+        <span onClick={thisWeek}>Today</span>
+        <BiChevronRight onClick={nextWeek} />
       </div>
       <div className='showRightItem'>
         <div className='showTodayTitle'>TODAY</div>
