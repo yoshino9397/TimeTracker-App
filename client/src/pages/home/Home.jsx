@@ -12,7 +12,7 @@ import { AuthContext } from "../../context/AuthContext";
 const Home = () => {
   const { user } = useContext(AuthContext);
   const [lists, setLists] = useState([]);
-
+  
   useEffect(() => {
     const fetchTable = async () => {
       try {
