@@ -36,10 +36,10 @@ const Chart = ({ aspect, title }) => {
 
         const res = await axios.get(`/tasks/user/${user._id}/week`);
         res.data.sort((p1, p2) => {
-          return new Date(p1.createdAt) - new Date(p2.createdAt);
+          return new Date(p1.startTime) - new Date(p2.startTime);
         });
         setWeekData(res.data);
-        console.log(format(new Date(weekData[2].createdAt), "dd"));
+        console.log(format(new Date(weekData[2].startTime), "dd"));
 
         // for (let i = 0; i < weekData.length; i++) {
         //   dataArr.push(new Date(res.data[i].createdAt).getDay());
