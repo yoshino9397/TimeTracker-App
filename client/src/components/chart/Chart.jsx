@@ -21,7 +21,6 @@ const Chart = ({ aspect, title }) => {
   const [weekDays, setWeekDays] = useState([]);
   const [weekTasks, setWeekTasks] = useState([]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +38,31 @@ const Chart = ({ aspect, title }) => {
           return new Date(p1.startTime) - new Date(p2.startTime);
         });
         setWeekData(res.data);
-        console.log(format(new Date(weekData[2].startTime), "dd"));
+        console.log("data", res.data);
+        const tmpDataArr = [],
+          dayArr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+        for (let i = 0; i < 7; i++) {
+          tmpDataArr.push(
+            res.data?.filter((el) => {
+              if (
+                format(new Date(el.startTime), "dd") ===
+                (thisMonday + i).toString()
+              ) {
+                // console.log("el(", dayArr[i], ")", el);
+                return el;
+              }
+            })
+          );
+        }
+        console.log("tmpDataArr", tmpDataArr);
+        const resultArr = tmpDataArr.map((dayTask) => {
+          let taskSum = 0;
+          dayTask.map((task) => (taskSum += task.taskDuration));
+          return taskSum;
+        });
+        console.log("resultArr", resultArr);
+        // console.log(format(new Date(weekData[2].startTime), "dd"));
 
         // for (let i = 0; i < weekData.length; i++) {
         //   dataArr.push(new Date(res.data[i].createdAt).getDay());
@@ -49,9 +72,11 @@ const Chart = ({ aspect, title }) => {
           num = thisMonday + i;
           arr.push({
             date: `${todayMonth}/` + num,
-            time: weekData[i].taskDuration,
+            // time: weekData[i].taskDuration,
+            time: resultArr[i],
           });
         }
+        console.log("arr", arr);
 
         setWeekDays(arr);
         setWeekTasks(dataArr);
@@ -61,7 +86,6 @@ const Chart = ({ aspect, title }) => {
     };
     fetchData();
   }, [user._id, weekData.length]);
-  console.log();
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -83,12 +107,12 @@ const Chart = ({ aspect, title }) => {
   // }, [user._id]);
 
   return (
-    <div className="chart">
-      <div className="title">
+    <div className='chart'>
+      <div className='title'>
         <DateRangeIcon />
         This week
       </div>
-      <ResponsiveContainer width="100%" aspect={aspect}>
+      <ResponsiveContainer width='100%' aspect={aspect}>
         <AreaChart
           width={730}
           height={250}
@@ -96,21 +120,21 @@ const Chart = ({ aspect, title }) => {
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <defs>
-            <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#9DBEB9" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#9DBEB9" stopOpacity={0} />
+            <linearGradient id='total' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='5%' stopColor='#9DBEB9' stopOpacity={0.8} />
+              <stop offset='95%' stopColor='#9DBEB9' stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="date" stroke="gray" />
-          <YAxis unit="s" stroke="gray" />
-          <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
+          <XAxis dataKey='date' stroke='gray' />
+          <YAxis unit='s' stroke='gray' />
+          <CartesianGrid strokeDasharray='3 3' className='chartGrid' />
           <Tooltip />
           <Area
-            type="monotone"
-            dataKey="time"
-            stroke="#194350"
+            type='monotone'
+            dataKey='time'
+            stroke='#194350'
             fillOpacity={1}
-            fill="url(#total)"
+            fill='url(#total)'
           />
         </AreaChart>
       </ResponsiveContainer>
