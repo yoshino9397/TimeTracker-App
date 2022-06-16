@@ -26,6 +26,11 @@ const UserSchema = new mongoose.Schema(
         }
       },
     },
+    timerMode: {
+      type: String,
+      default: "pomodoro",
+      trim: true,
+    },
     duration: {
       type: Number,
       default: 1500,

@@ -7,7 +7,8 @@ const updateUser = async (req, res, next) => {
       { $set: req.body },
       { new: true }
     );
-    res.status(200).json(updatedUser);
+    const { password, ...otherDetails } = updatedUser._doc;
+    res.status(200).json({ details: { ...otherDetails } });
   } catch (err) {
     next(err);
   }

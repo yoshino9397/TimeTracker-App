@@ -1,28 +1,88 @@
 import { useEffect, useState, useRef, useContext } from "react";
+import axios from "axios";
 
 import { AuthContext } from "../../context/AuthContext";
 import "./setting.scss";
 import { MdAlarm, MdOutlineTimer } from "react-icons/md";
 
 const Setting = ({ handleSettingWindow }) => {
-  const { user } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const [pomodoroErrMsg, setPomodoroErrMsg] = useState("");
   const [shortBreakErrMsg, setShortBreakErrMsg] = useState("");
   const [longBreakErrMsg, setLongBreakErrMsg] = useState("");
+  const [longBreakIntervalErrMsg, setLongBreakIntervalErrMsg] = useState("");
+  const [settingSubmitErrFlg, setSettingSubmitErrFlg] = useState(false);
   // const durationMin = user.duration / 60;
   // const shortBreakMin = user.shortBreak / 60;
   // const longBreakMin = user.longBreak / 60;
-  console.log("user", user);
 
   const checkTimerValidation = (e) => {
     console.log(e.target.id);
-    // if (e.target.id === "start-time") {
-    //   setTimeInputErr(e.target.value >= maxTime.current.value);
-    //   setTimeInputErrMsg("Start time should be set to a time before Stop time");
-    // } else {
-    //   setTimeInputErr(e.target.value <= minTime.current.value);
-    //   setTimeInputErrMsg("Start time should be set to a time before Stop time");
-    // }
+    if (e.target.id === "pomodoro") {
+      if (
+        !Number.isInteger(parseInt(e.target.value)) ||
+        parseInt(e.target.value) <= 0
+      ) {
+        setPomodoroErrMsg("Please enter a valid positive number");
+      } else {
+        setPomodoroErrMsg("");
+      }
+    } else if (e.target.id === "shortBreak") {
+      if (
+        !Number.isInteger(parseInt(e.target.value)) ||
+        parseInt(e.target.value) <= 0
+      ) {
+        setShortBreakErrMsg("Please enter a valid positive number");
+      } else {
+        setShortBreakErrMsg("");
+      }
+    } else if (e.target.id === "longBreak") {
+      if (
+        !Number.isInteger(parseInt(e.target.value)) ||
+        parseInt(e.target.value) <= 0
+      ) {
+        setLongBreakErrMsg("Please enter a valid positive number");
+      } else {
+        setLongBreakErrMsg("");
+      }
+    } else if (e.target.id === "longBreakInterval") {
+      if (
+        !Number.isInteger(parseInt(e.target.value)) ||
+        parseInt(e.target.value) <= 0
+      ) {
+        setLongBreakIntervalErrMsg("Please enter a valid positive number");
+      } else {
+        setLongBreakIntervalErrMsg("");
+      }
+    }
+  };
+
+  const submitSetting = async (e) => {
+    e.preventDefault();
+    if (
+      pomodoroErrMsg ||
+      shortBreakErrMsg ||
+      longBreakErrMsg ||
+      longBreakIntervalErrMsg
+    ) {
+      return setSettingSubmitErrFlg(true);
+    } else setSettingSubmitErrFlg(false);
+
+    try {
+      const res = await axios.put(`/users/${user._id}`, {
+        userId: user._id,
+        email: user.email,
+        timerMode: e.target[0].checked ? "pomodoro" : "timer",
+        duration: e.target[2].value,
+        shortBreak: e.target[3].value,
+        longBreak: e.target[4].value,
+        longBreakInterval: e.target[5].value,
+      });
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+    } catch (err) {
+      console.log("err:", err);
+    }
+    handleSettingWindow();
   };
 
   return (
@@ -32,7 +92,7 @@ const Setting = ({ handleSettingWindow }) => {
         <span className='settingContainerTitle'>Setting</span>
 
         <form
-          // onSubmit={submitSetting}
+          onSubmit={submitSetting}
           autoComplete='off'
           className='settingForm'
         >
@@ -78,6 +138,9 @@ const Setting = ({ handleSettingWindow }) => {
                 step='1'
               />
             </div>
+            {pomodoroErrMsg && (
+              <div className='timerInputErrMsg'>{pomodoroErrMsg}</div>
+            )}
             <div className='settingTimerFormInputSetContainer'>
               <label htmlFor='shortBreak' className='settingTimerFormLabel'>
                 Short Break (sec)
@@ -93,6 +156,9 @@ const Setting = ({ handleSettingWindow }) => {
                 step='1'
               />
             </div>
+            {shortBreakErrMsg && (
+              <div className='timerInputErrMsg'>{shortBreakErrMsg}</div>
+            )}
             <div className='settingTimerFormInputSetContainer'>
               <label htmlFor='longBreak' className='settingTimerFormLabel'>
                 Long Break (sec)
@@ -108,6 +174,9 @@ const Setting = ({ handleSettingWindow }) => {
                 step='1'
               />
             </div>
+            {longBreakErrMsg && (
+              <div className='timerInputErrMsg'>{longBreakErrMsg}</div>
+            )}
             <div className='settingTimerFormInputSetContainer'>
               <label
                 htmlFor='longBreakInterval'
@@ -122,13 +191,20 @@ const Setting = ({ handleSettingWindow }) => {
                 defaultValue={4}
                 placeholder='4'
                 className='settingTimerFormInput'
+                onBlur={checkTimerValidation}
                 step='1'
               />
             </div>
+            {longBreakIntervalErrMsg && (
+              <div className='timerInputErrMsg'>{longBreakIntervalErrMsg}</div>
+            )}
           </div>
           <button className='settingFormBtn' type='submit'>
             Submit
           </button>
+          {settingSubmitErrFlg && (
+            <div className='timerInputErrMsg'>Please clear error</div>
+          )}
         </form>
       </div>
     </>

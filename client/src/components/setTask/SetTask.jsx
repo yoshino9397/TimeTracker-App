@@ -18,12 +18,14 @@ import Setting from "../setting/Setting";
 let timerId;
 const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const { user } = useContext(AuthContext);
+
   const timeMinutes = Math.floor(user.duration / 60);
   const timeSeconds = Math.floor(user.duration % 60);
   const shortBreakTimeMinutes = Math.floor(user.shortBreak / 60);
   const shortBreakTimeSeconds = Math.floor(user.shortBreak % 60);
   const longBreakTimeMinutes = Math.floor(user.longBreak / 60);
   const longBreakTimeSeconds = Math.floor(user.longBreak % 60);
+  const pomodoroCycleRst = user.longBreakInterval;
 
   const [startTimer, setStartTimer] = useState(true);
   const [pomodoroCycle, setPomodoroCycle] = useState(0);
@@ -38,6 +40,14 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const [alarmOpen, setAlarmOpen] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const taskName = useRef();
+
+  useEffect(() => {
+    if (pomodoroCycle % 2) {
+      if (pomodoroCycle === pomodoroCycleRst * 2 - 1) {
+        timerInit("longBreak");
+      } else timerInit("shortBreak");
+    } else timerInit();
+  }, [user]);
 
   const timerInit = (mode = "") => {
     if (mode === "shortBreak") {
@@ -68,11 +78,11 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
 
   useEffect(() => {
     if (pomodoroCycle % 2) {
-      if (pomodoroCycle === 7) {
+      if (pomodoroCycle === pomodoroCycleRst * 2 - 1) {
         timerInit("longBreak");
       } else timerInit("shortBreak");
     } else timerInit();
-    if (pomodoroCycle === 8) setPomodoroCycle(0);
+    if (pomodoroCycle === pomodoroCycleRst * 2) setPomodoroCycle(0);
   }, [pomodoroCycle]);
 
   useEffect(() => {

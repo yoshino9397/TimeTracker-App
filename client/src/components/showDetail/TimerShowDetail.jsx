@@ -68,22 +68,16 @@ const TimerShowDetail = ({ data, handleEditProjectWindow, handleReload }) => {
       // delete
       try {
         const res = await axios.delete(`/tasks/${removeEl.val._id}`);
-        // remove from array
-        if (res.status === 200) {
-          setShowData((prev) =>
-            prev.filter((el) => el.val._id !== removeEl.val._id)
-          );
-        }
       } catch (err) {
         console.log("err:", err);
       }
     });
     setCheckBoxData([]);
-    const interval = setInterval(() => {
+    const reloadInterval = setInterval(() => {
       handleReload();
 
-      clearInterval(interval);
-    }, 200);
+      clearInterval(reloadInterval);
+    }, 300);
   };
 
   return (
