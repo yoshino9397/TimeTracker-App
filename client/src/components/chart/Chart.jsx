@@ -39,6 +39,7 @@ const Chart = ({ aspect, title }) => {
           return new Date(p1.startTime) - new Date(p2.startTime);
         });
         setWeekData(res.data);
+        console.log(res.data);
         console.log(format(new Date(weekData[2].startTime), "dd"));
 
         // for (let i = 0; i < weekData.length; i++) {
