@@ -9,6 +9,7 @@ import TimerShowSummary from "../../components/showSummary/TimerShowSummary";
 import SetTask from "../../components/setTask/SetTask";
 import TimerShowDetail from "../../components/showDetail/TimerShowDetail";
 import AddProject from "../../components/addProject/AddProject";
+import { format, nextDay, parseISO } from "date-fns";
 
 const absDate = [0, 6, 5, 4, 3, 2, 1];
 const Timer = () => {
@@ -18,6 +19,7 @@ const Timer = () => {
   const [tasks, setTasks] = useState([]);
   const [editProjectWindow, setEditProjectWindow] = useState(false);
   const [loadFlg, setLoadFlg] = useState(false);
+  const [noTaskMsg, setNoTaskMsg] = useState("");
 
   const loadProjects = async () => {
     try {
@@ -38,8 +40,15 @@ const Timer = () => {
   };
 
   const setWeeklyTasks = (task) => {
-    const list = absDate.map((date) => task.filter((el) => el.date === date));
-    setTasks(list);
+    if (typeof task !== "object") {
+      const nextSunday = format(nextDay(parseISO(task), 0), "yyyy-MM-dd");
+      setNoTaskMsg(task + " - " + nextSunday + ": NO TASK");
+      setTasks([]);
+    } else {
+      setNoTaskMsg("");
+      const list = absDate.map((date) => task.filter((el) => el.date === date));
+      setTasks(list);
+    }
   };
 
   const addWeeklyTask = (task) => {
@@ -81,6 +90,9 @@ const Timer = () => {
                   handleReload={handleReload}
                 />
               )
+          )}
+          {noTaskMsg && (
+            <span className='timerShowDetailsNoTask'>{noTaskMsg}</span>
           )}
         </div>
       </div>

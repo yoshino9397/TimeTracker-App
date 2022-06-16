@@ -106,7 +106,8 @@ const TimerShowSummary = ({
         }
       });
     }
-    setWeeklyTasks(tmpTasks);
+    if (tmpTasks.length === 0) setWeeklyTasks(baseMonday);
+    else setWeeklyTasks(tmpTasks);
     setTodaySumTime(tmpTodaySumTime);
     setWeekSumTime(tmpThisWeekSumTime);
   };
