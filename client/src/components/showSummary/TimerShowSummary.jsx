@@ -1,13 +1,18 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { format } from "date-fns";
+import {
+  format,
+  previousMonday,
+  nextMonday,
+  nextDay,
+  parseISO,
+} from "date-fns";
 
 import { AuthContext } from "../../context/AuthContext";
-import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 import "./timerShowSummary.scss";
 
-const absDate = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 const TimerShowSummary = ({
   tasks,
   newTask,
@@ -18,88 +23,113 @@ const TimerShowSummary = ({
   const { user } = useContext(AuthContext);
   const [todaySumTime, setTodaySumTime] = useState(0);
   const [weekSumTime, setWeekSumTime] = useState(0);
-  const tmpTasks = [];
+  const [baseMonday, setBaseMonday] = useState("");
   const today = format(new Date(), "yyyy-MM-dd");
-  const todayDay = format(new Date(), "c");
-  const todayMonth = format(new Date(), "yyyy-MM");
+  const WEEK_ARR = [0, 2, 3, 4, 5, 6];
+  // const WEEK_NAME = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const tmpTasks = [];
   let tmpTodaySumTime = 0,
-    tmpWeekSumTime = 0;
+    tmpThisWeekSumTime = 0;
+
+  // set init Monday
+  useEffect(() => {
+    const todayDay = format(new Date(), "c");
+    if (todayDay === "2") {
+      setBaseMonday(format(new Date(), "yyyy-MM-dd"));
+    } else {
+      setBaseMonday(format(previousMonday(new Date()), "yyyy-MM-dd"));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (baseMonday !== "") loadTasks();
+  }, [loadFlg, baseMonday]);
 
   useEffect(() => {
     if (newTask.length !== 0) {
       const taskDate = format(new Date(newTask.startTime), "yyyy-MM-dd");
-      if (taskDate.indexOf(todayMonth) === 0) {
-        const checkBeforeDate = today.slice(8) - taskDate.slice(8);
-        const checkAfterDate = taskDate.slice(8) - today.slice(8);
-        // added -1 for start Monday
-        if (checkBeforeDate >= 0 && checkBeforeDate < todayDay - 1) {
-          if (checkBeforeDate === 0) {
-            setTodaySumTime((prev) => prev + newTask.taskDuration);
-          }
-          tasks[absDate.findIndex((el) => el === checkAfterDate)].unshift({
-            date: checkAfterDate,
-            val: newTask,
-          });
-          addWeeklyTask(tasks);
-          setWeekSumTime((prev) => prev + newTask.taskDuration);
-        } else if (checkAfterDate > 0 && checkAfterDate < 9 - todayDay) {
-          // changed from 8 to 9 for start Monday
-          tasks[absDate.findIndex((el) => el === checkAfterDate)].unshift({
-            date: checkAfterDate,
-            val: newTask,
-          });
-          addWeeklyTask(tasks);
-          setWeekSumTime((prev) => prev + newTask.taskDuration);
+      if (taskDate === baseMonday) {
+        setWeekSumTime((prev) => prev + newTask.taskDuration);
+        if (taskDate === today) {
+          setTodaySumTime((prev) => prev + newTask.taskDuration);
         }
+        tasks[1].unshift({
+          date: 1,
+          val: newTask,
+        });
+        addWeeklyTask(tasks);
+      } else {
+        WEEK_ARR.forEach((DAY, idx) => {
+          if (
+            taskDate.slice(0, 10) ===
+            format(nextDay(parseISO(baseMonday), DAY), "yyyy-MM-dd")
+          ) {
+            setWeekSumTime((prev) => prev + newTask.taskDuration);
+            if (taskDate.slice(0, 10) === today) {
+              setTodaySumTime((prev) => prev + newTask.taskDuration);
+            }
+            tasks[idx].unshift({
+              date: DAY,
+              val: newTask,
+            });
+            addWeeklyTask(tasks);
+          }
+        });
       }
     }
   }, [newTask]);
-
-  useEffect(() => {
-    loadTasks();
-  }, [loadFlg]);
 
   const loadTasks = async () => {
     const res = await axios.get(`/tasks/user/${user._id}`);
     if (res.status === 200) {
       res.data.map((val) => {
-        const taskDate = format(new Date(val.startTime), "yyyy-MM-dd");
-        if (taskDate.indexOf(todayMonth) === 0) {
-          const checkBeforeDate = today.slice(8) - taskDate.slice(8);
-          const checkAfterDate = taskDate.slice(8) - today.slice(8);
-          console.log("taskDate", taskDate);
-          // added -1 for start Monday
-          if (checkBeforeDate >= 0 && checkBeforeDate < todayDay - 1) {
-            if (checkBeforeDate === 0) {
-              tmpTodaySumTime += val.taskDuration;
-            }
-            tmpTasks.splice(checkBeforeDate, 0, {
-              date: checkAfterDate,
-              val,
-            });
-            tmpWeekSumTime += val.taskDuration;
-          } else if (checkAfterDate > 0 && checkAfterDate < 9 - todayDay) {
-            // changed from 8 to 9 for start Monday
-            tmpTasks.splice(checkAfterDate, 0, {
-              date: checkAfterDate,
-              val,
-            });
-            tmpWeekSumTime += val.taskDuration;
+        if (val.startTime.slice(0, 10) === baseMonday) {
+          tmpThisWeekSumTime += val.taskDuration;
+          if (val.startTime.slice(0, 10) === today) {
+            tmpTodaySumTime += val.taskDuration;
           }
+          tmpTasks.push({
+            date: 1,
+            val,
+          });
+        } else {
+          WEEK_ARR.forEach((DAY) => {
+            if (
+              val.startTime.slice(0, 10) ===
+              format(nextDay(parseISO(baseMonday), DAY), "yyyy-MM-dd")
+            ) {
+              tmpThisWeekSumTime += val.taskDuration;
+              if (val.startTime.slice(0, 10) === today) {
+                tmpTodaySumTime += val.taskDuration;
+              }
+              tmpTasks.push({
+                date: DAY,
+                val,
+              });
+            }
+          });
         }
       });
     }
     setWeeklyTasks(tmpTasks);
     setTodaySumTime(tmpTodaySumTime);
-    setWeekSumTime(tmpWeekSumTime);
+    setWeekSumTime(tmpThisWeekSumTime);
+  };
+
+  const prevWeek = () => {
+    setBaseMonday(previousMonday(baseMonday));
+  };
+
+  const nextWeek = () => {
+    setBaseMonday(nextMonday(baseMonday));
   };
 
   return (
     <div className='showSummaryContainer'>
       <div className='showLeftItem'>
-        <GrFormPrevious />
+        <BiChevronLeft className='testetst' onClick={prevWeek} />
         <span>Today</span>
-        <GrFormNext />
+        <BiChevronRight />
       </div>
       <div className='showRightItem'>
         <div className='showTodayTitle'>TODAY</div>

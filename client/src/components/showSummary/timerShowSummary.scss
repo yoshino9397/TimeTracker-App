@@ -11,6 +11,27 @@
     align-items: center;
     margin-left: 0.8rem;
     font-size: 0.85rem;
+    color: #5d5d5d;
+
+    span {
+      cursor: pointer;
+      margin: 0 0.7rem;
+
+      &:hover {
+        color: rgb(178, 178, 178);
+      }
+    }
+
+    svg {
+      width: 1.245rem;
+      height: 1.245rem;
+      fill: #5d5d5d;
+      cursor: pointer;
+
+      &:hover {
+        fill: rgb(178, 178, 178);
+      }
+    }
   }
 
   .showRightItem {

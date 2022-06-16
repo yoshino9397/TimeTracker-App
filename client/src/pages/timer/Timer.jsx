@@ -10,7 +10,7 @@ import SetTask from "../../components/setTask/SetTask";
 import TimerShowDetail from "../../components/showDetail/TimerShowDetail";
 import AddProject from "../../components/addProject/AddProject";
 
-const absDate = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
+const absDate = [0, 6, 5, 4, 3, 2, 1];
 const Timer = () => {
   const { user } = useContext(AuthContext);
   const { dispatch } = useContext(ProjectsContext);
