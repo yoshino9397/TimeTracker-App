@@ -41,8 +41,6 @@ const Tables = ({ lists }) => {
       fetchData();
     }, [user._id]);
 
-    console.log(durationAll);
-
     useEffect(() => {
       const fetchRow = async () => {
         try {

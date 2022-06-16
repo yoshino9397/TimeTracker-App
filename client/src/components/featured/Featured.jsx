@@ -6,6 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import useCalculate from "../../hooks/useCalculate";
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
@@ -39,50 +40,48 @@ const Featured = () => {
   const [durationAll, setDurationAll] = useState(0);
   const [data, setData] = useState([]);
   const [color, setColor] = useState([]);
+  const [getTasks, setGetTasks] = useState([]);
+  const [getProjects, setGetProjects] = useState([]);
+  const taskArr = useCalculate(getTasks, getProjects);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const resTasks = await axios.get(`/tasks/user/${user._id}`);
+      const resProjects = await axios.get(`/projects/user/${user._id}`);
+      setGetTasks(resTasks.data);
+      setGetProjects(resProjects.data);
+    };
+    loadData();
+  }, [user._id]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        var sum = 0;
-        const res = await axios.get(`/tasks/user/${user._id}`);
-
-        for (let i = 0; i < res.data.length; i++) {
-          sum += res.data[i].taskDuration;
+        let sum = 0;
+        let colorArr = [];
+        let array = [];
+        const resultOdd = taskArr.filter((n, i) => i % 2 === 1);
+        const resultEven = taskArr.filter((n, i) => i % 2 === 0);
+        for (let i = 0; i < getProjects.length; i++) {
+          sum += getTasks[i].taskDuration;
+          colorArr.push(getProjects[i].colorCode);
+          array.push({
+            name: resultEven[i].title,
+            value: resultOdd[i],
+          });
+        }
+        for (let i = 0; i < getTasks.length; i++) {
+          sum += getTasks[i].taskDuration;
         }
         setDurationAll(sum);
+        setData(array);
+        setColor(colorArr);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, [user._id]);
-
-  useEffect(() => {
-    const fetchRow = async () => {
-      try {
-        let array = [];
-        let colorArr = [];
-        const res = await axios.get(`/projects/user/${user._id}`);
-
-        for (let i = 0; i < res.data.length; i++) {
-          let num = 0;
-          colorArr.push(res.data[i].colorCode);
-          for (let j = 0; j < res.data[i].tasks.length; j++) {
-            num += res.data[i].tasks[j].time;
-          }
-          array.push({
-            name: res.data[i].title,
-            value: num,
-          });
-        }
-        setColor(colorArr);
-        setData(array);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchRow();
-  }, [user._id]);
+  }, [getProjects, getTasks]);
 
   return (
     <div className="featured">
@@ -97,7 +96,7 @@ const Featured = () => {
         <div className="featuredChart">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart width={400} height={400}>
-              <Legend layout="vertical" verticalAlign="top" align="top" />
+              <Legend layout="horizontal" verticalAlign="top" align="top" />
               <Pie
                 data={data}
                 cx="50%"

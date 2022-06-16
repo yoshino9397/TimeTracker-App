@@ -6,6 +6,7 @@ const {
   getTask,
   getTasks,
   getTasksByProject,
+  getTasksByWeek,
 } = require("../controllers/task.js");
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.get("/:id", getTask);
 //GET ALL
 router.get("/user/:id", getTasks);
 router.get("/project/:id", getTasksByProject);
+router.get("/user/:id/week", getTasksByWeek);
 
 module.exports = router;
