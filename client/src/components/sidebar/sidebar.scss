@@ -17,9 +17,13 @@
     }
   }
 
-  hr {
+  .sidebarTitleHr {
     height: 0;
-    border: 0.5px solid #FFC2B4;
+    border: 0.5px solid #ffc2b4;
+  }
+
+  .sidebarHr {
+    display: none;
   }
 
   .center {
@@ -45,38 +49,99 @@
         padding: 5px;
         cursor: pointer;
 
-        &:hover {   
-          background-color:#9dbeb936;
+        &:hover {
+          background-color: #9dbeb936;
         }
 
         .icon {
           font-size: 18px;
-          color:#fcc8bc
+          color: #fcc8bc;
         }
 
-        span{
-            font-size: 13px;
-            font-weight: 600;
-            color: rgb(223, 220, 220);
-            margin-left: 10px;
+        span {
+          font-size: 13px;
+          font-weight: 600;
+          color: rgb(223, 220, 220);
+          margin-left: 10px;
         }
       }
     }
   }
 
-  .bottom{
-      display: flex;
-      align-items: center;
-      margin: 20px 10px;
+  .bottom {
+    display: flex;
+    align-items: center;
+    margin: 20px 10px;
 
-      .colorOption{
-          font-size: 25px;
-          cursor: pointer;
-          margin: 5px;
-          color:#d1d1d1;
-          &:hover {   
-            color:#fcc8bc;
-          }
+    .colorOption {
+      font-size: 25px;
+      cursor: pointer;
+      margin: 5px;
+      color: #d1d1d1;
+      &:hover {
+        color: #fcc8bc;
       }
+    }
+  }
+}
+
+@media (max-width: 950px) {
+  .sidebar {
+    .top {
+      .logo {
+        font-size: 16px;
+        font-weight: bold;
+        color: rgb(235, 222, 222);
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    flex: 0 1;
+    width: 2.8rem;
+
+    span,
+    p {
+      display: none;
+    }
+
+    .sidebarTitleHr {
+      margin-bottom: 0.2rem;
+    }
+
+    .center {
+      padding-left: 0;
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        li {
+          padding: 0;
+
+          svg {
+            margin: 0.4rem 0;
+          }
+        }
+      }
+
+      .sidebarHr {
+        display: block;
+        height: 0;
+        width: 100%;
+        border: 0.2px solid #ffffff;
+        margin: 0.2rem 0;
+      }
+    }
+    .bottom {
+      flex-direction: column;
+
+      svg {
+        width: 1.2rem;
+      }
+    }
   }
 }
