@@ -26,9 +26,29 @@ const UserSchema = new mongoose.Schema(
         }
       },
     },
+    timerMode: {
+      type: String,
+      default: "pomodoro",
+      trim: true,
+    },
     duration: {
       type: Number,
       default: 1500,
+      trim: true,
+    },
+    shortBreak: {
+      type: Number,
+      default: 300,
+      trim: true,
+    },
+    longBreak: {
+      type: Number,
+      default: 900,
+      trim: true,
+    },
+    longBreakInterval: {
+      type: Number,
+      default: 4,
       trim: true,
     },
   },

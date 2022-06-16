@@ -27,69 +27,74 @@ const Sidebar = () => {
     }
   };
   return (
-    <div className="sidebar">
-      <div className="top">
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">TimeIsMoney</span>
+    <div className='sidebar'>
+      <div className='top'>
+        <Link to='/' style={{ textDecoration: "none" }}>
+          <span className='logo'>TimeIsMoney</span>
         </Link>
       </div>
-      <hr />
-      <div className="center">
+      <hr className='sidebarTitleHr' />
+      <div className='center'>
         <ul>
-          <p className="title">TRACK</p>
+          <p className='title'>TRACK</p>
           <li>
-            <AccessAlarmIcon className="icon" />
-            <Link to="/timer" style={{ textDecoration: "none" }}>
+            <AccessAlarmIcon className='icon' />
+            <Link to='/timer' style={{ textDecoration: "none" }}>
               <span>Timer</span>
             </Link>
           </li>
-          <p className="title">ANALYZE</p>
-          <Link to="/" style={{ textDecoration: "none" }}>
+          <hr className='sidebarHr' />
+          <p className='title'>ANALYZE</p>
+          <Link to='/' style={{ textDecoration: "none" }}>
             <li>
-              <DashboardIcon className="icon" />
+              <DashboardIcon className='icon' />
               <span>Dashboard</span>
             </li>
           </Link>
-          <p className="title">MANAGE</p>
+          <hr className='sidebarHr' />
+          <p className='title'>MANAGE</p>
           <li>
-            <InsertChartIcon className="icon" />
+            <InsertChartIcon className='icon' />
             <span>Stats</span>
           </li>
           <li>
-            <NotificationsNoneIcon className="icon" />
+            <NotificationsNoneIcon className='icon' />
             <span>Notifications</span>
           </li>
-          <p className="title">SERVICE</p>
+          <hr className='sidebarHr' />
+          <p className='title'>SERVICE</p>
           <li>
-            <SettingsSystemDaydreamOutlinedIcon className="icon" />
+            <SettingsSystemDaydreamOutlinedIcon className='icon' />
             <span>System Health</span>
           </li>
           <li>
-            <PsychologyOutlinedIcon className="icon" />
+            <PsychologyOutlinedIcon className='icon' />
             <span>Logs</span>
           </li>
           <li>
-            <SettingsApplicationsIcon className="icon" />
+            <SettingsApplicationsIcon className='icon' />
             <span>Settings</span>
           </li>
-          <p className="title">USER</p>
+          <hr className='sidebarHr' />
+          <p className='title'>USER</p>
           <li>
-            <AccountCircleOutlinedIcon className="icon" />
+            <AccountCircleOutlinedIcon className='icon' />
             <span>Profile</span>
           </li>
           <li onClick={handleLogout}>
-            <ExitToAppIcon className="icon" />
+            <ExitToAppIcon className='icon' />
             <span>Logout</span>
           </li>
         </ul>
       </div>
-      <div className="bottom">
+      <hr className='sidebarHr' />
+      <div className='bottom'>
         <DarkModeOutlinedIcon
-          className="colorOption"
+          className='colorOption'
           onClick={() => dispatch({ type: "DARK" })}
         />
         <LightModeOutlinedIcon
-          className="colorOption"
+          className='colorOption'
           onClick={() => dispatch({ type: "LIGHT" })}
         />
       </div>

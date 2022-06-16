@@ -22,7 +22,7 @@ const TimerShowDetailCard = ({
   const [checkBox, setCheckBox] = useState(false);
 
   useEffect(() => {
-    if (el.val.projectTitle) {
+    if (el.val.projectId) {
       projects?.forEach((project) => {
         if (project._id === el.val.projectId) {
           return setProjectName({

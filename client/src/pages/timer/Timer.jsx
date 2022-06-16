@@ -9,7 +9,6 @@ import TimerShowSummary from "../../components/showSummary/TimerShowSummary";
 import SetTask from "../../components/setTask/SetTask";
 import TimerShowDetail from "../../components/showDetail/TimerShowDetail";
 import AddProject from "../../components/addProject/AddProject";
-import useCalculate from "../../hooks/useCalculate";
 
 const absDate = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 const Timer = () => {
@@ -19,20 +18,6 @@ const Timer = () => {
   const [tasks, setTasks] = useState([]);
   const [editProjectWindow, setEditProjectWindow] = useState(false);
   const [loadFlg, setLoadFlg] = useState(false);
-  const [getTasks, setGetTasks] = useState([]);
-  const [getProjects, setGetProjects] = useState([]);
-
-  const loadData = async () => {
-    const resTasks = await axios.get(`/tasks/user/${user._id}`);
-    setGetTasks(resTasks.data);
-    const resProjects = await axios.get(`/projects/user/${user._id}`);
-    setGetProjects(resProjects.data);
-  };
-  useEffect(() => {
-    loadData();
-  }, []);
-  
-  console.log(useCalculate(getTasks, getProjects));
 
   const loadProjects = async () => {
     try {
