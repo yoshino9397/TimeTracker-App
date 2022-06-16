@@ -15,48 +15,53 @@ import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import { format } from "date-fns";
 
-// const data = [
-//   { name: "", Total: 0 },
-//   { name: "Mon", Total: 4.2 },
-//   { name: "Tues", Total: 2.4 },
-//   { name: "Wed", Total: 4.8 },
-//   { name: "Thu", Total: 6.6 },
-//   { name: "Fri", Total: 7.0 },
-//   { name: "Sat", Total: 2.3 },
-//   { name: "Sun", Total: 4.5 },
-// ];
-
 const Chart = ({ aspect, title }) => {
   const { user } = useContext(AuthContext);
   const [weekData, setWeekData] = useState([{}]);
   const [weekDays, setWeekDays] = useState([]);
+  const [weekTasks, setWeekTasks] = useState([]);
+
 
   useEffect(() => {
-    let today = new Date();
-    let todayMonth = today.getMonth() + 1;
-    let date = today.getDate();
-    let dayNum = today.getDay();
-    let thisMonday = date - dayNum + 1;
-    let arr = [];
-    let num = 0;
     const fetchData = async () => {
       try {
+        let today = new Date();
+        let todayMonth = today.getMonth() + 1;
+        let date = today.getDate();
+        let dayNum = today.getDay();
+        let thisMonday = date - dayNum + 1;
+        let arr = [];
+        let num = 0;
+        let dataArr = [];
+
         const res = await axios.get(`/tasks/user/${user._id}/week`);
-        console.log(res.data);
+        res.data.sort((p1, p2) => {
+          return new Date(p1.createdAt) - new Date(p2.createdAt);
+        });
+        setWeekData(res.data);
+        console.log(format(new Date(weekData[2].createdAt), "dd"));
+
+        // for (let i = 0; i < weekData.length; i++) {
+        //   dataArr.push(new Date(res.data[i].createdAt).getDay());
+        // }
 
         for (let i = 0; i < 7; i++) {
           num = thisMonday + i;
           arr.push({
             date: `${todayMonth}/` + num,
+            time: weekData[i].taskDuration,
           });
         }
+
+        setWeekDays(arr);
+        setWeekTasks(dataArr);
       } catch (err) {
         console.log(err);
       }
-      setWeekDays(arr);
     };
     fetchData();
-  }, []);
+  }, [user._id, weekData.length]);
+  console.log();
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -97,12 +102,12 @@ const Chart = ({ aspect, title }) => {
             </linearGradient>
           </defs>
           <XAxis dataKey="date" stroke="gray" />
-          <YAxis unit="h" stroke="gray" />
+          <YAxis unit="s" stroke="gray" />
           <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
           <Tooltip />
           <Area
             type="monotone"
-            dataKey="taskDuration"
+            dataKey="time"
             stroke="#194350"
             fillOpacity={1}
             fill="url(#total)"
