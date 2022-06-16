@@ -31,7 +31,8 @@ const TimerShowSummary = ({
       if (taskDate.indexOf(todayMonth) === 0) {
         const checkBeforeDate = today.slice(8) - taskDate.slice(8);
         const checkAfterDate = taskDate.slice(8) - today.slice(8);
-        if (checkBeforeDate >= 0 && checkBeforeDate < todayDay) {
+        // added -1 for start Monday
+        if (checkBeforeDate >= 0 && checkBeforeDate < todayDay - 1) {
           if (checkBeforeDate === 0) {
             setTodaySumTime((prev) => prev + newTask.taskDuration);
           }
@@ -41,7 +42,8 @@ const TimerShowSummary = ({
           });
           addWeeklyTask(tasks);
           setWeekSumTime((prev) => prev + newTask.taskDuration);
-        } else if (checkAfterDate > 0 && checkAfterDate < 8 - todayDay) {
+        } else if (checkAfterDate > 0 && checkAfterDate < 9 - todayDay) {
+          // changed from 8 to 9 for start Monday
           tasks[absDate.findIndex((el) => el === checkAfterDate)].unshift({
             date: checkAfterDate,
             val: newTask,
@@ -65,7 +67,9 @@ const TimerShowSummary = ({
         if (taskDate.indexOf(todayMonth) === 0) {
           const checkBeforeDate = today.slice(8) - taskDate.slice(8);
           const checkAfterDate = taskDate.slice(8) - today.slice(8);
-          if (checkBeforeDate >= 0 && checkBeforeDate < todayDay) {
+          console.log("taskDate", taskDate);
+          // added -1 for start Monday
+          if (checkBeforeDate >= 0 && checkBeforeDate < todayDay - 1) {
             if (checkBeforeDate === 0) {
               tmpTodaySumTime += val.taskDuration;
             }
@@ -74,7 +78,8 @@ const TimerShowSummary = ({
               val,
             });
             tmpWeekSumTime += val.taskDuration;
-          } else if (checkAfterDate > 0 && checkAfterDate < 8 - todayDay) {
+          } else if (checkAfterDate > 0 && checkAfterDate < 9 - todayDay) {
+            // changed from 8 to 9 for start Monday
             tmpTasks.splice(checkAfterDate, 0, {
               date: checkAfterDate,
               val,
