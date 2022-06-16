@@ -30,8 +30,12 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const [startTimer, setStartTimer] = useState(true);
   const [pomodoroCycle, setPomodoroCycle] = useState(0);
   // this value is pomodoro from settings
-  const [settingTimerMin, setSettingTimerMin] = useState(timeMinutes);
-  const [settingTimerSec, setSettingTimerSec] = useState(timeSeconds);
+  const [settingTimerMin, setSettingTimerMin] = useState(
+    user.timerMode === "pomodoro" ? timeMinutes : 0
+  );
+  const [settingTimerSec, setSettingTimerSec] = useState(
+    user.timerMode === "pomodoro" ? timeSeconds : 0
+  );
   const [endTime, setEndTime] = useState("");
   const [beginTime, setBeginTime] = useState("");
   const [projectsOpen, setProjectsOpen] = useState(false);
@@ -42,11 +46,15 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const taskName = useRef();
 
   useEffect(() => {
-    if (pomodoroCycle % 2) {
-      if (pomodoroCycle === pomodoroCycleRst * 2 - 1) {
-        timerInit("longBreak");
-      } else timerInit("shortBreak");
-    } else timerInit();
+    if (user.timerMode === "pomodoro") {
+      if (pomodoroCycle % 2) {
+        if (pomodoroCycle === pomodoroCycleRst * 2 - 1) {
+          timerInit("longBreak");
+        } else timerInit("shortBreak");
+      } else timerInit("pomodoro");
+    } else {
+      timerInit();
+    }
   }, [user]);
 
   const timerInit = (mode = "") => {
@@ -58,10 +66,13 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       // long break time
       setSettingTimerMin(longBreakTimeMinutes);
       setSettingTimerSec(longBreakTimeSeconds);
-    } else {
+    } else if (mode === "pomodoro") {
       // initial time
       setSettingTimerMin(timeMinutes);
       setSettingTimerSec(timeSeconds);
+    } else {
+      setSettingTimerMin(0);
+      setSettingTimerSec(0);
     }
   };
 
@@ -76,13 +87,26 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
     }, 1000);
   };
 
+  const countUp = () => {
+    timerId = setTimeout(() => {
+      if (settingTimerSec === 59) {
+        setSettingTimerMin((prev) => prev + 1);
+        setSettingTimerSec(0);
+      } else {
+        setSettingTimerSec((prev) => prev + 1);
+      }
+    }, 1000);
+  };
+
   useEffect(() => {
-    if (pomodoroCycle % 2) {
-      if (pomodoroCycle === pomodoroCycleRst * 2 - 1) {
-        timerInit("longBreak");
-      } else timerInit("shortBreak");
-    } else timerInit();
-    if (pomodoroCycle === pomodoroCycleRst * 2) setPomodoroCycle(0);
+    if (user.timerMode === "pomodoro") {
+      if (pomodoroCycle % 2) {
+        if (pomodoroCycle === pomodoroCycleRst * 2 - 1) {
+          timerInit("longBreak");
+        } else timerInit("shortBreak");
+      } else timerInit("pomodoro");
+      if (pomodoroCycle === pomodoroCycleRst * 2) setPomodoroCycle(0);
+    }
   }, [pomodoroCycle]);
 
   useEffect(() => {
@@ -108,7 +132,11 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           }
           taskName.current.value = "";
           setProjectName("");
-          setPomodoroCycle((prev) => prev + 1);
+          if (user.timerMode === "pomodoro")
+            setPomodoroCycle((prev) => prev + 1);
+          else {
+            timerInit();
+          }
         }
       };
       taskSubmit();
@@ -117,14 +145,19 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
 
   useEffect(() => {
     if (!startTimer) {
-      if (settingTimerSec === 0 && settingTimerMin === 0) {
-        clearTimeout(timerId); // clear timer
-        // timerInit();
-        // api call
-        setStartTimer(true); // stop
-        setEndTime(new Date().getTime());
-        setAlarmOpen(true);
-      } else countDown();
+      if (user.timerMode === "pomodoro") {
+        if (settingTimerSec === 0 && settingTimerMin === 0) {
+          clearTimeout(timerId); // clear timer
+          // timerInit();
+          // api call
+          setStartTimer(true); // stop
+          setEndTime(new Date().getTime());
+          setAlarmOpen(true);
+        } else countDown();
+      } else {
+        countUp();
+        setPomodoroCycle(0);
+      }
     }
   }, [startTimer, settingTimerSec]);
 
