@@ -6,14 +6,12 @@ import { ProjectsContextProvider } from "./context/ProjectsContext";
 import { DarkModeContextProvider } from "./context/darkModeContext";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AuthContextProvider>
-      <ProjectsContextProvider>
-        <DarkModeContextProvider>
-          <App />
-        </DarkModeContextProvider>
-      </ProjectsContextProvider>
-    </AuthContextProvider>
-  </React.StrictMode>,
+  <AuthContextProvider>
+    <ProjectsContextProvider>
+      <DarkModeContextProvider>
+        <App />
+      </DarkModeContextProvider>
+    </ProjectsContextProvider>
+  </AuthContextProvider>,
   document.getElementById("root")
 );

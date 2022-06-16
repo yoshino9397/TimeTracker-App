@@ -1,4 +1,4 @@
-.addProjectContainerBack {
+.alarmContainerBack {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,39 +8,36 @@
   z-index: 1;
 }
 
-.addProjectContainer {
+.alarmContainer {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 50%;
+  width: 50%;
   z-index: 2;
+  overflow: hidden;
 
   background-color: rgb(255, 255, 255);
   color: #3f597c;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  padding: 4rem;
 
-  .addProjectContainerTitle {
-    margin-bottom: 0.8rem;
-  }
-
-  .editProjectsListHr {
-    width: 100%;
-    border: 0.1px solid rgb(226, 226, 226);
-    margin: 0.7rem 0;
-  }
-
-  .editProjectForm {
+  .alarmMsg {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 100%;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    svg {
+      fill: rgb(255, 255, 0);
+      stroke-width: 0.1px;
+      margin: 0 0.4rem;
+    }
   }
 
-  .editProjectFormBtn {
+  .alarmStopBtn {
     border: none;
     padding: 12px 20px;
     background-color: #46648a;
@@ -48,21 +45,12 @@
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;
-    margin-top: 1rem;
+    margin-top: 3rem;
     width: 100%;
     transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
 
     &:hover {
       background-color: #2d4059;
     }
-  }
-
-  .formSubmitInputErr {
-    color: rgb(244, 67, 54);
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.66;
-    text-align: left;
-    margin-top: 0.5rem;
   }
 }
