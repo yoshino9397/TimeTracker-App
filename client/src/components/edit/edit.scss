@@ -10,10 +10,9 @@
 
 .editTaskContainer {
   position: fixed;
-  top: 40%;
+  top: 50%;
   left: 50%;
-  margin-top: -25%;
-  margin-left: -32.5%;
+  transform: translate(-50%, -50%);
   min-width: 65%;
   z-index: 2;
 

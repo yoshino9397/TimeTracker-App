@@ -13,6 +13,7 @@ import { BiCoffee } from "react-icons/bi";
 import Projects from "../projects/Projects";
 import Edit from "../edit/Edit";
 import Alarm from "../alarm/Alarm";
+import Setting from "../setting/Setting";
 
 let timerId;
 const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
@@ -35,6 +36,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const [projectName, setProjectName] = useState("");
   const [editOpen, setEditOpen] = useState(false);
   const [alarmOpen, setAlarmOpen] = useState(false);
+  const [settingOpen, setSettingOpen] = useState(false);
   const taskName = useRef();
 
   const timerInit = (mode = "") => {
@@ -47,8 +49,9 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       setSettingTimerMin(longBreakTimeMinutes);
       setSettingTimerSec(longBreakTimeSeconds);
     } else {
+      // initial time
       setSettingTimerMin(timeMinutes);
-      setSettingTimerSec(timeSeconds); // initial time
+      setSettingTimerSec(timeSeconds);
     }
   };
 
@@ -145,6 +148,11 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
     // if (editOpen) handleReload();
   };
 
+  const handleSettingWindow = () => {
+    setSettingOpen((prev) => !prev);
+    // if (editOpen) handleReload();
+  };
+
   return (
     <div className='timerSetContainer'>
       <div className='timerSetTask'>
@@ -222,7 +230,11 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           <BsPlusSquareDotted />
         </button>
       </div>
-      <button className='timerSetting'>
+      <button
+        className='timerSetting'
+        disabled={!startTimer}
+        onClick={handleSettingWindow}
+      >
         <AiTwotoneSetting />
       </button>
 
@@ -235,6 +247,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           pomodoroCycle={pomodoroCycle}
         />
       )}
+      {settingOpen && <Setting handleSettingWindow={handleSettingWindow} />}
     </div>
   );
 };

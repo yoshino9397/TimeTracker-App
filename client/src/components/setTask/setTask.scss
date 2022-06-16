@@ -198,7 +198,17 @@
     cursor: pointer;
     flex: 0 0 auto;
 
-    svg {
+    &:disabled {
+      cursor: auto;
+
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        fill: rgb(187, 187, 187);
+      }
+    }
+
+    &:not(:disabled) svg {
       width: 1.5rem;
       height: 1.5rem;
       fill: rgb(103, 103, 103);

@@ -41,6 +41,11 @@ const UserSchema = new mongoose.Schema(
       default: 900,
       trim: true,
     },
+    longBreakInterval: {
+      type: Number,
+      default: 4,
+      trim: true,
+    },
   },
   { timestamps: true }
 );

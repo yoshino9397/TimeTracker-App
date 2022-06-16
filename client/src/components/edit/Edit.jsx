@@ -20,10 +20,7 @@ const Edit = ({ handleEditTaskWindow, mode, checkBoxData, removeCheck }) => {
   const { user } = useContext(AuthContext);
   const { projects } = useContext(ProjectsContext);
   const [projectName, setProjectName] = useState("");
-  const [projectsList, setProjectsList] = useState([
-    INITIAL_PROJECT,
-    ...projects,
-  ]);
+  const [projectsList] = useState([INITIAL_PROJECT, ...projects]);
   const [selectOption, setSelectOption] = useState(false);
   const [timeInputErr, setTimeInputErr] = useState(false);
   const [timeInputErrMsg, setTimeInputErrMsg] = useState("");
