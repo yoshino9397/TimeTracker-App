@@ -14,10 +14,12 @@ import Projects from "../projects/Projects";
 import Edit from "../edit/Edit";
 import Alarm from "../alarm/Alarm";
 import Setting from "../setting/Setting";
+import { Helmet } from "react-helmet";
 
 let timerId;
 const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const { user } = useContext(AuthContext);
+  const [titleText, setTitleText] = useState("TimeLogger");
 
   const timeMinutes = Math.floor(user.duration / 60);
   const timeSeconds = Math.floor(user.duration % 60);
@@ -75,6 +77,15 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       setSettingTimerSec(0);
     }
   };
+
+  useEffect(() => {
+    setTitleText(
+      ("00" + settingTimerMin).slice(-2) +
+        ":" +
+        ("00" + settingTimerSec).slice(-2) +
+        " - TimeLogger"
+    );
+  }, [settingTimerSec, settingTimerMin]);
 
   const countDown = () => {
     timerId = setTimeout(() => {
@@ -197,101 +208,107 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   };
 
   return (
-    <div className='timerSetContainer'>
-      <div className='timerSetTask'>
-        {pomodoroCycle === 7 ? (
-          <div className='timerSetTaskBreakMsg'>
-            <span>Long Break Time...</span>
-            <BiCoffee />
+    <>
+      <Helmet>
+        <title>{titleText}</title>
+        <meta name='description' content='Helmet application' />
+      </Helmet>
+      <div className='timerSetContainer'>
+        <div className='timerSetTask'>
+          {pomodoroCycle === 7 ? (
+            <div className='timerSetTaskBreakMsg'>
+              <span>Long Break Time...</span>
+              <BiCoffee />
+            </div>
+          ) : pomodoroCycle % 2 ? (
+            <div className='timerSetTaskBreakMsg'>
+              <span>Short Break Time...</span>
+              <BiCoffee />
+            </div>
+          ) : (
+            <input
+              type='text'
+              className='timerSetTaskInput'
+              placeholder='Please enter task name'
+              ref={taskName}
+            />
+          )}
+        </div>
+        {projectName && (
+          <div
+            className='timerSetProjectTag timerSetTag'
+            onClick={() => setProjectsOpen((prev) => !prev)}
+          >
+            <span
+              className='timerSetProjectTagBack'
+              style={{
+                backgroundColor: `${projectName.colorCode}`,
+              }}
+            >
+              &nbsp;
+            </span>
+            <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
+            <span className='timerSetProjectTagTitle'>{projectName.title}</span>
+            {projectsOpen && (
+              <Projects
+                handleModal={handleModal}
+                setProject={setProject}
+                handleEditProjectWindow={handleEditProjectWindow}
+              />
+            )}
           </div>
-        ) : pomodoroCycle % 2 ? (
-          <div className='timerSetTaskBreakMsg'>
-            <span>Short Break Time...</span>
-            <BiCoffee />
+        )}
+        {pomodoroCycle % 2 !== 1 && !projectName && (
+          <button className='timerSetTag' onClick={() => handleModal()}>
+            <BsTagFill />
+            {projectsOpen && (
+              <Projects
+                handleModal={handleModal}
+                setProject={setProject}
+                handleEditProjectWindow={handleEditProjectWindow}
+              />
+            )}
+          </button>
+        )}
+        <div className='timerStartContainer'>
+          <div className='timerBox'>
+            <span>
+              {`${("00" + settingTimerMin).slice(-2)}:${(
+                "00" + settingTimerSec
+              ).slice(-2)}`}
+            </span>
           </div>
-        ) : (
-          <input
-            type='text'
-            className='timerSetTaskInput'
-            placeholder='Please enter task name'
-            ref={taskName}
+          <button className='timerStartBtn' onClick={handleTimer}>
+            {startTimer ? <BsPlayCircle /> : <FaStopCircle />}
+          </button>
+          <button
+            className='timerAddBtn'
+            disabled={!startTimer}
+            onClick={handleEditTaskWindow}
+          >
+            <BsPlusSquareDotted />
+          </button>
+        </div>
+        <button
+          className='timerSetting'
+          disabled={!startTimer}
+          onClick={handleSettingWindow}
+        >
+          <AiTwotoneSetting />
+        </button>
+
+        {editOpen && (
+          <Edit handleEditTaskWindow={handleEditTaskWindow} mode='new' />
+        )}
+        {alarmOpen && (
+          <Alarm
+            handleAlarmWindow={handleAlarmWindow}
+            pomodoroCycle={pomodoroCycle}
           />
         )}
+        {settingOpen && <Setting handleSettingWindow={handleSettingWindow} />}
       </div>
-      {projectName && (
-        <div
-          className='timerSetProjectTag timerSetTag'
-          onClick={() => setProjectsOpen((prev) => !prev)}
-        >
-          <span
-            className='timerSetProjectTagBack'
-            style={{
-              backgroundColor: `${projectName.colorCode}`,
-            }}
-          >
-            &nbsp;
-          </span>
-          <GoPrimitiveDot style={{ fill: `${projectName.colorCode}` }} />
-          <span className='timerSetProjectTagTitle'>{projectName.title}</span>
-          {projectsOpen && (
-            <Projects
-              handleModal={handleModal}
-              setProject={setProject}
-              handleEditProjectWindow={handleEditProjectWindow}
-            />
-          )}
-        </div>
-      )}
-      {pomodoroCycle % 2 !== 1 && !projectName && (
-        <button className='timerSetTag' onClick={() => handleModal()}>
-          <BsTagFill />
-          {projectsOpen && (
-            <Projects
-              handleModal={handleModal}
-              setProject={setProject}
-              handleEditProjectWindow={handleEditProjectWindow}
-            />
-          )}
-        </button>
-      )}
-      <div className='timerStartContainer'>
-        <div className='timerBox'>
-          <span>
-            {`${("00" + settingTimerMin).slice(-2)}:${(
-              "00" + settingTimerSec
-            ).slice(-2)}`}
-          </span>
-        </div>
-        <button className='timerStartBtn' onClick={handleTimer}>
-          {startTimer ? <BsPlayCircle /> : <FaStopCircle />}
-        </button>
-        <button
-          className='timerAddBtn'
-          disabled={!startTimer}
-          onClick={handleEditTaskWindow}
-        >
-          <BsPlusSquareDotted />
-        </button>
-      </div>
-      <button
-        className='timerSetting'
-        disabled={!startTimer}
-        onClick={handleSettingWindow}
-      >
-        <AiTwotoneSetting />
-      </button>
-
-      {editOpen && (
-        <Edit handleEditTaskWindow={handleEditTaskWindow} mode='new' />
-      )}
-      {alarmOpen && (
-        <Alarm
-          handleAlarmWindow={handleAlarmWindow}
-          pomodoroCycle={pomodoroCycle}
-        />
-      )}
-      {settingOpen && <Setting handleSettingWindow={handleSettingWindow} />}
-    </div>
+    </>
   );
 };
 

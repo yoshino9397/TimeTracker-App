@@ -15,7 +15,6 @@ const Setting = ({ handleSettingWindow }) => {
   // const durationMin = user.duration / 60;
   // const shortBreakMin = user.shortBreak / 60;
   // const longBreakMin = user.longBreak / 60;
-  console.log("user", user);
 
   const checkTimerValidation = (e) => {
     console.log(e.target.id);
