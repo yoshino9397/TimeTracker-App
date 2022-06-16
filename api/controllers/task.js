@@ -1,4 +1,5 @@
 const Task = require("../models/Task.js");
+const moment = require("moment");
 
 const createTask = async (req, res) => {
   const newTask = new Task(req.body);
@@ -59,6 +60,25 @@ const getTasksByProject = async (req, res, next) => {
   }
 };
 
+const getTasksByWeek = async (req, res, next) => {
+  try {
+    const result = await Task.aggregate([
+      {
+        $match: {
+          userId: req.params.id,
+          createdAt: {
+            $gte: moment().startOf("week").toDate(),
+            $lt: moment().endOf("week").toDate(),
+          },
+        },
+      },
+    ]);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createTask,
   updateTask,
@@ -66,4 +86,5 @@ module.exports = {
   getTask,
   getTasks,
   getTasksByProject,
+  getTasksByWeek,
 };
