@@ -9,9 +9,15 @@ import {
 } from "date-fns";
 
 import { AuthContext } from "../../context/AuthContext";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import {
+  BiChevronLeft,
+  BiChevronRight,
+  BiChevronDown,
+  BiChevronUp,
+} from "react-icons/bi";
 
 import "./timerShowSummary.scss";
+import ChangeView from "../changeView/ChangeView";
 
 const TimerShowSummary = ({
   tasks,
@@ -21,6 +27,7 @@ const TimerShowSummary = ({
   loadFlg,
 }) => {
   const { user } = useContext(AuthContext);
+  const [viewOpen, setViewOpen] = useState(false);
   const [todaySumTime, setTodaySumTime] = useState(0);
   const [weekSumTime, setWeekSumTime] = useState(0);
   const [baseMonday, setBaseMonday] = useState("");
@@ -129,6 +136,10 @@ const TimerShowSummary = ({
     }
   };
 
+  const handleChangeViewWindow = () => {
+    setViewOpen((prev) => !prev);
+  };
+
   return (
     <div className='showSummaryContainer'>
       <div className='showLeftItem'>
@@ -152,6 +163,12 @@ const TimerShowSummary = ({
             (Math.floor(weekSumTime / 60) % 60)
           ).slice(-2)}:${("00" + (weekSumTime % 60)).slice(-2)}`}
         </div>
+        <div className='showChangeView' onClick={handleChangeViewWindow}>
+          VIEW{viewOpen ? <BiChevronUp /> : <BiChevronDown />}
+        </div>
+        {viewOpen && (
+          <ChangeView handleChangeViewWindow={handleChangeViewWindow} />
+        )}
       </div>
     </div>
   );

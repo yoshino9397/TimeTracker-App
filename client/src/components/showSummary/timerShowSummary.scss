@@ -40,6 +40,7 @@
     display: flex;
     align-items: center;
     margin-right: 0.8rem;
+    position: relative;
 
     .timerShowSummaryHr {
       width: 1.25rem;
@@ -57,6 +58,29 @@
 
     .showTodayTime,
     .showThisWeekTime {
+    }
+
+    .showChangeView {
+      display: flex;
+      margin: 0 0.2rem 0 1.2rem;
+      font-size: 0.8rem;
+      color: #5f5f5f;
+      cursor: pointer;
+
+      &:hover {
+        color: #bababa;
+
+        svg {
+          fill: #bababa;
+        }
+      }
+
+      svg {
+        fill: #5f5f5f;
+        width: 1rem;
+        height: 1rem;
+        margin-left: 0.1rem;
+      }
     }
   }
 }
