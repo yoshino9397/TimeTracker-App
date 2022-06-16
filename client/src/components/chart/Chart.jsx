@@ -13,6 +13,7 @@ import { useContext, useEffect } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
+import { format } from "date-fns";
 
 // const data = [
 //   { name: "", Total: 0 },
@@ -28,23 +29,53 @@ import { useState } from "react";
 const Chart = ({ aspect, title }) => {
   const { user } = useContext(AuthContext);
   const [weekData, setWeekData] = useState([{}]);
+  const [weekDays, setWeekDays] = useState([]);
 
   useEffect(() => {
+    let today = new Date();
+    let todayMonth = today.getMonth() + 1;
+    let date = today.getDate();
+    let dayNum = today.getDay();
+    let thisMonday = date - dayNum + 1;
+    let arr = [];
+    let num = 0;
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/tasks/user/${user._id}`);
-        setWeekData(
-          res.data.sort((p1, p2) => {
-            return new Date(p2.createdAt) - new Date(p1.createdAt);
-          })
-        );
-        
+        const res = await axios.get(`/tasks/user/${user._id}/week`);
+        console.log(res.data);
+
+        for (let i = 0; i < 7; i++) {
+          num = thisMonday + i;
+          arr.push({
+            date: `${todayMonth}/` + num,
+          });
+        }
       } catch (err) {
         console.log(err);
       }
+      setWeekDays(arr);
     };
     fetchData();
-  }, [user._id]);
+  }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await axios.get(`/tasks/user/${user._id}`);
+  //       console.log(new Date(res.data[2].createdAt).getMonth() + 1);
+
+  //       setWeekData(
+  //         res.data.filter((p1) => {})
+  //         // res.data.sort((p1, p2) => {
+  //         //   return new Date(p2.createdAt) - new Date(p1.createdAt);
+  //         // })
+  //       );
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [user._id]);
 
   return (
     <div className="chart">
@@ -56,7 +87,7 @@ const Chart = ({ aspect, title }) => {
         <AreaChart
           width={730}
           height={250}
-          data={weekData}
+          data={weekDays}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <defs>
@@ -65,7 +96,7 @@ const Chart = ({ aspect, title }) => {
               <stop offset="95%" stopColor="#9DBEB9" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="title" stroke="gray" />
+          <XAxis dataKey="date" stroke="gray" />
           <YAxis unit="h" stroke="gray" />
           <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
           <Tooltip />
