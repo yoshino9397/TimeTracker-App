@@ -1,12 +1,13 @@
 import "./changeView.scss";
 import { AiOutlineUnorderedList, AiTwotoneCalendar } from "react-icons/ai";
 
-const ChangeView = ({ handleChangeViewWindow }) => {
+const ChangeView = ({ handleChangeViewWindow, handleView, changeView }) => {
   const saveInputValue = (e) => {
-    console.log(e.target.id);
     if (e.target.id === "listMode") {
+      handleView(false);
       handleChangeViewWindow();
     } else if (e.target.id === "calendarMode") {
+      handleView(true);
       handleChangeViewWindow();
     }
   };
@@ -26,7 +27,7 @@ const ChangeView = ({ handleChangeViewWindow }) => {
               id='listMode'
               name='viewMode'
               value='listMode'
-              defaultChecked={true}
+              defaultChecked={!changeView}
               // defaultChecked={user.timerMode === "pomodoro" && "checked"}
             />
             <label htmlFor='listMode'>
@@ -40,6 +41,7 @@ const ChangeView = ({ handleChangeViewWindow }) => {
               id='calendarMode'
               name='viewMode'
               value='calendarMode'
+              defaultChecked={changeView}
               // defaultChecked={user.timerMode === "timer" && "checked"}
             />
             <label htmlFor='calendarMode'>

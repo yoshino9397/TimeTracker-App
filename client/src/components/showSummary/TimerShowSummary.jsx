@@ -25,6 +25,9 @@ const TimerShowSummary = ({
   setWeeklyTasks,
   addWeeklyTask,
   loadFlg,
+  handleView,
+  changeView,
+  setDate,
 }) => {
   const { user } = useContext(AuthContext);
   const [viewOpen, setViewOpen] = useState(false);
@@ -33,7 +36,6 @@ const TimerShowSummary = ({
   const [baseMonday, setBaseMonday] = useState("");
   const today = format(new Date(), "yyyy-MM-dd");
   const WEEK_ARR = [0, 2, 3, 4, 5, 6];
-  // const WEEK_NAME = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const tmpTasks = [];
   let tmpTodaySumTime = 0,
     tmpThisWeekSumTime = 0;
@@ -85,9 +87,10 @@ const TimerShowSummary = ({
     const res = await axios.get(`/tasks/user/${user._id}`);
     if (res.status === 200) {
       res.data.map((val) => {
-        if (val.startTime.slice(0, 10) === baseMonday) {
+        const taskDate = format(new Date(val.startTime), "yyyy-MM-dd");
+        if (taskDate === baseMonday) {
           tmpThisWeekSumTime += val.taskDuration;
-          if (val.startTime.slice(0, 10) === today) {
+          if (taskDate === today) {
             tmpTodaySumTime += val.taskDuration;
           }
           tmpTasks.push({
@@ -97,11 +100,11 @@ const TimerShowSummary = ({
         } else {
           WEEK_ARR.forEach((DAY) => {
             if (
-              val.startTime.slice(0, 10) ===
+              taskDate ===
               format(nextDay(parseISO(baseMonday), DAY), "yyyy-MM-dd")
             ) {
               tmpThisWeekSumTime += val.taskDuration;
-              if (val.startTime.slice(0, 10) === today) {
+              if (taskDate === today) {
                 tmpTodaySumTime += val.taskDuration;
               }
               tmpTasks.push({
@@ -113,6 +116,7 @@ const TimerShowSummary = ({
         }
       });
     }
+    setDate(baseMonday);
     if (tmpTasks.length === 0) setWeeklyTasks(baseMonday);
     else setWeeklyTasks(tmpTasks);
     setTodaySumTime(tmpTodaySumTime);
@@ -167,7 +171,11 @@ const TimerShowSummary = ({
           VIEW{viewOpen ? <BiChevronUp /> : <BiChevronDown />}
         </div>
         {viewOpen && (
-          <ChangeView handleChangeViewWindow={handleChangeViewWindow} />
+          <ChangeView
+            handleChangeViewWindow={handleChangeViewWindow}
+            handleView={handleView}
+            changeView={changeView}
+          />
         )}
       </div>
     </div>
