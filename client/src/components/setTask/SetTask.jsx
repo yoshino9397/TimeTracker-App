@@ -199,12 +199,10 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
 
   const handleAlarmWindow = () => {
     setAlarmOpen((prev) => !prev);
-    // if (editOpen) handleReload();
   };
 
   const handleSettingWindow = () => {
     setSettingOpen((prev) => !prev);
-    // if (editOpen) handleReload();
   };
 
   return (
