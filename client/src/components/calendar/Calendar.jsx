@@ -6,11 +6,12 @@ import { ProjectsContext } from "../../context/ProjectsContext";
 
 import "./calendar.scss";
 
+const SEPARATION = 24;
 const Calendar = ({ calendarDate, tasks }) => {
   const { projects } = useContext(ProjectsContext);
-  const SEPARATION = 24;
   const showTask = tasks.map((x, idx, tasks) => tasks[tasks.length - 1 - idx]);
   const resultArr = [];
+
   showTask.map((showDate) => {
     const tmpResultArr = [];
     showDate.map((task) =>
@@ -58,11 +59,11 @@ const Calendar = ({ calendarDate, tasks }) => {
             </div>
           ))}
         </div>
-        {calendarDate.map((date, dateIdx) => (
+        {[...Array(7)].map((date, dateIdx) => (
           <div className='calendarContainerTimeSet' key={dateIdx}>
             {[...Array(SEPARATION)].map((num, idx) => (
               <div className='calendarTimeDateBox' key={idx}>
-                {resultArr[dateIdx].map(
+                {resultArr[dateIdx]?.map(
                   (task, taskIdx) =>
                     task.idx === idx && (
                       <div className='calendarTimeTaskContainer' key={taskIdx}>
