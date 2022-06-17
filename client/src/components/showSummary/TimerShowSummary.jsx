@@ -35,7 +35,8 @@ const TimerShowSummary = ({
   const [weekSumTime, setWeekSumTime] = useState(0);
   const [baseMonday, setBaseMonday] = useState("");
   const today = format(new Date(), "yyyy-MM-dd");
-  const WEEK_ARR = [0, 2, 3, 4, 5, 6];
+  // const WEEK_ARR = [0, 2, 3, 4, 5, 6];
+  const WEEK_ARR = [0, 6, 5, 4, 3, 2];
   const tmpTasks = [];
   let tmpTodaySumTime = 0,
     tmpThisWeekSumTime = 0;
@@ -57,7 +58,7 @@ const TimerShowSummary = ({
         if (taskDate === today) {
           setTodaySumTime((prev) => prev + newTask.taskDuration);
         }
-        tasks[1].unshift({
+        tasks[6].unshift({
           date: 1,
           val: newTask,
         });
@@ -65,11 +66,11 @@ const TimerShowSummary = ({
       } else {
         WEEK_ARR.forEach((DAY, idx) => {
           if (
-            taskDate.slice(0, 10) ===
+            taskDate ===
             format(nextDay(parseISO(baseMonday), DAY), "yyyy-MM-dd")
           ) {
             setWeekSumTime((prev) => prev + newTask.taskDuration);
-            if (taskDate.slice(0, 10) === today) {
+            if (taskDate === today) {
               setTodaySumTime((prev) => prev + newTask.taskDuration);
             }
             tasks[idx].unshift({
