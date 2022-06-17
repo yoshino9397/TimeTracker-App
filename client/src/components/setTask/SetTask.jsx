@@ -95,7 +95,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       } else {
         setSettingTimerSec((prev) => prev - 1);
       }
-    }, 1000);
+    }, 980);
   };
 
   const countUp = () => {
@@ -106,7 +106,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       } else {
         setSettingTimerSec((prev) => prev + 1);
       }
-    }, 1000);
+    }, 980);
   };
 
   useEffect(() => {
@@ -126,13 +126,22 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
     } else {
       const taskSubmit = async () => {
         if (endTime) {
-          const duration = Math.floor((endTime - beginTime) / 1000);
-          setEndTime("");
+          let duration, calcEndTime;
+          if (user.timerMode === "pomodoro" && alarmOpen) {
+            duration = user.duration;
+            calcEndTime = beginTime + duration * 1000;
+          } else if (user.timerMode === "pomodoro" && !alarmOpen) {
+            duration = user.duration - (settingTimerMin * 60 + settingTimerSec);
+            calcEndTime = beginTime + duration * 1000;
+          } else if (user.timerMode !== "pomodoro") {
+            duration = settingTimerMin * 60 + settingTimerSec;
+            calcEndTime = beginTime + duration * 1000;
+          }
           const res = await axios.post("/tasks", {
             userId: user._id,
             title: taskName.current.value || "no name",
             startTime: beginTime,
-            finishTime: endTime,
+            finishTime: calcEndTime,
             taskDuration: duration,
             projectId: projectName._id,
             projectTitle: projectName.title,
@@ -143,6 +152,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           }
           taskName.current.value = "";
           setProjectName("");
+          setEndTime("");
           if (user.timerMode === "pomodoro")
             setPomodoroCycle((prev) => prev + 1);
           else {
@@ -161,9 +171,9 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
           clearTimeout(timerId); // clear timer
           // timerInit();
           // api call
+          setAlarmOpen(true);
           setStartTimer(true); // stop
           setEndTime(new Date().getTime());
-          setAlarmOpen(true);
         } else countDown();
       } else {
         countUp();

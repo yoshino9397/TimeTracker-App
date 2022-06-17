@@ -23,6 +23,9 @@ const CalendarDetail = ({ calendarDate, showTask }) => {
     });
     return sumTime;
   });
+  if (totalTime.length === 0) {
+    [...Array(7)].map((x) => totalTime.push(0));
+  }
 
   return (
     <div className='calendarContainerTitle'>
