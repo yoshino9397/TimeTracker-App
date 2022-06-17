@@ -30,7 +30,7 @@ const Sidebar = () => {
     <div className='sidebar'>
       <div className='top'>
         <Link to='/' style={{ textDecoration: "none" }}>
-          <span className='logo'>TimeIsMoney</span>
+          <span className='logo'>TimeTracker</span>
         </Link>
       </div>
       <hr className='sidebarTitleHr' />
