@@ -158,7 +158,7 @@ const Register = () => {
       <div className='rContainer'>
         <div className='rLogo'>
           <a href='/register'>
-            TimeLogger
+            TimeTracker
             <MdAlarm />
           </a>
         </div>
