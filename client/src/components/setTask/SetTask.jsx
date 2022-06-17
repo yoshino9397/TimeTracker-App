@@ -19,7 +19,7 @@ import { Helmet } from "react-helmet";
 let timerId;
 const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
   const { user } = useContext(AuthContext);
-  const [titleText, setTitleText] = useState("TimeLogger");
+  const [titleText, setTitleText] = useState("TimeTracker");
 
   const timeMinutes = Math.floor(user.duration / 60);
   const timeSeconds = Math.floor(user.duration % 60);
@@ -83,7 +83,7 @@ const SetTask = ({ setTask, handleEditProjectWindow, handleReload }) => {
       ("00" + settingTimerMin).slice(-2) +
         ":" +
         ("00" + settingTimerSec).slice(-2) +
-        " - TimeLogger"
+        " - TimeTracker"
     );
   }, [settingTimerSec, settingTimerMin]);
 

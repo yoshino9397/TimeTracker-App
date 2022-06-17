@@ -140,7 +140,7 @@ const Login = () => {
       <div className='lContainer'>
         <div className='lLogo'>
           <a href='/register'>
-            TimeLogger
+            TimeTracker
             <MdAlarm />
           </a>
         </div>
