@@ -15,11 +15,10 @@ import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import { format } from "date-fns";
 
-const Chart = ({ aspect, title }) => {
+const Chart = ({ aspect }) => {
   const { user } = useContext(AuthContext);
   const [weekData, setWeekData] = useState([{}]);
   const [weekDays, setWeekDays] = useState([]);
-  const [weekTasks, setWeekTasks] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,16 +30,13 @@ const Chart = ({ aspect, title }) => {
         let thisMonday = date - dayNum + 1;
         let arr = [];
         let num = 0;
-        let dataArr = [];
+        const tmpDataArr = [];
 
         const res = await axios.get(`/tasks/user/${user._id}/week`);
         res.data.sort((p1, p2) => {
           return new Date(p1.startTime) - new Date(p2.startTime);
         });
         setWeekData(res.data);
-        console.log("data", res.data);
-        const tmpDataArr = [],
-          dayArr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
         for (let i = 0; i < 7; i++) {
           tmpDataArr.push(
@@ -49,37 +45,27 @@ const Chart = ({ aspect, title }) => {
                 format(new Date(el.startTime), "dd") ===
                 (thisMonday + i).toString()
               ) {
-                // console.log("el(", dayArr[i], ")", el);
                 return el;
               }
             })
           );
         }
-        console.log("tmpDataArr", tmpDataArr);
+
         const resultArr = tmpDataArr.map((dayTask) => {
           let taskSum = 0;
           dayTask.map((task) => (taskSum += task.taskDuration));
           return taskSum;
         });
-        console.log("resultArr", resultArr);
-        // console.log(format(new Date(weekData[2].startTime), "dd"));
-
-        // for (let i = 0; i < weekData.length; i++) {
-        //   dataArr.push(new Date(res.data[i].createdAt).getDay());
-        // }
 
         for (let i = 0; i < 7; i++) {
           num = thisMonday + i;
           arr.push({
             date: `${todayMonth}/` + num,
-            // time: weekData[i].taskDuration,
             time: resultArr[i],
           });
         }
-        console.log("arr", arr);
 
         setWeekDays(arr);
-        setWeekTasks(dataArr);
       } catch (err) {
         console.log(err);
       }
@@ -87,32 +73,13 @@ const Chart = ({ aspect, title }) => {
     fetchData();
   }, [user._id, weekData.length]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await axios.get(`/tasks/user/${user._id}`);
-  //       console.log(new Date(res.data[2].createdAt).getMonth() + 1);
-
-  //       setWeekData(
-  //         res.data.filter((p1) => {})
-  //         // res.data.sort((p1, p2) => {
-  //         //   return new Date(p2.createdAt) - new Date(p1.createdAt);
-  //         // })
-  //       );
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [user._id]);
-
   return (
-    <div className='chart'>
-      <div className='title'>
+    <div className="chart">
+      <div className="title">
         <DateRangeIcon />
         This week
       </div>
-      <ResponsiveContainer width='100%' aspect={aspect}>
+      <ResponsiveContainer width="100%" aspect={aspect}>
         <AreaChart
           width={730}
           height={250}
@@ -120,21 +87,21 @@ const Chart = ({ aspect, title }) => {
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <defs>
-            <linearGradient id='total' x1='0' y1='0' x2='0' y2='1'>
-              <stop offset='5%' stopColor='#9DBEB9' stopOpacity={0.8} />
-              <stop offset='95%' stopColor='#9DBEB9' stopOpacity={0} />
+            <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#9DBEB9" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#9DBEB9" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey='date' stroke='gray' />
-          <YAxis unit='s' stroke='gray' />
-          <CartesianGrid strokeDasharray='3 3' className='chartGrid' />
+          <XAxis dataKey="date" stroke="gray" />
+          <YAxis unit="s" stroke="gray" />
+          <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
           <Tooltip />
           <Area
-            type='monotone'
-            dataKey='time'
-            stroke='#194350'
+            type="monotone"
+            dataKey="time"
+            stroke="#194350"
             fillOpacity={1}
-            fill='url(#total)'
+            fill="url(#total)"
           />
         </AreaChart>
       </ResponsiveContainer>
