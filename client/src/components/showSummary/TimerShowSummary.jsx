@@ -124,10 +124,12 @@ const TimerShowSummary = ({
   };
 
   const prevWeek = () => {
+    setDate(format(previousMonday(parseISO(baseMonday)), "yyyy-MM-dd"));
     setBaseMonday(format(previousMonday(parseISO(baseMonday)), "yyyy-MM-dd"));
   };
 
   const nextWeek = () => {
+    setDate(format(nextMonday(parseISO(baseMonday)), "yyyy-MM-dd"));
     setBaseMonday(format(nextMonday(parseISO(baseMonday)), "yyyy-MM-dd"));
   };
 
