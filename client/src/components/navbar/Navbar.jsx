@@ -82,7 +82,6 @@ const Navbar = () => {
       setOpen(!open);
     }
   };
-  console.log(format(moment().startOf("isoweek").toDate(), "yyyy-MM-dd"));
 
   return (
     <>
