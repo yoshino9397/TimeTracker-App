@@ -36,7 +36,6 @@
       }
     }
     .download{
-      color: #2c5865;
       margin-right: 15px;
       cursor: pointer;
     .downloadList{
@@ -48,7 +47,11 @@
       position: absolute;
       margin-right: 40px;
       right: 0;
-      background-color: rgb(232, 232, 232);   
+      background-color: rgb(232, 232, 232);  
+      .link{
+        text-decoration: none;
+        color: #2c5865;
+      }
     }
   }
   }
